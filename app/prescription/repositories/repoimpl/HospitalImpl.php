@@ -57,7 +57,7 @@ class HospitalImpl implements HospitalInterface{
 
             $hospitals = $query->get();
 
-            dd($hospitals);
+            //dd($hospitals);
         }
         catch(QueryException $queryEx)
         {
