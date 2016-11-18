@@ -242,7 +242,7 @@ class HospitalImpl implements HospitalInterface{
             $query = DB::table('patient as p')->select('p.id', 'p.name', 'p.address','p.pid', 'c.city_name',
                             'co.name','p.telephone', 'p.email',
                             'p.dob', 'p.age', 'p.place_of_birth', 'p.nationality', 'p.gender',
-                            'da.appointment_date', 'da.appointment_time');
+                            'da.appointment_date', 'da.appointment_time', 'da.brief_history');
             $query->join('doctor_appointment as da', 'da.patient_id', '=', 'p.patient_id');
             $query->join('cities as c', 'c.id', '=', 'p.city');
             $query->join('countries as co', 'co.id', '=', 'p.country');
