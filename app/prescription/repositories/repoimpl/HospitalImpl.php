@@ -131,7 +131,7 @@ class HospitalImpl implements HospitalInterface{
                 'p.name as patient_name', 'p.pid',
                 'da.hospital_id', 'h.hospital_name',
                 'da.doctor_id', 'd.name as doctor_name',
-                'da.appointment_date', 'da.appointment_time');
+                'da.appointment_date', 'da.appointment_time', 'da.appointment_type');
             $query->join('hospital as h', 'h.hospital_id', '=', 'da.hospital_id');
             $query->join('patient as p', 'p.patient_id', '=', 'da.patient_id');
             $query->join('doctor as d', 'd.doctor_id', '=', 'da.doctor_id');

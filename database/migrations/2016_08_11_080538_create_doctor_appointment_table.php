@@ -22,6 +22,7 @@ class CreateDoctorAppointmentTable extends Migration
                 $table->text('brief_history')->nullable();
                 $table->date('appointment_date');
                 $table->time('appointment_time');
+                $table->tinyInteger('appointment_type')->default(1)->nullable();
                 $table->string('created_by',255);
                 $table->string('modified_by',255);
                 $table->timestamps();
