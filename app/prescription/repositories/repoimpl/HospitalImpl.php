@@ -518,10 +518,19 @@ class HospitalImpl implements HospitalInterface{
 
         try
         {
-            $query = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name', 'p.pid');
+            /*$query = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name', 'p.pid');
             $query->join('users as usr', 'usr.id', '=', 'p.patient_id');
             $query->where('usr.delete_status', '=', 1);
             $query->where('p.name', 'LIKE', $keyword.'%');
+
+            //dd($query->toSql());
+            $patientNames = $query->get();*/
+
+            $query = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'p.telephone');
+            $query->join('users as usr', 'usr.id', '=', 'p.patient_id');
+            $query->where('usr.delete_status', '=', 1);
+            $query->where('p.pid', 'LIKE', '%'.$keyword.'%');
+            $query->orWhere('p.name', 'LIKE', '%'.$keyword.'%');
 
             //dd($query->toSql());
             $patientNames = $query->get();
