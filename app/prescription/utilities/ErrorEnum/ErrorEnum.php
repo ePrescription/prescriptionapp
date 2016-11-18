@@ -83,5 +83,8 @@ class ErrorEnum extends Enum{
     //Helper constants 211 to 220
     const CITIES_LIST_ERROR = 211;
 
+    const DOCTOR_DETAILS_ERROR = 221;
+    const DOCTOR_DETAILS_SUCCESS = 222;
+
 
 }

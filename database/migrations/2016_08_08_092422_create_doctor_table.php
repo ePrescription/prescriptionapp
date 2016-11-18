@@ -24,6 +24,9 @@ class CreateDoctorTable extends Migration
                 $table->string('did', 255);
                 $table->string('telephone', 255);
                 $table->string('email', 255)->nullable();
+                $table->string('qualifications', 255)->nullable();
+                $table->string('specialty', 255)->nullable();
+                $table->integer('experience')->unsigned()->nullable();
                 $table->string('doctor_photo')->nullable();
                 $table->string('created_by', 255);
                 $table->string('updated_by', 255);

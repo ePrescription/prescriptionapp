@@ -24,6 +24,7 @@ class CreatePrescriptionDetailsTable extends Migration
                 $table->tinyInteger('morning');
                 $table->tinyInteger('afternoon');
                 $table->tinyInteger('night');
+                $table->string('drug_status', 255)->nullable();
                 $table->string('created_by',255);
                 $table->string('modified_by',255);
                 $table->timestamps();

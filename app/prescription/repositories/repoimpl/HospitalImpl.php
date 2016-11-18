@@ -186,6 +186,43 @@ class HospitalImpl implements HospitalInterface{
         return $doctors;
     }
 
+    /**
+     * Get doctor details
+     * @param $doctorId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getDoctorDetails($doctorId)
+    {
+        $doctorDetails = null;
+
+        try
+        {
+            $query = DB::table('doctor as d')->join('users as usr1', 'usr1.id', '=', 'd.doctor_id');
+            $query->where('d.doctor_id', '=', $doctorId);
+            $query->where('usr1.delete_status', '=', 1);
+            $query->select('d.id as id', 'd.doctor_id as doctorId', 'd.name as doctorName', 'd.did as doctorUniqueId',
+                DB::raw('CONCAT(d.qualifications, " (", d.specialty, ") ", d.experience) as doctorDetails'));
+
+
+            //DB::raw('CONCAT(h.address, " ", c.city_name, " ", co.name) as hospital_details'));
+
+            $doctorDetails = $query->get();
+        }
+        catch(QueryException $queryEx)
+        {
+            throw new HospitalException(null, ErrorEnum::HOSPITAL_DOCTOR_LIST_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::HOSPITAL_DOCTOR_LIST_ERROR, $exc);
+        }
+
+        return $doctorDetails;
+    }
+
     //Get Patient List
     /**
      * Get list of patients for the hospital and patient name

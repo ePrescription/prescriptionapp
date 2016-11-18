@@ -19,7 +19,9 @@ class CreateLabtestDetailsTable extends Migration
                 $table->integer('patient_labtest_id')->unsigned();
                 $table->integer('labtest_id')->unsigned();
                 //$table->string('labtest_name', 255);
-                $table->text('brief_description');
+                $table->text('brief_description')->nullable();
+                $table->text('labtest_report')->nullable();
+                $table->varchar('labtest_report_status', 255)->nullable();
                 $table->string('created_by',255);
                 $table->string('modified_by',255);
                 $table->timestamps();

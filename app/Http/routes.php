@@ -113,6 +113,8 @@ Route::group(array('prefix' => 'hospital', 'namespace' => 'Doctor'), function()
 
    Route::get('rest/api/patientstatus', array('as' => 'hospital.isnewpatient', 'uses' => 'DoctorController@checkIsNewPatient'));
 
+   Route::get('rest/api/doctor/{doctorId}/doctordetails', array('as' => 'hospital.doctordetails', 'uses' => 'DoctorController@getDoctorDetails'));
+
 });
 
 Route::group(['prefix' => 'pharmacy'], function()

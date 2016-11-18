@@ -51,4 +51,7 @@
         "147" => "Patient lab tests saved successfully",
 
         "160" => "Successfully logged in",
+
+        "221" => "Unable to get doctor details",
+        "222" => "Successfully retrieved doctor details",
     ];
