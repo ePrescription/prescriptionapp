@@ -402,7 +402,7 @@ class HospitalImpl implements HospitalInterface{
             $query = DB::table('prescription_details as pd')->select('b.id as brand_id', 'b.brand_name', 'd.id as drug_id',
                         'd.drug_name',
                         'pd.dosage', 'pd.no_of_days',
-                        'pd.morning', 'pd.afternoon', 'pd.night');
+                        'pd.morning', 'pd.afternoon', 'pd.night', 'pd.drug_status');
             $query->join('patient_prescription as pp', 'pp.id', '=', 'pd.patient_prescription_id');
             $query->join('brands as b', 'b.id', '=', 'pd.brand_id');
             $query->join('drugs as d', 'd.id', '=', 'pd.drug_id');
@@ -856,7 +856,7 @@ class HospitalImpl implements HospitalInterface{
 
             $doctorDetails = $doctorQuery->get();
 
-            $query = DB::table('labtest_details as ld')->select('l.id', 'l.test_name', 'ld.brief_description', 'pl.labtest_date');
+            $query = DB::table('labtest_details as ld')->select('l.id', 'l.test_name', 'ld.brief_description', 'pl.labtest_date', 'ld.labtest_report');
             $query->join('patient_labtest as pl', 'pl.id', '=', 'ld.patient_labtest_id');
             $query->join('labtest as l', 'l.id', '=', 'ld.labtest_id');
             $query->where('pl.id', '=', $labTestId);
