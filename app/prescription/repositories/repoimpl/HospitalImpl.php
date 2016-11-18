@@ -204,7 +204,7 @@ class HospitalImpl implements HospitalInterface{
             $query->where('d.doctor_id', '=', $doctorId);
             $query->where('usr1.delete_status', '=', 1);
             $query->select('d.id as id', 'd.doctor_id as doctorId', 'd.name as doctorName', 'd.did as doctorUniqueId',
-                DB::raw('CONCAT(d.qualifications, " (", d.specialty, ") ", d.experience) as doctorDetails'));
+                DB::raw('CONCAT(d.qualifications, " (", d.specialty, ") ", d.experience, " years") as doctorDetails'));
 
 
             //DB::raw('CONCAT(h.address, " ", c.city_name, " ", co.name) as hospital_details'));
