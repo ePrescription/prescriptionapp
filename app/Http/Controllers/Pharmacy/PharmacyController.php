@@ -9,6 +9,9 @@ use App\prescription\services\HelperService;
 use App\prescription\utilities\Exception\HospitalException;
 use App\prescription\utilities\Exception\PharmacyException;
 use App\prescription\utilities\Exception\AppendMessage;
+use App\prescription\common\ResponseJson;
+use App\prescription\utilities\ErrorEnum\ErrorEnum;
+
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -481,18 +484,23 @@ class PharmacyController extends Controller
 
     public function forwardPrescriptionDetailsByMail(HospitalService $hospitalService, $prescriptionId, $email)
     {
+        //return $prescriptionId;
         $prescriptionDetails = null;
+        $prescriptionMailInfo = null;
         //dd('Inside prescription details');
 
         try
         {
-            $prescriptionDetails = $hospitalService->getPrescriptionDetails($prescriptionId);
+            //$prescriptionDetails = $hospitalService->getPrescriptionDetails($prescriptionId);
             //dd($labTestDetails);
+            $prescriptionMailInfo = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SUCCESS));
+            $prescriptionMailInfo->setObj("Mail Sent Successfully");
 
         }
         catch(PharmacyException $pharmacyExc)
         {
-            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            //dd($pharmacyExc);
+            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
             $errorMsg = $pharmacyExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($pharmacyExc);
             Log::error($msg);
@@ -500,12 +508,13 @@ class PharmacyController extends Controller
         catch(Exception $exc)
         {
             //dd($exc);
-            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
         }
 
-        return view('portal.patient-labtest-details',compact('prescriptionDetails'));
+        return $prescriptionMailInfo;
+        //return view('portal.patient-labtest-details',compact('prescriptionDetails'));
     }
 
     /**
@@ -518,18 +527,23 @@ class PharmacyController extends Controller
 
     public function forwardPrescriptionDetailsBySMS(HospitalService $hospitalService, $prescriptionId, $mobile)
     {
+
         $prescriptionDetails = null;
+        $prescriptionSMSInfo = null;
         //dd('Inside prescription details');
 
         try
         {
-            $prescriptionDetails = $hospitalService->getPrescriptionDetails($prescriptionId);
+            //$prescriptionDetails = $hospitalService->getPrescriptionDetails($prescriptionId);
             //dd($labTestDetails);
+            $prescriptionSMSInfo = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SUCCESS));
+            $prescriptionSMSInfo->setObj("SMS Sent Successfully");
 
         }
         catch(PharmacyException $pharmacyExc)
         {
-            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            //dd($pharmacyExc);
+            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
             $errorMsg = $pharmacyExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($pharmacyExc);
             Log::error($msg);
@@ -537,12 +551,13 @@ class PharmacyController extends Controller
         catch(Exception $exc)
         {
             //dd($exc);
-            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
         }
 
-        return view('portal.patient-labtest-details',compact('prescriptionDetails'));
+        return $prescriptionSMSInfo;
+        //return view('portal.patient-labtest-details',compact('prescriptionDetails'));
     }
 
 }

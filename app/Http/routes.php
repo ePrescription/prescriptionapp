@@ -117,6 +117,14 @@ Route::group(array('prefix' => 'hospital', 'namespace' => 'Doctor'), function()
 
 
 
+
+});
+
+Route::group(array('prefix' => 'hospital','namespace' => 'Pharmacy'), function() {
+
+    Route::get('rest/api/patient/prescription/{prescriptionId}/mail/{emailId}', array('as' => 'patient.sendemail', 'uses' => 'PharmacyController@forwardPrescriptionDetailsByMail'));
+    Route::get('rest/api/patient/prescription/{prescriptionId}/sms/{mobileNo}', array('as' => 'patient.sendsms', 'uses' => 'PharmacyController@forwardPrescriptionDetailsBySMS'));
+
 });
 
 Route::group(['prefix' => 'pharmacy'], function()
