@@ -922,6 +922,80 @@ class HospitalImpl implements HospitalInterface{
         return $patientLabTests;
     }
 
+
+    /**
+     * Save patient profile
+     * @param $patientProfileVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function saveNewPatientProfile(PatientProfileViewModel $patientProfileVM)
+    {
+        $status = true;
+        $user = null;
+        $patientId = null;
+        $patient = null;
+
+        try
+        {
+            $patientId = $patientProfileVM->getPatientId();
+            //dd($patientId);
+
+            if($patientId == 0)
+            {
+                $user = $this->registerNewPatient($patientProfileVM);
+                $this->attachPatientRole($user);
+                $patient = new Patient();
+            }
+            else
+            {
+                $patient = Patient::where('patient_id', '=', $patientId)->first();
+                if(!is_null($patient))
+                {
+                    //$user = User::find($companyId);
+                    $user = $this->registerNewPatient($patientProfileVM);
+                }
+            }
+
+            $patient->name = $patientProfileVM->getName();
+            $patient->address = $patientProfileVM->getAddress();
+            //$patient->city = $patientProfileVM->getCity();
+            //$patient->country = $patientProfileVM->getCountry();
+            $patient->pid = 'PID'.crc32(uniqid(rand()));
+            $patient->telephone = $patientProfileVM->getTelephone();
+            $patient->email = $patientProfileVM->getEmail();
+            //$patient->patient_photo = $patientProfileVM->getPatientPhoto();
+            //$patient->dob = $patientProfileVM->getDob();
+            //$patient->age = $patientProfileVM->getPlaceOfBirth();
+            //$patient->nationality = $patientProfileVM->getNationality();
+            //$patient->gender = $patientProfileVM->getGender();
+            //$patient->married = $patientProfileVM->getMaritalStatus();
+
+            $patient->created_by = $patientProfileVM->getCreatedBy();
+            $patient->created_at = $patientProfileVM->getCreatedAt();
+            $patient->updated_by = $patientProfileVM->getUpdatedBy();
+            $patient->updated_at = $patientProfileVM->getUpdatedAt();
+
+            $user->patient()->save($patient);
+        }
+        catch(QueryException $queryEx)
+        {
+            dd($queryEx);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_PROFILE_SAVE_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            dd($exc);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_PROFILE_SAVE_ERROR, $exc);
+        }
+
+        return $status;
+    }
+
     /**
      * Save patient profile
      * @param $patientProfileVM
@@ -959,18 +1033,18 @@ class HospitalImpl implements HospitalInterface{
             }
 
             $patient->name = $patientProfileVM->getName();
-            $patient->address = $patientProfileVM->getAddress();
-            $patient->city = $patientProfileVM->getCity();
-            $patient->country = $patientProfileVM->getCountry();
+            //$patient->address = $patientProfileVM->getAddress();
+            //$patient->city = $patientProfileVM->getCity();
+            //$patient->country = $patientProfileVM->getCountry();
             $patient->pid = 'PID'.crc32(uniqid(rand()));
             $patient->telephone = $patientProfileVM->getTelephone();
             $patient->email = $patientProfileVM->getEmail();
-            $patient->patient_photo = $patientProfileVM->getPatientPhoto();
-            $patient->dob = $patientProfileVM->getDob();
-            $patient->age = $patientProfileVM->getPlaceOfBirth();
-            $patient->nationality = $patientProfileVM->getNationality();
-            $patient->gender = $patientProfileVM->getGender();
-            $patient->married = $patientProfileVM->getMaritalStatus();
+            //$patient->patient_photo = $patientProfileVM->getPatientPhoto();
+            //$patient->dob = $patientProfileVM->getDob();
+            //$patient->age = $patientProfileVM->getPlaceOfBirth();
+            //$patient->nationality = $patientProfileVM->getNationality();
+            //$patient->gender = $patientProfileVM->getGender();
+            //$patient->married = $patientProfileVM->getMaritalStatus();
 
             $patient->created_by = $patientProfileVM->getCreatedBy();
             $patient->created_at = $patientProfileVM->getCreatedAt();
@@ -981,12 +1055,13 @@ class HospitalImpl implements HospitalInterface{
         }
         catch(QueryException $queryEx)
         {
-            //dd($queryEx);
+            dd($queryEx);
             $status = false;
             throw new HospitalException(null, ErrorEnum::PATIENT_PROFILE_SAVE_ERROR, $queryEx);
         }
         catch(Exception $exc)
         {
+            dd($exc);
             $status = false;
             throw new HospitalException(null, ErrorEnum::PATIENT_PROFILE_SAVE_ERROR, $exc);
         }

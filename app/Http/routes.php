@@ -122,15 +122,15 @@ Route::group(array('prefix' => 'hospital', 'namespace' => 'Doctor'), function()
 
 Route::group(array('prefix' => 'hospital','namespace' => 'Pharmacy'), function() {
 
-    Route::get('rest/api/patient/prescription/{prescriptionId}/mail/{emailId}', array('as' => 'patient.sendemail', 'uses' => 'PharmacyController@forwardPrescriptionDetailsByMail'));
-    Route::get('rest/api/patient/prescription/{prescriptionId}/sms/{mobileNo}', array('as' => 'patient.sendsms', 'uses' => 'PharmacyController@forwardPrescriptionDetailsBySMS'));
+    Route::get('rest/api/patient/prescription/{prescriptionId}/mail/{email}', array('as' => 'patient.sendemail', 'uses' => 'PharmacyController@forwardPrescriptionDetailsByMail'));
+    Route::get('rest/api/patient/prescription/{prescriptionId}/sms/{mobile}', array('as' => 'patient.sendsms', 'uses' => 'PharmacyController@forwardPrescriptionDetailsBySMS'));
 
 });
 
 Route::group(array('prefix' => 'hospital','namespace' => 'Lab'), function() {
 
-Route::get('rest/api/patient/labtest/{labTestId}/mail', array('as' => 'patient.sendemail', 'uses' => 'LabController@forwardLabDetailsByMail'));
-Route::get('rest/api/patient/labtest/{labTestId}/sms', array('as' => 'patient.sendsms', 'uses' => 'LabController@forwardLabDetailsBySMS'));
+Route::get('rest/api/patient/labtest/{labTestId}/mail/{email}', array('as' => 'patient.sendemail', 'uses' => 'LabController@forwardLabDetailsByMail'));
+Route::get('rest/api/patient/labtest/{labTestId}/sms/{mobile}', array('as' => 'patient.sendsms', 'uses' => 'LabController@forwardLabDetailsBySMS'));
 
 });
 

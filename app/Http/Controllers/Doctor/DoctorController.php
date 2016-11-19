@@ -681,6 +681,7 @@ class DoctorController extends Controller
 
     public function savePatientProfile(Request $patientProfileRequest)
     {
+        //return "HI";
         $patientProfileVM = null;
         $status = true;
         $jsonResponse = null;
