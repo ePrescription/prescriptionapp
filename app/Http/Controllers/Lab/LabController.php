@@ -469,4 +469,78 @@ class LabController extends Controller
 
         return view('portal.patient-labtest-details',compact('labTestDetails'));
     }
+
+    /**
+     * Forward the lab test details to the specified mail id
+     * @param $labTestId, $email
+     * @throws $labException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function forwardLabDetailsByMail(HospitalService $hospitalService, $labTestId, $email)
+    {
+        $labTestDetails = null;
+        //dd('Inside prescription details');
+
+        try
+        {
+            $labTestDetails = $hospitalService->getLabTestDetails($labTestId);
+            //dd($labTestDetails);
+
+        }
+        catch(LabException $labExc)
+        {
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            $errorMsg = $labExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($labExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        return view('portal.patient-labtest-details',compact('labTestDetails'));
+    }
+
+    /**
+     * Forward the lab test details by SMS
+     * @param $labTestId, $mobileNumber
+     * @throws $labException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function forwardLabDetailsBySMS(HospitalService $hospitalService, $labTestId, $mobile)
+    {
+        $labTestDetails = null;
+        //dd('Inside prescription details');
+
+        try
+        {
+            $labTestDetails = $hospitalService->getLabTestDetails($labTestId);
+            //dd($labTestDetails);
+
+        }
+        catch(LabException $labExc)
+        {
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            $errorMsg = $labExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($labExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        return view('portal.patient-labtest-details',compact('labTestDetails'));
+    }
 }
