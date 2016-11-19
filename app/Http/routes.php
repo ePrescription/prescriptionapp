@@ -127,6 +127,13 @@ Route::group(array('prefix' => 'hospital','namespace' => 'Pharmacy'), function()
 
 });
 
+Route::group(array('prefix' => 'hospital','namespace' => 'Lab'), function() {
+
+Route::get('rest/api/patient/labtest/{labTestId}/mail', array('as' => 'patient.sendemail', 'uses' => 'LabController@forwardLabDetailsByMail'));
+Route::get('rest/api/patient/labtest/{labTestId}/sms', array('as' => 'patient.sendsms', 'uses' => 'LabController@forwardLabDetailsBySMS'));
+
+});
+
 Route::group(['prefix' => 'pharmacy'], function()
 {
     Route::get('{id}/dashboard', function () {
