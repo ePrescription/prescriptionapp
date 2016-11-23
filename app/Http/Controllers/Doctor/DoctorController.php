@@ -338,8 +338,8 @@ class DoctorController extends Controller
 
                     $loginDetails['doctor']['id'] = $userId;
                     $loginDetails['doctor']['name'] = $userName;
-                    //$loginDetails['doctor']['details'] = "MBBS, 10 Year, Chennai";
-                    $loginDetails['doctor']['details'] = $doctorDetails;
+                    $loginDetails['doctor']['details'] = "MBBS MD (Cardiology) 10 years";
+                    //$loginDetails['doctor']['details'] = $doctorDetails;
 
                     $jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::USER_LOGIN_SUCCESS));
                     $jsonResponse->setObj($loginDetails);
