@@ -26,18 +26,18 @@ class PatientProfileMapper
 
         $profileVM->setPatientId($profile->patientId);
         $profileVM->setName($profile->name);
-        $profileVM->setAddress($profile->address);
-        $profileVM->setCity(property_exists($profile, 'city') ? $profile->city : null);
-        $profileVM->setCountry(property_exists($profile, 'country') ? $profile->country : null);
+        //$profileVM->setAddress($profile->address);
+        //$profileVM->setCity(property_exists($profile, 'city') ? $profile->city : null);
+        //$profileVM->setCountry(property_exists($profile, 'country') ? $profile->country : null);
         $profileVM->setTelephone($profile->telephone);
         $profileVM->setEmail(property_exists($profile, 'email') ? $profile->email : null);
-        $profileVM->setPatientPhoto(property_exists($profile, 'patientPhoto') ? $profile->patientPhoto : null);
-        $profileVM->setDob(property_exists($profile, 'dob') ? $profile->dob : null);
+        //$profileVM->setPatientPhoto(property_exists($profile, 'patientPhoto') ? $profile->patientPhoto : null);
+        //$profileVM->setDob(property_exists($profile, 'dob') ? $profile->dob : null);
         $profileVM->setAge(property_exists($profile, 'age') ? $profile->age : null);
-        $profileVM->setPlaceOfBirth(property_exists($profile, 'placeOfBirth') ? $profile->placeOfBirth : null);
-        $profileVM->setNationality(property_exists($profile, 'nationality') ? $profile->nationality : null);
+        //$profileVM->setPlaceOfBirth(property_exists($profile, 'placeOfBirth') ? $profile->placeOfBirth : null);
+        //$profileVM->setNationality(property_exists($profile, 'nationality') ? $profile->nationality : null);
         $profileVM->setGender($profile->gender);
-        $profileVM->setMaritalStatus(property_exists($profile, 'maritalStatus') ? $profile->maritalStatus : null);
+        //$profileVM->setMaritalStatus(property_exists($profile, 'maritalStatus') ? $profile->maritalStatus : null);
 
         $profileVM->setCreatedBy($userName);
         $profileVM->setUpdatedBy($userName);
