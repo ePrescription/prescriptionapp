@@ -762,4 +762,25 @@ class HospitalService {
         return $hospitalId;
     }
 
+
+    public function getProfile($hospitalId)
+    {
+        $hospitalProfile = null;
+
+        try
+        {
+            $hospitalProfile = $this->hospitalRepo->getProfile($hospitalId);
+        }
+        catch(HospitalException $profileExc)
+        {
+            throw $profileExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new PharmacyException(null, ErrorEnum::HOSPITAL_PROFILE_VIEW_ERROR, $exc);
+        }
+
+        return $hospitalProfile;
+    }
+
 }

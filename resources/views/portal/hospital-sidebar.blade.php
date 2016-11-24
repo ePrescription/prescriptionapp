@@ -2,7 +2,7 @@
     <!-- Sidebar user panel -->
     <div class="user-panel">
         <div class="pull-left image">
-            <img src="{{ URL::to('/') }}/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image" />
+            <img src="{{ URL::to('/') }}/images/prescription-160x160.jpg" class="img-circle" alt="User Image" />
         </div>
         <div class="pull-left info">
             <p>{{Session::get('AuthDisplayName')}}</p>
@@ -22,33 +22,28 @@
     <!-- sidebar menu: : style can be found in sidebar.less -->
     <ul class="sidebar-menu">
         <li class="header">MAIN NAVIGATION</li>
-        <li class="active treeview">
-            <a href="{{URL::to('/')}}/patient/{{Auth::user()->id}}/dashboard">
+        <li class="@if($dashboard_menu==1) active @endif treeview">
+            <a href="{{URL::to('/')}}/fronthospital/{{Auth::user()->id}}/dashboard">
                 <i class="fa fa-dashboard"></i> <span>Dashboard</span>
             </a>
         </li>
-        <li class="treeview">
-            <a href="#doctorslist.html">
-                <i class="fa fa-user-md"></i> <span>Doctors</span>
-            </a>
-        </li>
-        <li class="treeview">
-            <a href="#doctorslist.html">
+        <li class="@if($patient_menu==1) active @endif treeview">
+            <a href="{{URL::to('/')}}/fronthospital/rest/api/{{Auth::user()->id}}/patients">
                 <i class="fa fa-users"></i> <span>Patients</span>
             </a>
         </li>
-        <li class="treeview">
-            <a href="#doctorslist.html">
-                <i class="fa fa-pencil-square-o"></i> <span>Prescriptions</span>
+        <li class="@if($profile_menu==1) active @endif treeview">
+            <a href="#myaccount.html">
+                <i class="fa fa-book"></i> <span>My Account</span>
             </a>
+            <ul class="treeview-menu">
+                <li><a href="{{URL::to('/')}}/fronthospital/rest/api/{{Auth::user()->id}}/profile"><i class="fa fa-circle-o"></i> View Profile</a></li>
+                <li><a href="{{URL::to('/')}}/fronthospital/rest/api/{{Auth::user()->id}}/editprofile"><i class="fa fa-circle-o"></i> Edit Profile</a></li>
+                <!--
+                <li><a href="{{URL::to('/')}}/pharmacy/rest/api/{{Auth::user()->id}}/changepassword"><i class="fa fa-circle-o"></i> Change Password</a></li>
+                -->
+            </ul>
         </li>
-        <li class="treeview">
-            <a href="#patientslist.html">
-                <i class="fa fa-flask"></i> <span>Lab Tests</span>
-            </a>
-        </li>
-
-
         <!--
           <li class="treeview">
             <a href="myaccount.html">

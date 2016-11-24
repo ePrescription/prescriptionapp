@@ -239,7 +239,7 @@ class HospitalImpl implements HospitalInterface{
 
         try
         {
-            $query = DB::table('hospital_patient as hp')->select('p.id', 'p.patient_id', 'p.pid', 'p.name', 'p.gender', 'p.telephone',
+            $query = DB::table('hospital_patient as hp')->select('p.id', 'p.patient_id', 'p.pid', 'p.name', 'p.age', 'p.gender', 'p.telephone',
                             'h.hospital_id', 'h.hospital_name');
             $query->join('hospital as h', 'h.hospital_id', '=', 'hp.hospital_id');
             $query->join('patient as p', 'p.patient_id', '=', 'hp.patient_id');
@@ -1275,5 +1275,42 @@ class HospitalImpl implements HospitalInterface{
     public function test()
     {
         //dd('Inside test function in implementation');
+    }
+
+
+
+    public function getProfile($hospitalId)
+    {
+        $hospitalProfile = null;
+
+        try
+        {
+            /*$pharmacyProfile = Pharmacy::where('pharmacy_id', '=', $pharmacyId)
+                ->get(array('id', 'pharmacy_id', 'name', 'address', ''))->toArray();*/
+            //$pharmacyProfile = Pharmacy::where('pharmacy_id', $pharmacyId)->get();
+
+            $query = DB::table('hospital as h')->join('cities as c', 'c.id', '=', 'h.city');
+            $query->join('countries as co', 'co.id', '=', 'h.country');
+            $query->where('h.hospital_id', '=', $hospitalId);
+            $query->select('h.id', 'h.hospital_id', 'h.hospital_name as hospital_name', 'h.address', 'c.id as city_id', 'c.city_name',
+                'co.id as country_id', 'co.name as country_name', 'h.hid', 'h.telephone', 'h.email');
+
+            //dd($query->toSql());
+            $hospitalProfile = $query->get();
+            //dd($pharmacyProfile);
+
+            //dd($pharmacyProfile);
+        }
+        catch(QueryException $queryExc)
+        {
+            //dd($queryExc);
+            throw new HospitalException(null, ErrorEnum::PHARMACY_PROFILE_VIEW_ERROR, $queryExc);
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PHARMACY_PROFILE_VIEW_ERROR, $exc);
+        }
+
+        return $hospitalProfile;
     }
 }
