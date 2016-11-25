@@ -26,7 +26,7 @@ class PatientProfileMapper
 
         $profileVM->setPatientId($profile->patientId);
         $profileVM->setName($profile->name);
-        $profileVM->setAddress($profile->address);
+        $profileVM->setAddress(property_exists($profile, 'address') ? $profile->address : null);
         $profileVM->setCity(property_exists($profile, 'city') ? $profile->city : null);
         $profileVM->setCountry(property_exists($profile, 'country') ? $profile->country : null);
         $profileVM->setTelephone($profile->telephone);
