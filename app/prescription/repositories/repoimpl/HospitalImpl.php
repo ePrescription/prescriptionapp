@@ -1033,18 +1033,18 @@ class HospitalImpl implements HospitalInterface{
             }
 
             $patient->name = $patientProfileVM->getName();
-            //$patient->address = $patientProfileVM->getAddress();
-            //$patient->city = $patientProfileVM->getCity();
-            //$patient->country = $patientProfileVM->getCountry();
+            $patient->address = $patientProfileVM->getAddress();
+            $patient->city = $patientProfileVM->getCity();
+            $patient->country = $patientProfileVM->getCountry();
             $patient->pid = 'PID'.crc32(uniqid(rand()));
             $patient->telephone = $patientProfileVM->getTelephone();
             $patient->email = $patientProfileVM->getEmail();
-            //$patient->patient_photo = $patientProfileVM->getPatientPhoto();
-            //$patient->dob = $patientProfileVM->getDob();
-            //$patient->age = $patientProfileVM->getPlaceOfBirth();
-            //$patient->nationality = $patientProfileVM->getNationality();
-            //$patient->gender = $patientProfileVM->getGender();
-            //$patient->married = $patientProfileVM->getMaritalStatus();
+            $patient->patient_photo = $patientProfileVM->getPatientPhoto();
+            $patient->dob = $patientProfileVM->getDob();
+            $patient->age = $patientProfileVM->getPlaceOfBirth();
+            $patient->nationality = $patientProfileVM->getNationality();
+            $patient->gender = $patientProfileVM->getGender();
+            $patient->married = $patientProfileVM->getMaritalStatus();
 
             $patient->created_by = $patientProfileVM->getCreatedBy();
             $patient->created_at = $patientProfileVM->getCreatedAt();
