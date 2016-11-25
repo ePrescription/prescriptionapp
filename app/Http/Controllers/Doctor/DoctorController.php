@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\prescription\services\HelperService;
 use App\prescription\services\HospitalService;
 use App\prescription\utilities\Exception\HospitalException;
 use App\prescription\utilities\Exception\AppendMessage;
@@ -18,6 +19,8 @@ use App\prescription\utilities\UserType;
 use App\prescription\mapper\PatientPrescriptionMapper;
 
 use App\Http\Requests\DoctorLoginRequest;
+
+use App\prescription\mapper\HospitalMapper;
 
 use Log;
 use Input;
@@ -338,8 +341,8 @@ class DoctorController extends Controller
 
                     $loginDetails['doctor']['id'] = $userId;
                     $loginDetails['doctor']['name'] = $userName;
-                    //$loginDetails['doctor']['details'] = "MBBS, 10 Year, Chennai";
-                    $loginDetails['doctor']['details'] = $doctorDetails;
+                    $loginDetails['doctor']['details'] = "MBBS MD (Cardiology) 10 years";
+                    //$loginDetails['doctor']['details'] = $doctorDetails;
 
                     $jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::USER_LOGIN_SUCCESS));
                     $jsonResponse->setObj($loginDetails);
@@ -681,6 +684,7 @@ class DoctorController extends Controller
 
     public function savePatientProfile(Request $patientProfileRequest)
     {
+        //return "HI";
         $patientProfileVM = null;
         $status = true;
         $jsonResponse = null;
@@ -1231,7 +1235,7 @@ class DoctorController extends Controller
                 if(( Auth::user()->hasRole('hospital')) &&  (Auth::user()->delete_status==1) )
                     {
                         $LoginUserType=Session::put('LoginUserType', 'hospital');
-                        return redirect('hospital/'.Auth::user()->id.'/dashboard');
+                        return redirect('fronthospital/'.Auth::user()->id.'/dashboard');
                     }
                     else if( Auth::user()->hasRole('doctor')  && (Auth::user()->delete_status==1) )
                     {
@@ -1307,5 +1311,184 @@ class DoctorController extends Controller
             $prescriptionResult = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FAILURE));
         }
 
+    }
+
+    public function getPatientsByHospitalForFront($hospitalId)
+    {
+        //dd('HI');
+        $patients = null;
+        try
+        {
+            $patients = HospitalServiceFacade::getPatientsByHospital($hospitalId);
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        return view('portal.hospital-patients',compact('patients'));
+    }
+
+
+//VIMAL
+
+    public function getProfile($hospitalId)
+    {
+        $hospitalProfile = null;
+        //dd('Inside get profile function in pharmacy controller');
+
+        try
+        {
+            $hospitalProfile = $this->hospitalService->getProfile($hospitalId);
+            //dd($hospitalProfile);
+        }
+        catch(HospitalException $profileExc)
+        {
+            //dd($hospitalExc);
+            $errorMsg = $profileExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($profileExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        return view('portal.hospital-profile',compact('hospitalProfile'));
+
+        //return $pharmacyProfile;
+    }
+
+    public function editProfile($hospitalId, HelperService $helperService)
+    {
+        $hospitalProfile = null;
+        //dd('Inside get profile function in pharmacy controller');
+
+        try
+        {
+            $hospitalProfile = $this->hospitalService->getProfile($hospitalId);
+            //dd($hospitalProfile);
+            $cities = $helperService->getCities();
+            //dd($cities);
+        }
+        catch(HospitalException $profileExc)
+        {
+            //dd($hospitalExc);
+            $errorMsg = $profileExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($profileExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        return view('portal.hospital-editprofile',compact('hospitalProfile','cities'));
+
+        //return $pharmacyProfile;
+    }
+
+
+    public function editHospital(Request $hospitalRequest)
+    {
+        $hospitalId = Auth::user()->id;
+        $hospitalProfile = $this->hospitalService->getProfile($hospitalId);
+        $message= "Profile Details Updated Successfully";
+        return view('portal.hospital-profile',compact('hospitalProfile','message'));
+
+        $pharmacyVM = null;
+        $status = true;
+        //$string = ""
+        //dd($pharmacyRequest);
+        try
+        {
+            /*
+            //dd('Inside edit pharmacy');
+            $pharmacy = array('pharmacy_name' => 'MedPlus', 'address' => 'test', 'city' => 15, 'country' => 99,
+                'telephone' => '5464645654', 'email' => 'medplys@gmail.com');
+            //$pharmacyVM = PharmacyMapper::setPhamarcyDetails($pharmacyRequest);
+            */
+            $hospitalVM = HospitalMapper::setPhamarcyDetails($hospitalRequest);
+            //dd($pharmacyVM);
+            $status = $this->pharmacyService->editPharmacy($pharmacyVM);
+            //dd($status);
+
+            /*if($status)
+            {
+                //$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SAVE_SUCCESS));
+            }*/
+
+            if($status) {
+                $pharmacyId=$pharmacyVM->getPharmacyId();
+                //dd($pharmacyId);
+                $pharmacyProfile = $this->pharmacyService->getProfile($pharmacyId);
+                $message= "Profile Details Updated Successfully";
+            }
+
+        }
+        catch(PharmacyException $profileExc)
+        {
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SAVE_ERROR));
+            $errorMsg = $profileExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($profileExc);
+            Log::error($msg);
+            //return $jsonResponse;
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SAVE_ERROR));
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        // dd($pharmacyProfile);
+        return view('portal.pharmacy-profile',compact('pharmacyProfile','message'));
+
+        //return $jsonResponse;
+    }
+
+
+    public function editChangePassword($pharmacyId)
+    {
+        $pharmacyProfile = null;
+        //dd('Inside get profile function in pharmacy controller');
+
+        try
+        {
+            //$pharmacyProfile = $this->pharmacyService->getProfile($pharmacyId);
+            //dd($pharmacyProfile);
+        }
+        catch(PharmacyException $profileExc)
+        {
+            //dd($hospitalExc);
+            $errorMsg = $profileExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($profileExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        return view('portal.hospital-changepassword');
+
+        //return $pharmacyProfile;
     }
 }

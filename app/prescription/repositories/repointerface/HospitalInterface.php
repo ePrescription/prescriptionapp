@@ -54,4 +54,6 @@ interface HospitalInterface {
     public function getLabTestDetails($labTestId);
     public function savePatientLabTests(PatientLabTestViewModel $patientLabTestVM);
 
+    //Hospital
+    public function getProfile($hospitalId);
 }

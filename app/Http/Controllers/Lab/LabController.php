@@ -8,6 +8,10 @@ use App\prescription\services\HospitalService;
 use App\prescription\services\LabService;
 use App\prescription\utilities\Exception\LabException;
 use App\prescription\utilities\Exception\AppendMessage;
+use App\prescription\common\ResponseJson;
+use App\prescription\utilities\ErrorEnum\ErrorEnum;
+
+
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -485,13 +489,15 @@ class LabController extends Controller
 
         try
         {
-            $labTestDetails = $hospitalService->getLabTestDetails($labTestId);
+            //$labTestDetails = $hospitalService->getLabTestDetails($labTestId);
             //dd($labTestDetails);
 
+            $labMailInfo = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::LAB_DETAILS_SUCCESS));
+            $labMailInfo->setObj("Mail Sent Successfully");
         }
         catch(LabException $labExc)
         {
-            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::LAB_DETAILS_ERROR));
             $errorMsg = $labExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($labExc);
             Log::error($msg);
@@ -499,12 +505,13 @@ class LabController extends Controller
         catch(Exception $exc)
         {
             //dd($exc);
-            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::LAB_DETAILS_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
         }
 
-        return view('portal.patient-labtest-details',compact('labTestDetails'));
+        return $labMailInfo;
+        //return view('portal.patient-labtest-details',compact('labTestDetails'));
     }
 
     /**
@@ -522,13 +529,16 @@ class LabController extends Controller
 
         try
         {
-            $labTestDetails = $hospitalService->getLabTestDetails($labTestId);
+            //$labTestDetails = $hospitalService->getLabTestDetails($labTestId);
             //dd($labTestDetails);
+
+            $labSMSInfo = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::LAB_DETAILS_SUCCESS));
+            $labSMSInfo->setObj("SMS Sent Successfully");
 
         }
         catch(LabException $labExc)
         {
-            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::LAB_DETAILS_ERROR));
             $errorMsg = $labExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($labExc);
             Log::error($msg);
@@ -536,11 +546,12 @@ class LabController extends Controller
         catch(Exception $exc)
         {
             //dd($exc);
-            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::LAB_DETAILS_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
         }
 
-        return view('portal.patient-labtest-details',compact('labTestDetails'));
+        return $labSMSInfo;
+        //return view('portal.patient-labtest-details',compact('labTestDetails'));
     }
 }

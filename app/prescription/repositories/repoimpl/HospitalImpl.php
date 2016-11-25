@@ -239,7 +239,7 @@ class HospitalImpl implements HospitalInterface{
 
         try
         {
-            $query = DB::table('hospital_patient as hp')->select('p.id', 'p.patient_id', 'p.pid', 'p.name', 'p.gender', 'p.telephone',
+            $query = DB::table('hospital_patient as hp')->select('p.id', 'p.patient_id', 'p.pid', 'p.name', 'p.age', 'p.gender', 'p.telephone',
                             'h.hospital_id', 'h.hospital_name');
             $query->join('hospital as h', 'h.hospital_id', '=', 'hp.hospital_id');
             $query->join('patient as p', 'p.patient_id', '=', 'hp.patient_id');
@@ -922,6 +922,80 @@ class HospitalImpl implements HospitalInterface{
         return $patientLabTests;
     }
 
+
+    /**
+     * Save patient profile
+     * @param $patientProfileVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function saveNewPatientProfile(PatientProfileViewModel $patientProfileVM)
+    {
+        $status = true;
+        $user = null;
+        $patientId = null;
+        $patient = null;
+
+        try
+        {
+            $patientId = $patientProfileVM->getPatientId();
+            //dd($patientId);
+
+            if($patientId == 0)
+            {
+                $user = $this->registerNewPatient($patientProfileVM);
+                $this->attachPatientRole($user);
+                $patient = new Patient();
+            }
+            else
+            {
+                $patient = Patient::where('patient_id', '=', $patientId)->first();
+                if(!is_null($patient))
+                {
+                    //$user = User::find($companyId);
+                    $user = $this->registerNewPatient($patientProfileVM);
+                }
+            }
+
+            $patient->name = $patientProfileVM->getName();
+            $patient->address = $patientProfileVM->getAddress();
+            //$patient->city = $patientProfileVM->getCity();
+            //$patient->country = $patientProfileVM->getCountry();
+            $patient->pid = 'PID'.crc32(uniqid(rand()));
+            $patient->telephone = $patientProfileVM->getTelephone();
+            $patient->email = $patientProfileVM->getEmail();
+            //$patient->patient_photo = $patientProfileVM->getPatientPhoto();
+            //$patient->dob = $patientProfileVM->getDob();
+            //$patient->age = $patientProfileVM->getPlaceOfBirth();
+            //$patient->nationality = $patientProfileVM->getNationality();
+            //$patient->gender = $patientProfileVM->getGender();
+            //$patient->married = $patientProfileVM->getMaritalStatus();
+
+            $patient->created_by = $patientProfileVM->getCreatedBy();
+            $patient->created_at = $patientProfileVM->getCreatedAt();
+            $patient->updated_by = $patientProfileVM->getUpdatedBy();
+            $patient->updated_at = $patientProfileVM->getUpdatedAt();
+
+            $user->patient()->save($patient);
+        }
+        catch(QueryException $queryEx)
+        {
+            dd($queryEx);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_PROFILE_SAVE_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            dd($exc);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_PROFILE_SAVE_ERROR, $exc);
+        }
+
+        return $status;
+    }
+
     /**
      * Save patient profile
      * @param $patientProfileVM
@@ -959,18 +1033,18 @@ class HospitalImpl implements HospitalInterface{
             }
 
             $patient->name = $patientProfileVM->getName();
-            $patient->address = $patientProfileVM->getAddress();
-            $patient->city = $patientProfileVM->getCity();
-            $patient->country = $patientProfileVM->getCountry();
+            //$patient->address = $patientProfileVM->getAddress();
+            //$patient->city = $patientProfileVM->getCity();
+            //$patient->country = $patientProfileVM->getCountry();
             $patient->pid = 'PID'.crc32(uniqid(rand()));
             $patient->telephone = $patientProfileVM->getTelephone();
             $patient->email = $patientProfileVM->getEmail();
-            $patient->patient_photo = $patientProfileVM->getPatientPhoto();
-            $patient->dob = $patientProfileVM->getDob();
-            $patient->age = $patientProfileVM->getPlaceOfBirth();
-            $patient->nationality = $patientProfileVM->getNationality();
-            $patient->gender = $patientProfileVM->getGender();
-            $patient->married = $patientProfileVM->getMaritalStatus();
+            //$patient->patient_photo = $patientProfileVM->getPatientPhoto();
+            //$patient->dob = $patientProfileVM->getDob();
+            //$patient->age = $patientProfileVM->getPlaceOfBirth();
+            //$patient->nationality = $patientProfileVM->getNationality();
+            //$patient->gender = $patientProfileVM->getGender();
+            //$patient->married = $patientProfileVM->getMaritalStatus();
 
             $patient->created_by = $patientProfileVM->getCreatedBy();
             $patient->created_at = $patientProfileVM->getCreatedAt();
@@ -981,12 +1055,13 @@ class HospitalImpl implements HospitalInterface{
         }
         catch(QueryException $queryEx)
         {
-            //dd($queryEx);
+            dd($queryEx);
             $status = false;
             throw new HospitalException(null, ErrorEnum::PATIENT_PROFILE_SAVE_ERROR, $queryEx);
         }
         catch(Exception $exc)
         {
+            dd($exc);
             $status = false;
             throw new HospitalException(null, ErrorEnum::PATIENT_PROFILE_SAVE_ERROR, $exc);
         }
@@ -1200,5 +1275,42 @@ class HospitalImpl implements HospitalInterface{
     public function test()
     {
         //dd('Inside test function in implementation');
+    }
+
+
+
+    public function getProfile($hospitalId)
+    {
+        $hospitalProfile = null;
+
+        try
+        {
+            /*$pharmacyProfile = Pharmacy::where('pharmacy_id', '=', $pharmacyId)
+                ->get(array('id', 'pharmacy_id', 'name', 'address', ''))->toArray();*/
+            //$pharmacyProfile = Pharmacy::where('pharmacy_id', $pharmacyId)->get();
+
+            $query = DB::table('hospital as h')->join('cities as c', 'c.id', '=', 'h.city');
+            $query->join('countries as co', 'co.id', '=', 'h.country');
+            $query->where('h.hospital_id', '=', $hospitalId);
+            $query->select('h.id', 'h.hospital_id', 'h.hospital_name as hospital_name', 'h.address', 'c.id as city_id', 'c.city_name',
+                'co.id as country_id', 'co.name as country_name', 'h.hid', 'h.telephone', 'h.email');
+
+            //dd($query->toSql());
+            $hospitalProfile = $query->get();
+            //dd($pharmacyProfile);
+
+            //dd($pharmacyProfile);
+        }
+        catch(QueryException $queryExc)
+        {
+            //dd($queryExc);
+            throw new HospitalException(null, ErrorEnum::PHARMACY_PROFILE_VIEW_ERROR, $queryExc);
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PHARMACY_PROFILE_VIEW_ERROR, $exc);
+        }
+
+        return $hospitalProfile;
     }
 }
