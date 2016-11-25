@@ -38,6 +38,8 @@ class PatientProfileMapper
         $profileVM->setNationality(property_exists($profile, 'nationality') ? $profile->nationality : null);
         $profileVM->setGender($profile->gender);
         $profileVM->setMaritalStatus(property_exists($profile, 'maritalStatus') ? $profile->maritalStatus : null);
+        $profileVM->setHospitalId(property_exists($profile, 'hospitalId') ? $profile->hospitalId : null);
+        $profileVM->setDoctorId(property_exists($profile, 'doctorId') ? $profile->doctorId : null);
 
         $profileVM->setCreatedBy($userName);
         $profileVM->setUpdatedBy($userName);

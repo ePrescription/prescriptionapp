@@ -1010,10 +1010,13 @@ class HospitalImpl implements HospitalInterface{
         $user = null;
         $patientId = null;
         $patient = null;
+        $hospitalPatient = null;
+        $hospitalId = null;
 
         try
         {
             $patientId = $patientProfileVM->getPatientId();
+            $hospitalId = $patientProfileVM->getHospitalId();
             //dd($patientId);
 
             if($patientId == 0)
@@ -1052,6 +1055,11 @@ class HospitalImpl implements HospitalInterface{
             $patient->updated_at = $patientProfileVM->getUpdatedAt();
 
             $user->patient()->save($patient);
+
+            $user->patienthospitals()->attach($hospitalId, array('created_by' => $patientProfileVM->getCreatedBy(),
+                'updated_by' => $patientProfileVM->getUpdatedBy()));
+
+
         }
         catch(QueryException $queryEx)
         {

@@ -26,6 +26,9 @@ class PatientProfileViewModel
     private $nationality;
     private $gender;
     private $maritalStatus;
+    private $hospitalId;
+    private $doctorId;
+
     private $createdBy;
     private $updatedBy;
     private $createdAt;
@@ -269,6 +272,38 @@ class PatientProfileViewModel
     public function setMaritalStatus($maritalStatus)
     {
         $this->maritalStatus = $maritalStatus;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHospitalId()
+    {
+        return $this->hospitalId;
+    }
+
+    /**
+     * @param mixed $hospitalId
+     */
+    public function setHospitalId($hospitalId)
+    {
+        $this->hospitalId = $hospitalId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDoctorId()
+    {
+        return $this->doctorId;
+    }
+
+    /**
+     * @param mixed $doctorId
+     */
+    public function setDoctorId($doctorId)
+    {
+        $this->doctorId = $doctorId;
     }
 
     /**

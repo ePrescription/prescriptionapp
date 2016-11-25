@@ -77,4 +77,11 @@ class User extends Model implements AuthenticatableContract,
     {
         return $this->hasMany('App\prescription\model\entities\DoctorAppointments', 'doctor_id');
     }
+
+    public function patienthospitals()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\Patient', 'hospital_patient', 'patient_id', 'hospital_id')
+            ->withPivot('created_by', 'updated_by')
+            ->withTimestamps();
+    }
 }

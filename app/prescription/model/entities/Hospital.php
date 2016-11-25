@@ -18,4 +18,16 @@ class Hospital extends Model
     {
         return $this->belongsTo('App\User', 'hospital_id');
     }
+
+    /*public function patients()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\Patient', 'hospital_patient', 'hospital_id', 'patient_id')
+            ->withPivot('created_by', 'updated_by')
+            ->withTimestamps();
+    }*/
+
+    /*public function patients()
+    {
+        return $this->belongsToMany('App\User', 'hospital_patient', 'hospital_id', 'patient_id');
+    }*/
 }
