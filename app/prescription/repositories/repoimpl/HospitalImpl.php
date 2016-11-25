@@ -937,10 +937,13 @@ class HospitalImpl implements HospitalInterface{
         $user = null;
         $patientId = null;
         $patient = null;
+        $hospitalPatient = null;
+        $hospitalId = null;
 
         try
         {
             $patientId = $patientProfileVM->getPatientId();
+            $hospitalId = $patientProfileVM->getHospitalId();
             //dd($patientId);
 
             if($patientId == 0)
@@ -961,17 +964,17 @@ class HospitalImpl implements HospitalInterface{
 
             $patient->name = $patientProfileVM->getName();
             $patient->address = $patientProfileVM->getAddress();
-            //$patient->city = $patientProfileVM->getCity();
-            //$patient->country = $patientProfileVM->getCountry();
+            $patient->city = $patientProfileVM->getCity();
+            $patient->country = $patientProfileVM->getCountry();
             $patient->pid = 'PID'.crc32(uniqid(rand()));
             $patient->telephone = $patientProfileVM->getTelephone();
             $patient->email = $patientProfileVM->getEmail();
-            //$patient->patient_photo = $patientProfileVM->getPatientPhoto();
-            //$patient->dob = $patientProfileVM->getDob();
-            //$patient->age = $patientProfileVM->getPlaceOfBirth();
-            //$patient->nationality = $patientProfileVM->getNationality();
-            //$patient->gender = $patientProfileVM->getGender();
-            //$patient->married = $patientProfileVM->getMaritalStatus();
+            $patient->patient_photo = $patientProfileVM->getPatientPhoto();
+            $patient->dob = $patientProfileVM->getDob();
+            $patient->age = $patientProfileVM->getPlaceOfBirth();
+            $patient->nationality = $patientProfileVM->getNationality();
+            $patient->gender = $patientProfileVM->getGender();
+            $patient->married = $patientProfileVM->getMaritalStatus();
 
             $patient->created_by = $patientProfileVM->getCreatedBy();
             $patient->created_at = $patientProfileVM->getCreatedAt();
@@ -979,16 +982,19 @@ class HospitalImpl implements HospitalInterface{
             $patient->updated_at = $patientProfileVM->getUpdatedAt();
 
             $user->patient()->save($patient);
+
+            $user->patienthospitals()->attach($hospitalId, array('created_by' => $patientProfileVM->getCreatedBy(),
+                'updated_by' => $patientProfileVM->getUpdatedBy()));
         }
         catch(QueryException $queryEx)
         {
-            dd($queryEx);
+            //dd($queryEx);
             $status = false;
             throw new HospitalException(null, ErrorEnum::PATIENT_PROFILE_SAVE_ERROR, $queryEx);
         }
         catch(Exception $exc)
         {
-            dd($exc);
+            //dd($exc);
             $status = false;
             throw new HospitalException(null, ErrorEnum::PATIENT_PROFILE_SAVE_ERROR, $exc);
         }
