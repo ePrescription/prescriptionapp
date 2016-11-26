@@ -84,6 +84,10 @@ Route::group(array('prefix' => 'fronthospital', 'namespace' => 'Doctor'), functi
     });
 
     Route::get('rest/api/{hospitalId}/patients', array('as' => 'hospital.patients', 'uses' => 'DoctorController@getPatientsByHospitalForFront'));
+
+    Route::get('rest/api/{hospitalId}/addpatient', array('as' => 'hospital.addpatient', 'uses' => 'DoctorController@addPatientsByHospitalForFront'));
+    Route::post('rest/api/{hospitalId}/savepatient', array('as' => 'hospital.savepatient', 'uses' => 'DoctorController@savePatientsByHospitalForFront'));
+
     Route::get('rest/api/{hospitalId}/profile', array('as' => 'hospital.viewprofile', 'uses' => 'DoctorController@getProfile'));
 
     Route::get('rest/api/{hospitalId}/editprofile', array('as' => 'hospital.editprofile', 'uses' => 'DoctorController@editProfile'));

@@ -1493,4 +1493,82 @@ class DoctorController extends Controller
 
         //return $pharmacyProfile;
     }
+
+
+    public function addPatientsByHospitalForFront($hospitalId)
+    {
+        //dd('HI');
+        $patients = null;
+        try
+        {
+            //$patients = HospitalServiceFacade::getPatientsByHospital($hospitalId);
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        return view('portal.hospital-addpatient');
+    }
+
+
+    public function savePatientsByHospitalForFront(Request $patientProfileRequest)
+    {
+        //dd('HI');
+        //return "HI";
+        $patientProfileVM = null;
+        $status = true;
+        $jsonResponse = null;
+        //return $patientProfileRequest->all();
+
+        try
+        {
+            $patientProfileVM = PatientProfileMapper::setPatientProfile($patientProfileRequest);
+            $status = HospitalServiceFacade::savePatientProfile($patientProfileVM);
+
+            if($status)
+            {
+                //$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_SUCCESS));
+
+                $msg = "Patient Profile Added Successfully.";
+                return redirect('fronthospital/rest/api/'.Auth::user()->id.'/addpatient')->with('success',$msg);
+            }
+            else
+            {
+                $msg = "Patient Details Invalid / Incorrect! Try Again.";
+                return redirect('fronthospital/rest/api/'.Auth::user()->id.'/addpatient')->with('message',$msg);
+            }
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_ERROR));
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
+            //return $jsonResponse;
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SAVE_ERROR));
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        $msg = "Patient Details Invalid / Incorrect! Try Again.";
+        return redirect('fronthospital/rest/api/'.Auth::user()->id.'/addpatient')->with('message',$msg);
+        //return $jsonResponse;
+
+    }
 }

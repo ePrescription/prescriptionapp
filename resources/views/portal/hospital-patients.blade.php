@@ -38,10 +38,10 @@ $profile_menu="0";
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title" style="line-height:30px;">Pharmacy Patients Details List</h3>
-                            <!--
-                            <a href="doctorcreate.html" style="float:right;"><button type="submit" class="btn btn-success"><i class="fa fa-edit"></i><b> Create New Doctor</b></button></a>
-                            -->
+                            <h3 class="box-title" style="line-height:30px;">Hospital Patients Details List</h3>
+
+                            <a href="{{URL::to('/')}}/fronthospital/rest/api/{{Auth::user()->id}}/addpatient" style="float:right;"><button type="submit" class="btn btn-success"><i class="fa fa-edit"></i><b> Create New Patient</b></button></a>
+
                         </div><!-- /.box-header -->
                         <div class="box-body">
                             <div>
