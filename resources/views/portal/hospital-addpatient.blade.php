@@ -6,8 +6,8 @@
 @stop
 <?php
 $dashboard_menu="0";
-$patient_menu="0";
-$profile_menu="1";
+$patient_menu="1";
+$profile_menu="0";
 ?>
 @section('content')
 <div class="wrapper">
@@ -45,7 +45,24 @@ $profile_menu="1";
                             -->
                         </div><!-- /.box-header -->
                         <div class="box-body">
-                            <!-- form start -->
+
+                            @if (session()->has('message'))
+                                <div class="col_full login-title">
+                                <span style="color:red;">
+                                    <b>{{session('message')}}</b>
+                                </span>
+                                </div>
+                            @endif
+
+                            @if (session()->has('success'))
+                                <div class="col_full login-title">
+                                <span style="color:green;">
+                                    <b>{{session('success')}}</b>
+                                </span>
+                                </div>
+                                @endif
+
+                                        <!-- form start -->
                             <form action="{{URL::to('/')}}/fronthospital/rest/api/{{Auth::user()->id}}/savepatient" role="form" method="POST">
                             <input type="hidden" name="hospitalId" value="{{Auth::user()->id}}" required="required" />
                             <input type="hidden" name="patientId" value="0" required="required" />
