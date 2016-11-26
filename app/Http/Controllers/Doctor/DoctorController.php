@@ -19,6 +19,7 @@ use App\prescription\utilities\UserType;
 use App\prescription\mapper\PatientPrescriptionMapper;
 
 use App\Http\Requests\DoctorLoginRequest;
+use App\Http\Requests\PatientProfileRequest;
 
 use App\prescription\mapper\HospitalMapper;
 
@@ -682,7 +683,8 @@ class DoctorController extends Controller
      * @author Baskar
      */
 
-    public function savePatientProfile(Request $patientProfileRequest)
+    //public function savePatientProfile(Request $patientProfileRequest)
+    public function savePatientProfile(PatientProfileRequest $patientProfileRequest)
     {
         //return "HI";
         $patientProfileVM = null;

@@ -8,6 +8,7 @@ class ErrorEnum extends Enum{
     const SUCCESS = 1;
     const FAILURE = 0;
     const USER_NOT_EXIST = 2;
+    const VALIDATION_ERRORS = 3;
     const UNKNOWN_ERROR = 100;
 
     //const USER_NOT_FOUND_ERROR = 101;

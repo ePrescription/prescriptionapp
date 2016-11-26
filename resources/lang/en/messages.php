@@ -8,6 +8,7 @@
 
     return[
         "0" => "We are facing some technical issues. Please contact the support team",
+        "3" => "Validation errors",
 
         "101" => "Unable to retrieve hospital list",
         "102" => "Hospital list retrieved successfully",
