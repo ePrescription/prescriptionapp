@@ -170,8 +170,9 @@ class HospitalImpl implements HospitalInterface{
             $query->join('users as usr2', 'usr2.id', '=', 'hd.doctor_id');
             $query->join('doctor as d', 'd.doctor_id', '=', 'hd.doctor_id');
             $query->where('usr2.delete_status', '=', 1);
+            $query->where('hd.hospital_id', '=', $hospitalId);
             $query->select('d.id as id', 'd.doctor_id as doctorId', 'd.name as doctorName', 'd.did as doctorUniqueId');
-
+            //dd($query->toSql());
             $doctors = $query->get();
         }
         catch(QueryException $queryEx)
@@ -316,7 +317,7 @@ class HospitalImpl implements HospitalInterface{
 
         try
         {
-            $query = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'p.age', 'p.gender', 'p.telephone');
+            $query = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'p.age', 'p.gender', 'p.email', 'p.telephone');
             $query->join('users as usr', 'usr.id', '=', 'p.patient_id');
             $query->where('p.patient_id', '=', $patientId);
             $query->where('usr.delete_status', '=', 1);
@@ -669,6 +670,7 @@ class HospitalImpl implements HospitalInterface{
 
     public function saveNewAppointment(NewAppointmentViewModel $appointmentVM)
     {
+        //dd($appointmentVM);
         $status = true;
         $patientPrescription = null;
 

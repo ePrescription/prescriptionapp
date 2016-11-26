@@ -44,6 +44,22 @@ $profile_menu="0";
 
                         </div><!-- /.box-header -->
                         <div class="box-body">
+                            @if (session()->has('message'))
+                                <div class="col_full login-title">
+                                <span style="color:red;">
+                                    <b>{{session('message')}}</b>
+                                </span>
+                                </div>
+                            @endif
+
+                            @if (session()->has('success'))
+                                <div class="col_full login-title">
+                                <span style="color:green;">
+                                    <b>{{session('success')}}</b>
+                                </span>
+                                </div>
+                            @endif
+
                             <div>
                                 PID ( Patient Identification)
                             </div>
@@ -67,6 +83,7 @@ $profile_menu="0";
                                     <td>{{$patient->age}}</td>
                                     <td>@if($patient->gender==1) Male @else Female @endif</td>
                                     <td>
+                                        <a href="{{URL::to('/')}}/fronthospital/rest/api/{{Auth::user()->id}}/patient/{{$patient->patient_id}}/addappointment" style="float:right;">Appointment</a>
 <!--
                                         <a href="#doctorview.html"><button type="submit" class="btn btn-success btn-xs"><i class="fa fa-eye"></i> View</button></a>
 -->

@@ -1571,4 +1571,87 @@ class DoctorController extends Controller
         //return $jsonResponse;
 
     }
+
+
+
+    public function addAppointmentByHospitalForFront($hospitalId,$patientId)
+    {
+        //dd('HI');
+        $doctors = null;
+        $patientProfile = null;
+        try
+        {
+            //dd($patientId);
+            $doctors = HospitalServiceFacade::getDoctorsByHospitalId($hospitalId);
+            //$patientDetails = HospitalServiceFacade::getPatientDetailsById($patientId);
+            $patientProfile = HospitalServiceFacade::getPatientProfile($patientId);
+            //dd($doctors);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            //dd($hospitalExc);
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        return view('portal.hospital-addappointment',compact('doctors','patientProfile'));
+    }
+
+
+    public function saveAppointmentByHospitalForFront(Request $appointmentRequest)
+    {
+        //dd($appointmentRequest);
+        $appointmentsVM = null;
+        $status = true;
+        $jsonResponse = null;
+
+        try
+        {
+            $appointmentsVM = PatientProfileMapper::setPatientAppointment($appointmentRequest);
+            $status = HospitalServiceFacade::saveNewAppointment($appointmentsVM);
+
+            if($status)
+            {
+                //$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_SUCCESS));
+
+                $msg = "Patient Appointment Added Successfully.";
+                return redirect('fronthospital/rest/api/'.Auth::user()->id.'/patients')->with('success',$msg);
+            }
+            else
+            {
+                $msg = "Patient Appointment Details Invalid / Incorrect! Try Again.";
+                return redirect('fronthospital/rest/api/'.Auth::user()->id.'/patients')->with('message',$msg);
+            }
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            dd($hospitalExc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_ERROR));
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
+            //return $jsonResponse;
+        }
+        catch(Exception $exc)
+        {
+            dd($exc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SAVE_ERROR));
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        $msg = "Patient Appointment Details Invalid / Incorrect! Try Again.";
+        return redirect('fronthospital/rest/api/'.Auth::user()->id.'/patients')->with('message',$msg);
+        //return $jsonResponse;
+
+    }
 }
