@@ -20,6 +20,7 @@ use App\prescription\mapper\PatientPrescriptionMapper;
 
 use App\Http\Requests\DoctorLoginRequest;
 use App\Http\Requests\PatientProfileRequest;
+use App\Http\Requests\NewAppointmentRequest;
 
 use App\prescription\mapper\HospitalMapper;
 
@@ -1117,7 +1118,8 @@ class DoctorController extends Controller
      * @author Baskar
      */
 
-    public function saveNewAppointment(Request $appointmentRequest)
+    //public function saveNewAppointment(Request $appointmentRequest)
+    public function saveNewAppointment(NewAppointmentRequest $appointmentRequest)
     {
         $appointmentsVM = null;
         $status = true;
