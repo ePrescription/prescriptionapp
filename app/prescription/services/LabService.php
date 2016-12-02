@@ -201,4 +201,26 @@ class LabService
 
         return $labTests;
     }
+
+
+
+    public function getTestsForDoctor($doctorId, $hospitalId)
+    {
+        $labTests = null;
+
+        try
+        {
+            $labTests = $this->labRepo->getTestsForDoctor($doctorId, $hospitalId);
+        }
+        catch(LabException $profileExc)
+        {
+            throw $profileExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new LabException(null, ErrorEnum::LAB_TESTS_LIST_ERROR, $exc);
+        }
+
+        return $labTests;
+    }
 }

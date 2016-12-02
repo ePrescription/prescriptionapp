@@ -1267,6 +1267,11 @@ class HospitalImpl implements HospitalInterface{
                 //$hospitalId = DB::table('hospital_lab as hl')->where('hl.lab_id', $userId)->select('hl.hospital_id')->get();
                 $query = DB::table('hospital_lab as hl')->where('hl.lab_id', $userId)->select('hl.hospital_id');
             }
+            elseif(UserType::USERTYPE_DOCTOR == $userTypeId)
+            {
+                //$hospitalId = DB::table('hospital_lab as hl')->where('hl.lab_id', $userId)->select('hl.hospital_id')->get();
+                $query = DB::table('hospital_doctor as hd')->where('hd.doctor_id', $userId)->select('hd.hospital_id');
+            }
 
             //dd($query->toSql());
             $hospitalId = $query->get();

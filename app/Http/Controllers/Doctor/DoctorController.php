@@ -18,6 +18,8 @@ use App\prescription\utilities\Exception\AppendMessage;
 use App\prescription\utilities\UserType;
 use App\prescription\mapper\PatientPrescriptionMapper;
 
+use App\prescription\model\entities\HospitalDoctor;
+
 use App\Http\Requests\DoctorLoginRequest;
 use App\Http\Requests\PatientProfileRequest;
 use App\Http\Requests\NewAppointmentRequest;
@@ -1243,9 +1245,14 @@ class DoctorController extends Controller
                     }
                     else if( Auth::user()->hasRole('doctor')  && (Auth::user()->delete_status==1) )
                     {
+
                         $LoginUserType=Session::put('LoginUserType', 'doctor');
 
-                        Session::put('LoginUserHospital', '3');
+                        $doctorid = Auth::user()->id;
+                        //dd($doctorid);
+                        $hospitalId = HospitalServiceFacade::getHospitalId(UserType::USERTYPE_DOCTOR, $doctorid);
+                        //dd($hospitalId);
+                        Session::put('LoginUserHospital', $hospitalId[0]->hospital_id);
                         return redirect('doctor/'.Auth::user()->id.'/dashboard');
                     }
                     else if( Auth::user()->hasRole('patient') && (Auth::user()->delete_status==1) )
@@ -1655,5 +1662,37 @@ class DoctorController extends Controller
         return redirect('fronthospital/rest/api/'.Auth::user()->id.'/patients')->with('message',$msg);
         //return $jsonResponse;
 
+    }
+
+
+
+    public function getPatientsByDoctorForFront($doctorId,$hospitalId)
+    {
+        //dd('HI');
+        $patients = null;
+        try
+        {
+            //$hospitalInfo = HospitalDoctor::where('doctor_id','=',$doctorId)->first();
+            //$hospitalId=$hospitalInfo['hospital_id'];
+
+            //dd($hospitalId);
+            $patients = HospitalServiceFacade::getPatientsByHospital($hospitalId);
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        return view('portal.doctor-patients',compact('patients'));
     }
 }

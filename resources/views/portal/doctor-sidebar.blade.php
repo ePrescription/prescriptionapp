@@ -22,23 +22,23 @@
     <!-- sidebar menu: : style can be found in sidebar.less -->
     <ul class="sidebar-menu">
         <li class="header">MAIN NAVIGATION</li>
-        <li class="active treeview">
-            <a href="{{URL::to('/')}}/patient/{{Auth::user()->id}}/dashboard">
+        <li  class="@if($dashboard_menu==1) active @endif treeview">
+            <a href="{{URL::to('/')}}/doctor/{{Auth::user()->id}}/dashboard">
                 <i class="fa fa-dashboard"></i> <span>Dashboard</span>
             </a>
         </li>
-        <li class="treeview">
-            <a href="#doctorslist.html">
+        <li  class="@if($patient_menu==1) active @endif treeview">
+            <a href="{{URL::to('/')}}/doctor/rest/api/{{Auth::user()->id}}/hospital/{{Session::get('LoginUserHospital')}}/patients">
                 <i class="fa fa-users"></i> <span>Patients</span>
             </a>
         </li>
-        <li class="treeview">
-            <a href="#doctorslist.html">
+        <li  class="@if($prescription_menu==1) active @endif treeview">
+            <a href="{{URL::to('/')}}/doctor/rest/api/{{Auth::user()->id}}/hospital/{{Session::get('LoginUserHospital')}}/prescriptions">
                 <i class="fa fa-pencil-square-o"></i> <span>Prescriptions</span>
             </a>
         </li>
-        <li class="treeview">
-            <a href="#patientslist.html">
+        <li  class="@if($lab_menu==1) active @endif treeview">
+            <a href="{{URL::to('/')}}/doctor/rest/api/{{Auth::user()->id}}/hospital/{{Session::get('LoginUserHospital')}}/labtests">
                 <i class="fa fa-flask"></i> <span>Lab Tests</span>
             </a>
         </li>

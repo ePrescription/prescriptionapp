@@ -269,5 +269,34 @@ class PharmacyImpl implements PharmacyInterface
         return $prescriptions;
     }
 
-    
+
+
+
+    public function getPrescriptionListForDoctor($doctorId, $hospitalId)
+    {
+        $prescriptions = null;
+
+        try
+        {
+
+            $query = DB::table('patient as p')->join('patient_prescription as pp', 'pp.patient_id', '=', 'p.patient_id');
+            $query->join('hospital_doctor as hp', 'hp.hospital_id', '=', 'pp.hospital_id');
+            $query->where('hp.hospital_id', '=', $hospitalId);
+            $query->where('hp.doctor_id', '=', $doctorId);
+            $query->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'pp.id as prescription_id', 'pp.unique_id as prid', 'pp.prescription_date');
+
+            $prescriptions = $query->get();
+            //dd($prescriptions);
+        }
+        catch(QueryException $queryEx)
+        {
+            throw new PharmacyException(null, ErrorEnum::PRESCRIPTION_LIST_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            throw new PharmacyException(null, ErrorEnum::PRESCRIPTION_LIST_ERROR, $exc);
+        }
+
+        return $prescriptions;
+    }
 }

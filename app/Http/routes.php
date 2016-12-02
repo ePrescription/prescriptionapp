@@ -203,7 +203,44 @@ Route::group(['prefix' => 'doctor'], function()
         return view('portal.doctor-dashboard');
     });
 
+    Route::group(['namespace' => 'Doctor'], function()
+    {
 
+        Route::get('rest/api/{doctorId}/hospital/{hospitalId}/patients', array('as' => 'doctor.patients', 'uses' => 'DoctorController@getPatientsByDoctorForFront'));
+
+    });
+
+
+    Route::group(['namespace' => 'Pharmacy'], function()
+    {
+        Route::get('rest/api/{doctorId}/hospital/{hospitalId}/prescriptions', array('as' => 'doctor.prescriptions', 'uses' => 'PharmacyController@getPrescriptionListForDoctor'));
+        Route::get('rest/api/prescription/{prescriptionId}', array('as' => 'doctor.prescriptiondetails', 'uses' => 'PharmacyController@getPrescriptionDetailsForDoctor'));
+        Route::get('rest/api/prescription', array('as' => 'doctor.searchbyprid', 'uses' => 'PharmacyController@getPrescriptionByPrid'));
+
+
+        //Route::get('rest/api/patient/{prescriptionId}/mail', array('as' => 'patient.sendemail', 'uses' => 'PharmacyController@forwardPrescriptionDetailsByMail'));
+        //Route::get('rest/api/patient/{prescriptionId}/sms', array('as' => 'patient.send sms', 'uses' => 'PharmacyController@forwardPrescriptionDetailsBySMS'));
+
+        //Route::get('rest/api/{labId}/changepassword', array('as' => 'lab.changepassword', 'uses' => 'PharmacyController@editChangePassword'));
+        //Route::post('rest/api/pharmacy', array('as' => 'pharmacy.editpharmacy', 'uses' => 'PharmacyController@editPharmacy'));
+        //Route::get('rest/api/lab', array('as' => 'lab.editlab', 'uses' => 'PharmacyController@saveChangesPassword'));
+
+    });
+
+
+    Route::group(['namespace' => 'Lab'], function()
+    {
+        Route::get('rest/api/{doctorId}/hospital/{hospitalId}/labtests', array('as' => 'doctor.labtests', 'uses' => 'LabController@getTestsForDoctor'));
+        Route::get('rest/api/lab/{labTestId}', array('as' => 'doctor.labdetails', 'uses' => 'LabController@getLabTestDetailsForDoctor'));
+        Route::get('rest/api/labtests', array('as' => 'doctor.lid', 'uses' => 'LabController@getLabTestsByLid'));
+
+        //Route::get('rest/api/patient/{prescriptionId}/mail', array('as' => 'patient.sendemail', 'uses' => 'LabController@forwardLabDetailsByMail'));
+        //Route::get('rest/api/patient/{prescriptionId}/sms', array('as' => 'patient.send sms', 'uses' => 'LabController@forwardLabDetailsBySMS'));
+
+        //Route::get('rest/api/{labId}/changepassword', array('as' => 'lab.changepassword', 'uses' => 'LabController@editChangePassword'));
+        //Route::post('rest/api/lab', array('as' => 'lab.editlab', 'uses' => 'LabController@editLab'));
+        //Route::get('rest/api/lab', array('as' => 'lab.editlab', 'uses' => 'LabController@saveChangesPassword'));
+    });
 });
 
 

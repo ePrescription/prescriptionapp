@@ -554,4 +554,67 @@ class LabController extends Controller
         return $labSMSInfo;
         //return view('portal.patient-labtest-details',compact('labTestDetails'));
     }
+
+
+
+    public function getTestsForDoctor($doctorId, $hospitalId)
+    {
+
+        $labTests = null;
+
+        try
+        {
+            $labTests = $this->labService->getTestsForDoctor($doctorId, $hospitalId);
+            //dd($labTests);
+        }
+        catch(LabException $profileExc)
+        {
+            //dd($hospitalExc);
+            $errorMsg = $profileExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($profileExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        return view('portal.doctor-labtest',compact('labTests'));
+
+        //return $labTests;
+
+    }
+
+
+    public function getLabTestDetailsForDoctor(HospitalService $hospitalService, $labTestId)
+    {
+        $labTestDetails = null;
+        //dd('Inside prescription details');
+
+        try
+        {
+            $labTestDetails = $hospitalService->getLabTestDetails($labTestId);
+            //dd($labTestDetails);
+
+        }
+        catch(LabException $labExc)
+        {
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            $errorMsg = $labExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($labExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        return view('portal.doctor-labtest-details',compact('labTestDetails'));
+    }
+
 }

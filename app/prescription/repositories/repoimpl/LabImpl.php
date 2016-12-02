@@ -30,6 +30,7 @@ class LabImpl implements LabInterface
      * @author Baskar
      */
 
+
     public function getProfile($labId)
     {
         $labProfile = null;
@@ -254,6 +255,35 @@ class LabImpl implements LabInterface
 
             $labTests = $query->get();
             //dd($prescriptions);
+        }
+        catch(QueryException $queryEx)
+        {
+            throw new LabException(null, ErrorEnum::LAB_TESTS_LIST_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            throw new LabException(null, ErrorEnum::LAB_TESTS_LIST_ERROR, $exc);
+        }
+
+        return $labTests;
+    }
+
+
+    public function getTestsForDoctor($doctorId, $hospitalId)
+    {
+        $labTests = null;
+
+        try
+        {
+
+            $query = DB::table('patient as p')->join('patient_labtest as pl', 'pl.patient_id', '=', 'p.patient_id');
+            $query->join('hospital_doctor as hl', 'hl.hospital_id', '=', 'pl.hospital_id');
+            $query->where('hl.hospital_id', '=', $hospitalId);
+            $query->where('hl.doctor_id', '=', $doctorId);
+            $query->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'pl.id as labtest_id', 'pl.unique_id as plid', 'pl.labtest_date');
+
+            $labTests = $query->get();
+            //dd($labTests);
         }
         catch(QueryException $queryEx)
         {

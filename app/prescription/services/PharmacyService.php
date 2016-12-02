@@ -194,5 +194,26 @@ class PharmacyService
 
         return $prescriptions;
     }
+
+
+    public function getPrescriptionListForDoctor($doctorId, $hospitalId)
+    {
+        $prescriptions = null;
+
+        try
+        {
+            $prescriptions = $this->pharmacyRepo->getPrescriptionListForDoctor($doctorId, $hospitalId);
+        }
+        catch(PharmacyException $profileExc)
+        {
+            throw $profileExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new PharmacyException(null, ErrorEnum::PRESCRIPTION_LIST_ERROR, $exc);
+        }
+
+        return $prescriptions;
+    }
 }
 

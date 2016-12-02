@@ -19,4 +19,6 @@ interface LabInterface
     public function getLabTestsByLid($lid);
     public function editLab(LabViewModel $labVM);
     public function getTestsForLabForPatient($patientId);
+
+    public function getTestsForDoctor($doctorId, $hospitalId);
 }
