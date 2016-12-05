@@ -1641,7 +1641,7 @@ class DoctorController extends Controller
         }
         catch(HospitalException $hospitalExc)
         {
-            dd($hospitalExc);
+            //dd($hospitalExc);
             //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_ERROR));
             $errorMsg = $hospitalExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($hospitalExc);
@@ -1650,7 +1650,7 @@ class DoctorController extends Controller
         }
         catch(Exception $exc)
         {
-            dd($exc);
+            //dd($exc);
             //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SAVE_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
