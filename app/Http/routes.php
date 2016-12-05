@@ -74,6 +74,14 @@ Route::group(array('prefix' => 'patient'), function()
         Route::get('rest/api/prescription', array('as' => 'patient.searchbyprid', 'uses' => 'PharmacyController@getPrescriptionByPridForPatient'));
         Route::get('rest/api/prescription/{prescriptionId}', array('as' => 'patient.prescriptiondetails', 'uses' => 'PharmacyController@getPrescriptionDetailsForPatient'));
     });
+
+    // Move all the web calls here
+
+    Route::group(['namespace' => 'Doctor'], function()
+    {
+        Route::get('rest/{patientId}/details', array('as' => 'patient.details', 'uses' => 'DoctorController@getPatientAllDetails'));
+    });
+
 });
 
 
@@ -107,6 +115,7 @@ Route::group(array('prefix' => 'hospital', 'namespace' => 'Doctor'), function()
     Route::get('{id}/dashboard', function () {
         return view('portal.hospital-dashboard');
     });
+    Route::post('send', 'DoctorController@sendEmail');
 
     //MOBILE
    Route::get('rest/api/hospitals', array('as' => 'doctor.hospitals', 'uses' => 'DoctorController@getHospitalByKeyword'));
@@ -140,6 +149,8 @@ Route::group(array('prefix' => 'hospital', 'namespace' => 'Doctor'), function()
    Route::get('rest/api/patientstatus', array('as' => 'hospital.isnewpatient', 'uses' => 'DoctorController@checkIsNewPatient'));
 
    Route::get('rest/api/doctor/{doctorId}/doctordetails', array('as' => 'hospital.doctordetails', 'uses' => 'DoctorController@getDoctorDetails'));
+
+
 
 
 

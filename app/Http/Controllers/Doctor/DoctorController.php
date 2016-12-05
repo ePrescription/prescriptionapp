@@ -32,6 +32,8 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
+use Mail;
+
 use App\Http\ViewModels\PatientPrescriptionViewModel;
 
 class DoctorController extends Controller
@@ -1245,7 +1247,6 @@ class DoctorController extends Controller
                     }
                     else if( Auth::user()->hasRole('doctor')  && (Auth::user()->delete_status==1) )
                     {
-
                         $LoginUserType=Session::put('LoginUserType', 'doctor');
 
                         $doctorid = Auth::user()->id;
@@ -1416,24 +1417,20 @@ class DoctorController extends Controller
 
     public function editHospital(Request $hospitalRequest)
     {
-        $hospitalId = Auth::user()->id;
-        $hospitalProfile = $this->hospitalService->getProfile($hospitalId);
-        $message= "Profile Details Updated Successfully";
-        return view('portal.hospital-profile',compact('hospitalProfile','message'));
 
-        $pharmacyVM = null;
-        $status = true;
+
+        //$pharmacyVM = null;
+        //$status = true;
         //$string = ""
         //dd($pharmacyRequest);
         try
         {
-            /*
-            //dd('Inside edit pharmacy');
-            $pharmacy = array('pharmacy_name' => 'MedPlus', 'address' => 'test', 'city' => 15, 'country' => 99,
-                'telephone' => '5464645654', 'email' => 'medplys@gmail.com');
-            //$pharmacyVM = PharmacyMapper::setPhamarcyDetails($pharmacyRequest);
-            */
-            $hospitalVM = HospitalMapper::setPhamarcyDetails($hospitalRequest);
+            $hospitalId = Auth::user()->id;
+            $hospitalProfile = $this->hospitalService->getProfile($hospitalId);
+            $message= "Profile Details Updated Successfully";
+
+
+            /*$hospitalVM = HospitalMapper::setPhamarcyDetails($hospitalRequest);
             //dd($pharmacyVM);
             $status = $this->pharmacyService->editPharmacy($pharmacyVM);
             //dd($status);
@@ -1443,15 +1440,15 @@ class DoctorController extends Controller
                 //$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SAVE_SUCCESS));
             }*/
 
-            if($status) {
+            /*if($status) {
                 $pharmacyId=$pharmacyVM->getPharmacyId();
                 //dd($pharmacyId);
                 $pharmacyProfile = $this->pharmacyService->getProfile($pharmacyId);
                 $message= "Profile Details Updated Successfully";
-            }
+            }*/
 
         }
-        catch(PharmacyException $profileExc)
+        catch(HospitalException $profileExc)
         {
             //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SAVE_ERROR));
             $errorMsg = $profileExc->getMessageForCode();
@@ -1467,8 +1464,9 @@ class DoctorController extends Controller
             Log::error($msg);
         }
 
+        return view('portal.hospital-profile',compact('hospitalProfile','message'));
         // dd($pharmacyProfile);
-        return view('portal.pharmacy-profile',compact('pharmacyProfile','message'));
+        //return view('portal.pharmacy-profile',compact('pharmacyProfile','message'));
 
         //return $jsonResponse;
     }
@@ -1694,5 +1692,73 @@ class DoctorController extends Controller
         }
 
         return view('portal.doctor-patients',compact('patients'));
+    }
+
+    public function getPatientAllDetails($patientId)
+    {
+        $patientDetails = null;
+        $patientPrescriptions = null;
+        $labTests = null;
+        //$jsonResponse = null;
+        //dd('Inside patient details');
+        try
+        {
+            $patientDetails = HospitalServiceFacade::getPatientDetailsById($patientId);
+            $patientPrescriptions = HospitalServiceFacade::getPrescriptionByPatient($patientId);
+            $labTests = HospitalServiceFacade::getLabTestsByPatient($patientId);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        //Modify to return to the appropriate view
+        return 'test';
+        //return $jsonResponse;
+    }
+
+    public function sendEmail(Request $mailRequest)
+    {
+        //dd($mailRequest);
+        $title = $mailRequest->input('title');
+        $content = $mailRequest->input('content');
+
+        //return response()->json($title);
+
+        try
+        {
+            /*Mail::send('emails.send', ['title' => $title, 'content' => $content], function ($message)
+            {
+
+                $message->from('baskar2271@gmail.com', 'Christian Nwamba');
+
+                $message->to('baskar2271@yahoo.com');
+
+            });*/
+
+            Mail::send('emails.send', ['user' => $title], function ($m) use ($title) {
+                $m->from('baskar2271@gmail.com', 'Your Application');
+
+                $m->to('baskar2271@yahoo.com', $title)->subject('Your Reminder!');
+            });
+        }
+        catch(Exception $exc)
+        {
+            return response()->json(['message' => $exc->getMessage()]);
+        }
+
+
+
+        return response()->json(['message' => 'Request completed']);
     }
 }

@@ -21,6 +21,7 @@ class CreatePatientTable extends Migration
                 $table->text('address');
                 $table->integer('city')->unsigned();
                 $table->integer('country')->unsigned();
+                $table->integer('pid_no_prefix')->unsigned()->nullable();
                 $table->string('pid', 255)->unique();
                 $table->string('telephone', 255);
                 $table->string('email', 255)->nullable();

@@ -162,6 +162,8 @@ return [
         App\prescription\serviceprovider\reposerviceprovider\HospitalRepoServiceProvider::class,
         App\prescription\serviceprovider\servicesserviceprovider\HospitalServiceProvider::class,
 
+        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+
     ],
 
     /*
@@ -212,6 +214,9 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
 
         'HospitalServiceFacade'      => App\prescription\facades\HospitalServiceFacade::class,
+
+        'JWTAuth'   => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class
 
     ],
 
