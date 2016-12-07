@@ -1730,34 +1730,27 @@ class DoctorController extends Controller
     public function sendEmail(Request $mailRequest)
     {
         //dd($mailRequest);
+
         $title = $mailRequest->input('title');
         $content = $mailRequest->input('content');
+
+        $data = array('name' => "Learning laravel", 'title' => $title, 'content' => $content);
 
         //return response()->json($title);
 
         try
         {
-            /*Mail::send('emails.send', ['title' => $title, 'content' => $content], function ($message)
-            {
 
-                $message->from('baskar2271@gmail.com', 'Christian Nwamba');
+            Mail::send('emails.send', $data, function ($m) {
+                $m->from('baskar2271@gmail.com', 'Learning Laravel');
 
-                $message->to('baskar2271@yahoo.com');
-
-            });*/
-
-            Mail::send('emails.send', ['user' => $title], function ($m) use ($title) {
-                $m->from('baskar2271@gmail.com', 'Your Application');
-
-                $m->to('baskar2271@yahoo.com', $title)->subject('Your Reminder!');
+                $m->to('baskar2271@yahoo.com')->subject('Learning laravel test mail');
             });
         }
         catch(Exception $exc)
         {
             return response()->json(['message' => $exc->getMessage()]);
         }
-
-
 
         return response()->json(['message' => 'Request completed']);
     }
