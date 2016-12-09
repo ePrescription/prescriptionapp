@@ -102,13 +102,19 @@ $profile_menu="0";
                                     </div>
                                 </div>
                                 <div class="form-group col-md-12">
+                                    <label class="col-sm-3 control-label">Appointment Created Date</label>
+                                    <div class="col-sm-9">
+                                        {{date('Y-m-d h:i:s')}}
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
                                     <label class="col-sm-3 control-label">Appointment Date</label>
                                     <div class="col-sm-9">
                                         <input type="date" data-date-format="YYYY-MM-DD" min="{{date('Y-m-d')}}" class="form-control" name="appointmentDate" value="" required="required" />
                                     </div>
                                 </div>
                                 <div class="form-group col-md-12">
-                                    <label class="col-sm-3 control-label">Appointment Date</label>
+                                    <label class="col-sm-3 control-label">Appointment Time</label>
                                     <div class="col-sm-9">
                                         <input type="time" class="form-control" name="appointmentTime" value="" required="required" />
                                     </div>

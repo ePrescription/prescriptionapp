@@ -1755,4 +1755,44 @@ class DoctorController extends Controller
 
         return response()->json(['message' => 'Request completed']);
     }
+
+
+
+    public function PatientDetailsByHospitalForFront($hid,$patientId)
+    {
+        $patientDetails = null;
+        $patientPrescriptions = null;
+        $labTests = null;
+        //$jsonResponse = null;
+        //dd('Inside patient details');
+        try
+        {
+            //$patientDetails = HospitalServiceFacade::getPatientDetailsById($patientId);
+            $patientDetails = HospitalServiceFacade::getPatientProfile($patientId);
+            $patientPrescriptions = HospitalServiceFacade::getPrescriptionByPatient($patientId);
+            $labTests = HospitalServiceFacade::getLabTestsByPatient($patientId);
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+//dd($labTests);
+
+        return view('portal.hospital-patient-details',compact('patientDetails','patientPrescriptions','labTests'));
+        //Modify to return to the appropriate view
+        //return 'test';
+        //return $jsonResponse;
+    }
 }
