@@ -131,7 +131,7 @@ $profile_menu="0";
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title" style="line-height:30px;width:500px;float:left;">Drugs Details</h3>
+                        <h3 class="box-title" style="line-height:30px;width:500px;float:left;">Tests Details</h3>
                     </div><!-- /.box-header -->
                     <div class="box-body">
                         <table id="example2" class="table table-bordered table-hover">
@@ -145,8 +145,8 @@ $profile_menu="0";
                             <tbody>
                             @foreach($labTestDetails['PatientLabTestDetails'] as $labtest)
                                 <tr>
-                                    <td>{{$labtest->test_name}}</td>
-                                    <td>{{$labtest->brief_description}}</td>
+                                    <td>{{strtoupper($labtest->test_name)}}</td>
+                                    <td>{{strtoupper($labtest->brief_description)}}</td>
 
                                 </tr>
                             @endforeach

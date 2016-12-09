@@ -48,14 +48,15 @@ $profile_menu="0";
                             <div>
                                 PID ( Patient Identification)
                             </div>
+
                             <table id="example2" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
-                                    <th>PID</th>
-                                    <th>PATIENT</th>
-                                    <th>PHONE</th>
-                                    <th>AGE</th>
-                                    <th>GENDER</th>
+                                    <th>Patient ID</th>
+                                    <th>Patient Name in Full</th>
+                                    <th>Patient Mobile No</th>
+                                    <th>Patient Age</th>
+                                    <th>Patient's gender</th>
                                     <th></th>
                                 </tr>
                                 </thead>
