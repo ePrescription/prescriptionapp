@@ -1815,7 +1815,8 @@ class DoctorController extends Controller
             $patientDetails = HospitalServiceFacade::getPatientProfile($patientId);
             $patientPrescriptions = HospitalServiceFacade::getPrescriptionByPatient($patientId);
             $labTests = HospitalServiceFacade::getLabTestsByPatient($patientId);
-
+            $patientAppointment = HospitalServiceFacade::getPatientAppointments($patientId);
+            //dd($patientAppointment);
         }
         catch(HospitalException $hospitalExc)
         {
@@ -1835,7 +1836,7 @@ class DoctorController extends Controller
 
 //dd($patientDetails);
 
-        return view('portal.hospital-patient-details',compact('patientDetails','patientPrescriptions','labTests'));
+        return view('portal.hospital-patient-details',compact('patientDetails','patientPrescriptions','labTests','patientAppointment'));
         //return view('portal.hospital-patient-details',compact('patientDetails','patientPrescriptions','labTests'));
         //Modify to return to the appropriate view
         //return 'test';

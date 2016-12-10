@@ -99,13 +99,36 @@ $profile_menu="0";
 
                 </div>
 
-                <div class="col-xs-12 hidden">
+                <div class="col-xs-12">
 
                     <div class="box">
                         <div class="box-header">
                             <h3 class="box-title" style="line-height:30px;width:500px;float:left;">Appointment Details</h3>
                         </div><!-- /.box-header -->
                         <div class="box-body">
+                            <table id="example2" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>PATIENT</th>
+                                    <th>HOSPITAL</th>
+                                    <th>DOCTOR</th>
+                                    <th>DATE</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($patientAppointment as $appointment)
+                                    <tr>
+                                        <td>{{$appointment->patient_name}}</td>
+                                        <td>{{$appointment->hospital_name}}</td>
+                                        <td>{{$appointment->name}}</td>
+                                        <td>{{$appointment->appointment_date}} {{$appointment->appointment_time}}</td>
+                                        <td>Open</td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+
+                            </table>
 
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->
