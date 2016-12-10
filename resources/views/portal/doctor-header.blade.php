@@ -14,7 +14,13 @@
             <span class="sr-only">Toggle navigation</span>
         </a>
         <div style="width:700px;float:left;">
-            <h2 style="padding: 0px;margin: 8px; color: #FFF; font-weight: bold;">ePrescription and Lab Tests Application <br/> {{Session::get('AuthDisplayName')}}</h2>
+            <h2 style="padding: 0px;margin: 8px; color: #FFF; font-weight: bold;    font-size: 18px;">
+                ePrescription and Lab Tests Application <br/>
+                {{Session::get('AuthDisplayName')}} - {{Session::get('LoginDoctorDetails')}}
+                <br/>
+                {{Session::get('LoginHospitalDetails')}}
+
+            </h2>
         </div>
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">

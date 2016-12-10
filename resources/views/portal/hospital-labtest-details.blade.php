@@ -138,6 +138,7 @@ $profile_menu="0";
                                 <tr>
                                     <th>TEST NAME</th>
                                     <th>TEST DETAILS</th>
+                                    <th></th>
 
                                 </tr>
                                 </thead>
@@ -146,7 +147,13 @@ $profile_menu="0";
                                 <tr>
                                     <td>{{$labtest->test_name}}</td>
                                     <td>{{$labtest->brief_description}}</td>
-
+                                    <td>
+                                        @if(!is_null($labtest->labtest_report))
+                                            <a target="_blank" href="{{$labtest->labtest_report}}">Download</a>
+                                        @else
+                                            None
+                                        @endif
+                                    </td>
                                 </tr>
                                 @endforeach
                                 </tbody>

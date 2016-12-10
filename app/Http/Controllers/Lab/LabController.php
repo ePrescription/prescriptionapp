@@ -689,7 +689,7 @@ class LabController extends Controller
         $file->move($destinationPath,$file->getClientOriginalName());
 
 
-        $domain = "http://ec2-50-112-212-39.us-west-2.compute.amazonaws.com";
+        $domain = "ec2-50-112-212-39.us-west-2.compute.amazonaws.com";
 
         $LabTestDetails = LabTestDetails::find($labTestId);
         //dd($LabTestDetails);

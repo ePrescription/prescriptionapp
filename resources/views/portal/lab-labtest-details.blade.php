@@ -150,7 +150,7 @@ $profile_menu="0";
                                     <td>{{strtoupper($labtest->brief_description)}}</td>
                                     <td>
                                         @if(!is_null($labtest->labtest_report))
-                                            <a href="{{$labtest->labtest_report}}">Download</a>
+                                            <a target="_blank" href="{{$labtest->labtest_report}}">Download</a>
                                         @else
 
                                             <a href="{{URL::to('/')}}/lab/rest/api/lab/report/{{$labtest->ltid}}/upload" style="float:rightx;">Upload Report</a>

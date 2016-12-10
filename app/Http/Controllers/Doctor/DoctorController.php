@@ -1254,6 +1254,15 @@ class DoctorController extends Controller
                         $hospitalId = HospitalServiceFacade::getHospitalId(UserType::USERTYPE_DOCTOR, $doctorid);
                         //dd($hospitalId);
                         Session::put('LoginUserHospital', $hospitalId[0]->hospital_id);
+
+                        $hospitalInfo = HospitalServiceFacade::getProfile($hospitalId[0]->hospital_id);
+                        //dd($hospitalInfo);
+                        Session::put('LoginHospitalDetails', $hospitalInfo[0]->hospital_name.' '.$hospitalInfo[0]->address);
+
+                        $doctorInfo = HospitalServiceFacade::getDoctorDetails($doctorid);
+                        //dd($doctorInfo);
+                        Session::put('LoginDoctorDetails', $doctorInfo[0]->doctorDetails);
+
                         return redirect('doctor/'.Auth::user()->id.'/dashboard');
                     }
                     else if( Auth::user()->hasRole('patient') && (Auth::user()->delete_status==1) )
