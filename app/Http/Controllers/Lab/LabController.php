@@ -12,10 +12,14 @@ use App\prescription\common\ResponseJson;
 use App\prescription\utilities\ErrorEnum\ErrorEnum;
 
 
+use App\prescription\model\entities\LabTestDetails;
+
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+
+use App\Http\Requests\LabReportRequest;
 
 use Exception;
 use Log;
@@ -645,6 +649,57 @@ class LabController extends Controller
         }
 
         return view('portal.hospital-labtest-details',compact('labTestDetails'));
+    }
+
+
+    public function getLabTestUploadForLab($labTestId)
+    {
+        //dd('Inside prescription details');
+        return view('portal.lab-labtest-upload',compact('labTestId'));
+    }
+
+    public function getLabTestUploadSaveForLab(LabReportRequest $labTestUpload)
+    {
+        //dd($labTestUpload->input('labTestId'));
+        //dd('Inside lab upload details');
+        $labTestId = $labTestUpload->input('labTestId');
+        $file = $labTestUpload->file('labtest_report');
+        //dd($file);
+        //Display File Name
+        echo 'File Name: '.$file->getClientOriginalName();
+        echo '<br>';
+
+        //Display File Extension
+        echo 'File Extension: '.$file->getClientOriginalExtension();
+        echo '<br>';
+
+        //Display File Real Path
+        echo 'File Real Path: '.$file->getRealPath();
+        echo '<br>';
+
+        //Display File Size
+        echo 'File Size: '.$file->getSize();
+        echo '<br>';
+
+        //Display File Mime Type
+        echo 'File Mime Type: '.$file->getMimeType();
+
+        //Move Uploaded File
+        $destinationPath = 'uploads/'.$labTestId;
+        $file->move($destinationPath,$file->getClientOriginalName());
+
+
+        $domain = "http://ec2-50-112-212-39.us-west-2.compute.amazonaws.com";
+
+        $LabTestDetails = LabTestDetails::find($labTestId);
+        //dd($LabTestDetails);
+        $LabTestDetails->labtest_report = $domain.'/'.$destinationPath.'/'.$file->getClientOriginalName();
+
+        $LabTestDetails->save();
+
+        $msg = "Lab Report Upload.";
+        return redirect('lab/rest/api/lab/23')->with('message',$msg);
+       // return view('portal.lab-labtest-upload',compact('labTestId'));
     }
 
 }

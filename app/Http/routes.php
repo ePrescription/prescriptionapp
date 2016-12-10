@@ -91,6 +91,8 @@ Route::group(array('prefix' => 'fronthospital', 'namespace' => 'Lab'), function(
     //Route::get('rest/api/{patientId}/labtests', array('as' => 'patient.labtests', 'uses' => 'LabController@getTestsForLabForPatient'));
     //Route::get('rest/api/labtests', array('as' => 'patient.lid', 'uses' => 'LabController@getLabTestsByLidForPatient'));
     Route::get('rest/api/lab/{labId}', array('as' => 'patient.labdetails', 'uses' => 'LabController@getLabTestDetailsForHospital'));
+
+
 });
 
 Route::group(array('prefix' => 'fronthospital', 'namespace' => 'Pharmacy'), function()
@@ -296,6 +298,12 @@ Route::group(['prefix' => 'lab'], function()
 
         Route::get('rest/api/patient/{prescriptionId}/mail', array('as' => 'patient.sendemail', 'uses' => 'LabController@forwardLabDetailsByMail'));
         Route::get('rest/api/patient/{prescriptionId}/sms', array('as' => 'patient.send sms', 'uses' => 'LabController@forwardLabDetailsBySMS'));
+
+
+
+
+        Route::get('rest/api/lab/report/{labTestId}/upload', array('as' => 'patient.labtestupload', 'uses' => 'LabController@getLabTestUploadForLab'));
+        Route::post('rest/api/lab/report/{labTestId}/saveupload', array('as' => 'patient.labtestsaveupload', 'uses' => 'LabController@getLabTestUploadSaveForLab'));
 
         //Route::get('rest/api/{labId}/changepassword', array('as' => 'lab.changepassword', 'uses' => 'LabController@editChangePassword'));
         //Route::post('rest/api/lab', array('as' => 'lab.editlab', 'uses' => 'LabController@editLab'));

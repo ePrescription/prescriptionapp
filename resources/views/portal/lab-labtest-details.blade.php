@@ -139,6 +139,7 @@ $profile_menu="0";
                             <tr>
                                 <th>TEST NAME</th>
                                 <th>TEST DETAILS</th>
+                                <th>MANAGE</th>
 
                             </tr>
                             </thead>
@@ -147,6 +148,14 @@ $profile_menu="0";
                                 <tr>
                                     <td>{{strtoupper($labtest->test_name)}}</td>
                                     <td>{{strtoupper($labtest->brief_description)}}</td>
+                                    <td>
+                                        @if(!is_null($labtest->labtest_report))
+                                            <a href="{{$labtest->labtest_report}}">Download</a>
+                                        @else
+
+                                            <a href="{{URL::to('/')}}/lab/rest/api/lab/report/{{$labtest->ltid}}/upload" style="float:rightx;">Upload Report</a>
+                                        @endif
+                                    </td>
 
                                 </tr>
                             @endforeach
