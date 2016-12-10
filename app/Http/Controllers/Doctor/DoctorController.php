@@ -1727,6 +1727,41 @@ class DoctorController extends Controller
         //return $jsonResponse;
     }
 
+    /**
+     * Get patient appointments
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientAppointments($patientId)
+    {
+        $appointments = null;
+        //dd($patientId);
+
+        try
+        {
+            $appointments = HospitalServiceFacade::getPatientAppointments($patientId);
+            dd($appointments);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        return $appointments;
+    }
+
     public function sendEmail(Request $mailRequest)
     {
         //dd($mailRequest);
@@ -1741,11 +1776,11 @@ class DoctorController extends Controller
         try
         {
 
-            Mail::send('emails.send', $data, function ($m) {
-                $m->from('baskar@gmail.com', 'Learning Laravel');
+            Mail::send('emails.prescription', $data, function ($m) {
+                $m->from('prescriptionapp1@gmail.com', 'Learning Laravel');
 
                 //$m->to('baskar2271@yahoo.com')->subject('Learning laravel test mail');
-                $m->to('alagirivimal@gmail.com')->subject('Learning laravel test mail');
+                $m->to('baskar2271@gmail.com')->subject('Learning laravel test mail');
             });
         }
         catch(Exception $exc)

@@ -924,6 +924,41 @@ class HospitalImpl implements HospitalInterface{
         return $patientLabTests;
     }
 
+    /**
+     * Get patient appointments
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientAppointments($patientId)
+    {
+        $appointments = null;
+
+        try
+        {
+            $query = DB::table('doctor_appointment as da')->join('hospital as h', 'h.hospital_id', '=', 'da.hospital_id');
+            $query->join('patient as p', 'p.patient_id', '=', 'da.patient_id');
+            $query->join('doctor as d', 'd.doctor_id', '=', 'da.doctor_id');
+            $query->where('da.patient_id', $patientId);
+            $query->select('p.id', 'p.patient_id', 'p.pid', 'p.name as patient_name', 'h.hospital_id', 'h.hospital_name',
+                'd.doctor_id', 'd.name', 'da.appointment_date', 'da.appointment_time');
+
+            $appointments = $query->paginate();
+        }
+        catch(QueryException $queryEx)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_APPOINTMENT_LIST_ERROR, $queryEx);
+        }
+        catch(Exception $ex)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_APPOINTMENT_LIST_ERROR, $ex);
+        }
+
+        return $appointments;
+    }
+
 
     /**
      * Save patient profile

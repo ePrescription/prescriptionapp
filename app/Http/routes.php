@@ -57,8 +57,8 @@ Route::group(array('prefix' => 'patient'), function()
 
     Route::group(['namespace' => 'Common'], function()
     {
-    Route::get('rest/api/{patientId}/profile', array('as' => 'patient.profile', 'uses' => 'CommonController@getPatientProfile'));
-    Route::get('rest/api/details', array('as' => 'patient.patient', 'uses' => 'CommonController@searchPatientByPid'));
+        Route::get('rest/api/{patientId}/profile', array('as' => 'patient.profile', 'uses' => 'CommonController@getPatientProfile'));
+        Route::get('rest/api/details', array('as' => 'patient.patient', 'uses' => 'CommonController@searchPatientByPid'));
     });
 
     Route::group(['namespace' => 'Lab'], function()
@@ -80,6 +80,7 @@ Route::group(array('prefix' => 'patient'), function()
     Route::group(['namespace' => 'Doctor'], function()
     {
         Route::get('rest/{patientId}/details', array('as' => 'patient.details', 'uses' => 'DoctorController@getPatientAllDetails'));
+        Route::get('rest/{patientId}/appointments', array('as' => 'patient.appointments', 'uses' => 'DoctorController@getPatientAppointments'));
     });
 
 });

@@ -91,9 +91,11 @@ class ErrorEnum extends Enum{
 
     //Hospital Profile constants 300 to 399
 
-    const HOSPITAL_PROFILE_VIEW_ERROR = 171;
-    const HOSPITAL_PATIENT_LIST_ERROR = 172;
-    const HOSPITAL_SAVE_ERROR = 174;
-    const HOSPITAL_SAVE_SUCCESS = 175;
+    const HOSPITAL_PROFILE_VIEW_ERROR = 300;
+    const HOSPITAL_PATIENT_LIST_ERROR = 301;
+    const HOSPITAL_SAVE_ERROR = 302;
+    const HOSPITAL_SAVE_SUCCESS = 303;
+
+    const PATIENT_APPOINTMENT_LIST_ERROR = 304;
 
 }

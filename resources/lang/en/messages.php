@@ -55,4 +55,6 @@
 
         "221" => "Unable to get doctor details",
         "222" => "Successfully retrieved doctor details",
+
+        "304" => "Unable to retrieve patient appointments",
     ];

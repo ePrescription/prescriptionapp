@@ -28,6 +28,7 @@ interface HospitalInterface {
     public function getPatientsByHospital($hospitalId);
     public function getPatientDetailsById($patientId);
     public function getPatientProfile($patientId);
+    public function getPatientAppointments($patientId);
 
     //Get Prescription List
     public function getPrescriptions($hospitalId, $doctorId);
