@@ -621,4 +621,36 @@ class PharmacyController extends Controller
         //return $prescriptionDetails;
     }
 
+
+    public function getPrescriptionDetailsForHospital(HospitalService $hospitalService, $prescriptionId)
+    {
+        $prescriptionDetails = null;
+        //dd('Inside prescription details');
+
+        try
+        {
+            $prescriptionDetails = $hospitalService->getPrescriptionDetails($prescriptionId);
+            //dd($prescriptionDetails);
+
+        }
+        catch(PharmacyException $pharmacyExc)
+        {
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            $errorMsg = $pharmacyExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($pharmacyExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        return view('portal.hospital-prescription-details',compact('prescriptionDetails'));
+
+        //return $prescriptionDetails;
+    }
+
 }

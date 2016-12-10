@@ -1810,6 +1810,7 @@ class DoctorController extends Controller
         }
         catch(HospitalException $hospitalExc)
         {
+            dd($hospitalExc);
             //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
             $errorMsg = $hospitalExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($hospitalExc);
@@ -1817,15 +1818,16 @@ class DoctorController extends Controller
         }
         catch(Exception $exc)
         {
-            //dd($exc);
+            dd($exc);
             //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
         }
 
-//dd($labTests);
+//dd($patientDetails);
 
         return view('portal.hospital-patient-details',compact('patientDetails','patientPrescriptions','labTests'));
+        //return view('portal.hospital-patient-details',compact('patientDetails','patientPrescriptions','labTests'));
         //Modify to return to the appropriate view
         //return 'test';
         //return $jsonResponse;

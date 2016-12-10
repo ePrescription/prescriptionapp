@@ -86,6 +86,21 @@ Route::group(array('prefix' => 'patient'), function()
 });
 
 
+Route::group(array('prefix' => 'fronthospital', 'namespace' => 'Lab'), function()
+{
+    //Route::get('rest/api/{patientId}/labtests', array('as' => 'patient.labtests', 'uses' => 'LabController@getTestsForLabForPatient'));
+    //Route::get('rest/api/labtests', array('as' => 'patient.lid', 'uses' => 'LabController@getLabTestsByLidForPatient'));
+    Route::get('rest/api/lab/{labId}', array('as' => 'patient.labdetails', 'uses' => 'LabController@getLabTestDetailsForHospital'));
+});
+
+Route::group(array('prefix' => 'fronthospital', 'namespace' => 'Pharmacy'), function()
+{
+    //Route::get('rest/api/{patientId}/prescriptions', array('as' => 'patient.prescriptions', 'uses' => 'PharmacyController@getPrescriptionListForPatient'));
+    //Route::get('rest/api/prescription', array('as' => 'patient.searchbyprid', 'uses' => 'PharmacyController@getPrescriptionByPridForPatient'));
+    Route::get('rest/api/prescription/{prescriptionId}', array('as' => 'patient.prescriptiondetails', 'uses' => 'PharmacyController@getPrescriptionDetailsForHospital'));
+});
+
+
 Route::group(array('prefix' => 'fronthospital', 'namespace' => 'Doctor'), function()
 {
     Route::get('{id}/dashboard', function () {

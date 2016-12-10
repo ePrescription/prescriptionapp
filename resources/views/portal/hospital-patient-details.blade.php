@@ -6,9 +6,7 @@
 @stop
 <?php
 $dashboard_menu="0";
-$patient_menu="0";
-$prescription_menu="1";
-$lab_menu="0";
+$patient_menu="1";
 $profile_menu="0";
 ?>
 @section('content')
@@ -121,6 +119,37 @@ $profile_menu="0";
                             <h3 class="box-title" style="line-height:30px;width:500px;float:left;">Prescription Details</h3>
                         </div><!-- /.box-header -->
                         <div class="box-body">
+                            <div>
+                                PRID ( Prescription Identification) - PID ( Patient Identification)
+                            </div>
+                            <table id="example2" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>PRID</th>
+                                    <th>PID</th>
+                                    <th>PATIENT</th>
+                                    <th>DATE</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($patientPrescriptions as $prescription)
+                                    <tr>
+                                        <td>{{$prescription->unique_id}}</td>
+                                        <td>{{$prescription->pid}}</td>
+                                        <td>{{$prescription->name}}</td>
+                                        <td>{{$prescription->prescription_date}}</td>
+                                        <td>
+
+                                            <a href="{{URL::to('/')}}/fronthospital/rest/api/prescription/{{$prescription->prescription_id}}"><button type="submit" class="btn btn-success btn-xs"><i class="fa fa-eye"></i> View</button></a>
+
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+
+                            </table>
+
 
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->
@@ -134,6 +163,37 @@ $profile_menu="0";
                             <h3 class="box-title" style="line-height:30px;width:500px;float:left;">Lab Tests Details</h3>
                         </div><!-- /.box-header -->
                         <div class="box-body">
+
+                            <div>
+                                PLID ( Patient LabTest Identification) - PID ( Patient Identification)
+                            </div>
+                            <table id="example2" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>PLID</th>
+                                    <th>PID</th>
+                                    <th>PATIENT</th>
+                                    <th>DATE</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($labTests as $labTest)
+                                    <tr>
+                                        <td>{{$labTest->unique_id}}</td>
+                                        <td>{{$labTest->pid}}</td>
+                                        <td>{{$labTest->name}}</td>
+                                        <td>{{$labTest->labtest_date}}</td>
+                                        <td>
+
+                                            <a href="{{URL::to('/')}}/fronthospital/rest/api/lab/{{$labTest->labtest_id}}"><button type="submit" class="btn btn-success btn-xs"><i class="fa fa-eye"></i> View</button></a>
+
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+
+                            </table>
 
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->
