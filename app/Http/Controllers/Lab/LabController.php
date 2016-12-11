@@ -24,6 +24,8 @@ use App\Http\Requests\LabReportRequest;
 use Exception;
 use Log;
 
+use Mail;
+
 class LabController extends Controller
 {
     protected $labService;
@@ -493,8 +495,23 @@ class LabController extends Controller
 
         try
         {
-            //$labTestDetails = $hospitalService->getLabTestDetails($labTestId);
+            $labTestDetails = $hospitalService->getLabTestDetails($labTestId);
             //dd($labTestDetails);
+
+            $subject = "LabTest Details";
+            $name = "ePrescription and Lab Tests Application";
+            $title = "LabTest Details";
+            $content = $labTestDetails;
+            $to = $email;
+
+            $data = array('name' => $name, 'title' => $title, 'labTestDetails' => $labTestDetails);
+
+            Mail::send('emails.labtest', $data, function ($m) {
+                //$m->from('prescriptionapp1@gmail.com', $name);
+                //$m->to($to)->subject($subject);
+                $m->from('prescriptionapp1@gmail.com', 'ePrescription and Lab Tests Application');;
+                $m->to('alagirivimal@gmail.com')->subject('ePrescription and Lab Tests Application');
+            });
 
             $labMailInfo = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::LAB_DETAILS_SUCCESS));
             $labMailInfo->setObj("Mail Sent Successfully");
