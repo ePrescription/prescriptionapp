@@ -20,6 +20,8 @@ use App\Http\Controllers\Controller;
 use Exception;
 use Log;
 
+use Mail;
+
 class PharmacyController extends Controller
 {
     protected $pharmacyService;
@@ -484,6 +486,8 @@ class PharmacyController extends Controller
 
     public function forwardPrescriptionDetailsByMail(HospitalService $hospitalService, $prescriptionId, $email)
     {
+        //dd($prescriptionId.' '.$email);
+
         //return $prescriptionId;
         $prescriptionDetails = null;
         $prescriptionMailInfo = null;
@@ -491,8 +495,22 @@ class PharmacyController extends Controller
 
         try
         {
-            //$prescriptionDetails = $hospitalService->getPrescriptionDetails($prescriptionId);
-            //dd($labTestDetails);
+            $prescriptionDetails = $hospitalService->getPrescriptionDetails($prescriptionId);
+           // dd($prescriptionDetails);
+
+            $subject = "Prescription Details";
+            $name = "ePrescription and Lab Tests Application";
+            $title = "Prescription Details";
+            $content = $prescriptionDetails;
+            $to = $email;
+
+            $data = array('name' => $name, 'title' => $title, 'content' => $content);
+
+            Mail::send('emails.prescription', $data, function ($m, $name, $to, $subject) {
+                $m->from('prescriptionapp1@gmail.com', $name);
+                $m->to($to)->subject($subject);
+            });
+
             $prescriptionMailInfo = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SUCCESS));
             $prescriptionMailInfo->setObj("Mail Sent Successfully");
 

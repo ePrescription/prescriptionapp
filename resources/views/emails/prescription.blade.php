@@ -8,14 +8,7 @@
 </head>
 <body>
 <div class="container">
-<!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <h1>Prescriptions Details</h1>
-    </section>
 
-    <!-- Main content -->
     <section class="content">
         <div class="row">
 
@@ -31,25 +24,25 @@
                             <div class="form-group col-md-6">
                                 <label class="col-sm-6 control-label">Patient ID</label>
                                 <div class="col-sm-6">
-                                    PID101
+                                    {{$prescriptionDetails['PatientProfile'][0]->pid}}
                                 </div>
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="col-sm-6 control-label">Patient Name</label>
                                 <div class="col-sm-6">
-                                    Baskar
+                                    {{$prescriptionDetails['PatientProfile'][0]->name}}
                                 </div>
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="col-sm-6 control-label">Phone Number</label>
                                 <div class="col-sm-6">
-                                    8754499177
+                                    {{$prescriptionDetails['PatientProfile'][0]->telephone}}
                                 </div>
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="col-sm-6 control-label">E-Mail</label>
                                 <div class="col-sm-6">
-                                    baskar@gmail.com
+                                    {{$prescriptionDetails['PatientProfile'][0]->email}}
                                 </div>
                             </div>
 
@@ -76,25 +69,25 @@
                             <div class="form-group col-md-6">
                                 <label class="col-sm-6 control-label">Doctor ID</label>
                                 <div class="col-sm-6">
-                                    DID100
+                                    {{$prescriptionDetails['DoctorProfile'][0]->did}}
                                 </div>
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="col-sm-6 control-label">Doctor Name</label>
                                 <div class="col-sm-6">
-                                    Dr. Anand
+                                    {{$prescriptionDetails['DoctorProfile'][0]->name}}
                                 </div>
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="col-sm-6 control-label">Phone Number</label>
                                 <div class="col-sm-6">
-                                    6546788991
+                                    {{$prescriptionDetails['DoctorProfile'][0]->telephone}}
                                 </div>
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="col-sm-6 control-label">E-Mail</label>
                                 <div class="col-sm-6">
-                                    anand@gmail.com
+                                    {{$prescriptionDetails['DoctorProfile'][0]->email}}
                                 </div>
                             </div>
 
@@ -127,33 +120,17 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>DOBIN</td>
-                                <td>GABAPENTIN</td>
-                                <td>5 ML</td>
-                                <td>5</td>
-                                <td>
-                                    1 - 1 - 0
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>ENCENTIN</td>
-                                <td>GABAPENTIN</td>
-                                <td>10 MG</td>
-                                <td>10</td>
-                                <td>
-                                    1 - 0 - 1
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>GABACENT</td>
-                                <td>GABAPENTIN</td>
-                                <td>5 ML</td>
-                                <td>5</td>
-                                <td>
-                                    1 - 1 - 0
-                                </td>
-                            </tr>
+                            @foreach($prescriptionDetails['PatientDrugDetails'] as $prescription)
+                                <tr>
+                                    <td>{{$prescription->brand_name}}</td>
+                                    <td>{{$prescription->drug_name}}</td>
+                                    <td>{{$prescription->dosage}}</td>
+                                    <td>{{$prescription->no_of_days}}</td>
+                                    <td>
+                                        {{$prescription->morning}} - {{$prescription->afternoon}} - {{$prescription->night}}
+                                    </td>
+                                </tr>
+                            @endforeach
                             </tbody>
 
                         </table>
@@ -164,6 +141,7 @@
         </div><!-- /.row -->
     </section><!-- /.content -->
 </div><!-- /.content-wrapper -->
+
 </div>
 
 </body>
