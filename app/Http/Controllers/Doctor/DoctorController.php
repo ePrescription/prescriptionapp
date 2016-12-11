@@ -1787,7 +1787,6 @@ class DoctorController extends Controller
 
             Mail::send('emails.prescription', $data, function ($m) {
                 $m->from('prescriptionapp1@gmail.com', 'Learning Laravel');
-
                 //$m->to('baskar2271@yahoo.com')->subject('Learning laravel test mail');
                 $m->to('baskar2271@gmail.com')->subject('Learning laravel test mail');
             });
