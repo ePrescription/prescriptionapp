@@ -1752,7 +1752,7 @@ class DoctorController extends Controller
         try
         {
             $appointments = HospitalServiceFacade::getPatientAppointments($patientId);
-            dd($appointments);
+            //dd($appointments);
         }
         catch(HospitalException $hospitalExc)
         {

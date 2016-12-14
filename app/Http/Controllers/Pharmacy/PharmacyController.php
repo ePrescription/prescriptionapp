@@ -506,11 +506,12 @@ class PharmacyController extends Controller
 
             $data = array('name' => $name, 'title' => $title, 'prescriptionDetails' => $prescriptionDetails);
 
-            Mail::send('emails.prescription', $data, function ($m) {
+            Mail::send('emails.prescription', $data, function ($m) use($to, $subject){
                 //$m->from('prescriptionapp1@gmail.com', $name);
                 //$m->to($to)->subject($subject);
                 $m->from('prescriptionapp1@gmail.com', 'ePrescription and Lab Tests Application');;
-                $m->to('alagirivimal@gmail.com')->subject('ePrescription and Lab Tests Application');
+                //$m->to('alagirivimal@gmail.com')->subject('ePrescription and Lab Tests Application');
+                $m->to($to)->subject($subject);
             });
 
             $prescriptionMailInfo = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SUCCESS));
