@@ -13,6 +13,66 @@
     </style>
 </head>
 <body>
+
+
+
+<table id="example1" class="table table-bordered table-hover">
+    <tbody>
+    <tr>
+        <td colspan="2">{{$prescriptionDetails['HospitalProfile'][0]->hospital_name}}</td>
+    </tr>
+    <tr>
+        <td>Doctor's Name</td>
+        <td>{{$prescriptionDetails['DoctorProfile'][0]->name}}</td>
+    </tr>
+    <tr>
+        <td>Patient's Name</td>
+        <td>{{$prescriptionDetails['PatientProfile'][0]->name}}</td>
+    </tr>
+    <tr>
+        <td>Date of Issues</td>
+        <td>{{date("Y-m-d"}}</td>
+    </tr>
+    <tr>
+        <td colspan="2">Pharmacy - Medicines</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <table id="example2" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>Brand</th>
+                    <th>Drug</th>
+                    <th>Dosage</th>
+                    <th>Days</th>
+                    <th>Frequency</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($prescriptionDetails['PatientDrugDetails'] as $prescription)
+                    <tr>
+                        <td>{{$prescription->brand_name}}</td>
+                        <td>{{$prescription->drug_name}}</td>
+                        <td>{{$prescription->dosage}}</td>
+                        <td>{{$prescription->no_of_days}}</td>
+                        <td>
+                            {{$prescription->morning}} - {{$prescription->afternoon}} - {{$prescription->night}}
+                        </td>
+                        <td>Open</td>
+                    </tr>
+                @endforeach
+                </tbody>
+
+            </table>
+
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+<?php /* ?>
 <div class="container">
 
     <section class="content">
@@ -149,6 +209,6 @@
 </div><!-- /.content-wrapper -->
 
 </div>
-
+<?php /* ?>
 </body>
 </html>

@@ -417,6 +417,7 @@ class HospitalImpl implements HospitalInterface{
         $prescriptionDetails = null;
         $patientDetails = null;
         $doctorDetails = null;
+        $hospitalDetails = null;
         $patientPrescription = null;
 
         try
@@ -436,8 +437,12 @@ class HospitalImpl implements HospitalInterface{
             $doctorQuery = DB::table('doctor as d')->select('d.id', 'd.doctor_id', 'd.name', 'd.did', 'd.telephone', 'd.email');
             $doctorQuery->join('patient_prescription as pp', 'pp.doctor_id', '=', 'd.doctor_id');
             $doctorQuery->where('pp.id', '=', $prescriptionId);
-
             $doctorDetails = $doctorQuery->get();
+
+            $hospitalQuery = DB::table('hospital as h')->select('h.id', 'h.hospital_id', 'h.hospital_name', 'h.hid', 'h.telephone', 'h.email');
+            $hospitalQuery->join('patient_prescription as pp', 'pp.hospital_id', '=', 'h.hospital_id');
+            $hospitalQuery->where('pp.id', '=', $prescriptionId);
+            $hospitalDetails = $hospitalQuery->get();
 
             $query = DB::table('prescription_details as pd')->select('b.id as brand_id', 'b.brand_name', 'd.id as drug_id',
                         'd.drug_name',
@@ -447,11 +452,11 @@ class HospitalImpl implements HospitalInterface{
             $query->join('brands as b', 'b.id', '=', 'pd.brand_id');
             $query->join('drugs as d', 'd.id', '=', 'pd.drug_id');
             $query->where('pp.id', '=', $prescriptionId);
-
             $prescriptionDetails = $query->get();
 
             $patientPrescription["PatientProfile"] = $patientDetails;
             $patientPrescription["DoctorProfile"] = $doctorDetails;
+            $patientPrescription["HospitalProfile"] = $hospitalDetails;
             $patientPrescription["PatientDrugDetails"] = $prescriptionDetails;
 
         }
@@ -875,6 +880,9 @@ class HospitalImpl implements HospitalInterface{
     {
         $labTestDetails = null;
         $patientDetails = null;
+        $doctorDetails = null;
+        $hospitalDetails = null;
+
         $patientLabTests = null;
 
         try
@@ -894,18 +902,22 @@ class HospitalImpl implements HospitalInterface{
             $doctorQuery = DB::table('doctor as d')->select('d.id', 'd.doctor_id', 'd.name', 'd.did', 'd.telephone', 'd.email');
             $doctorQuery->join('patient_labtest as pl', 'pl.doctor_id', '=', 'd.doctor_id');
             $doctorQuery->where('pl.id', '=', $labTestId);
-
             $doctorDetails = $doctorQuery->get();
+
+            $hospitalQuery = DB::table('hospital as h')->select('h.id', 'h.hospital_id', 'h.hospital_name', 'h.hid', 'h.telephone', 'h.email');
+            $hospitalQuery->join('patient_labtest as pl', 'pl.hospital_id', '=', 'h.hospital_id');
+            $hospitalQuery->where('pl.id', '=', $labTestId);
+            $hospitalDetails = $hospitalQuery->get();
 
             $query = DB::table('labtest_details as ld')->select('ld.id as ltid', 'l.id', 'l.test_name', 'ld.brief_description', 'pl.labtest_date', 'ld.labtest_report');
             $query->join('patient_labtest as pl', 'pl.id', '=', 'ld.patient_labtest_id');
             $query->join('labtest as l', 'l.id', '=', 'ld.labtest_id');
             $query->where('pl.id', '=', $labTestId);
-
             $labTestDetails = $query->get();
 
             $patientLabTests["PatientProfile"] = $patientDetails;
             $patientLabTests["DoctorProfile"] = $doctorDetails;
+            $patientLabTests["HospitalProfile"] = $hospitalDetails;
             $patientLabTests["PatientLabTestDetails"] = $labTestDetails;
 
             //dd($patientLabTests);

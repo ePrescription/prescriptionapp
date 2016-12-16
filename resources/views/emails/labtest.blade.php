@@ -13,6 +13,62 @@
     </style>
 </head>
 <body>
+
+<table id="example1" class="table table-bordered table-hover">
+    <tbody>
+        <tr>
+            <td colspan="2">{{$labTestDetails['HospitalProfile'][0]->hospital_name}}</td>
+        </tr>
+        <tr>
+            <td>Doctor's Name</td>
+            <td>{{$labTestDetails['DoctorProfile'][0]->name}}</td>
+        </tr>
+        <tr>
+            <td>Patient's Name</td>
+            <td>{{$labTestDetails['PatientProfile'][0]->name}}</td>
+        </tr>
+        <tr>
+            <td>Date of Issues</td>
+            <td>HOSPITAL NAME</td>
+        </tr>
+        <tr>
+            <td colspan="2">Lab Test Details</td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <table id="example2" class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>Test Name</th>
+                        <th>Test Details</th>
+                        <th>Status</th>
+                        <th>Result</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($labTestDetails['PatientLabTestDetails'] as $labtest)
+                        <tr>
+                            <td>{{$labtest->test_name}}</td>
+                            <td>{{$labtest->brief_description}}</td>
+                            <td>Open</td>
+                            <td>
+                                @if(!is_null($labtest->labtest_report))
+                                    <a target="_blank" href="{{$labtest->labtest_report}}">Download</a>
+                                @else
+                                    None
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+<?php /* ?>
 <div class="container">
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -161,6 +217,6 @@
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
 </div>
-
+<?php */ ?>
 </body>
 </html>
