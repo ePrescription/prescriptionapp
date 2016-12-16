@@ -496,7 +496,7 @@ class PharmacyController extends Controller
         try
         {
             $prescriptionDetails = $hospitalService->getPrescriptionDetails($prescriptionId);
-           // dd($prescriptionDetails);
+            //dd($prescriptionDetails);
 
             $subject = "Prescription Details";
             $name = "ePrescription and Lab Tests Application";
