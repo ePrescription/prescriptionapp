@@ -460,7 +460,7 @@ class HospitalImpl implements HospitalInterface{
             $patientPrescription["HospitalProfile"] = $hospitalDetails;
             $patientPrescription["PatientDrugDetails"] = $prescriptionDetails;
 
-            dd($patientPrescription);
+            //dd($patientPrescription);
 
         }
         catch(QueryException $queryEx)
