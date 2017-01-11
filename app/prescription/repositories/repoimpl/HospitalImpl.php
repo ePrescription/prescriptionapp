@@ -783,15 +783,21 @@ class HospitalImpl implements HospitalInterface{
 
         try
         {
-            $query = DB::table('labtest as lt')->select('lt.id', 'lt.test_name')->where('lt.test_status', '=', 1);
+            //dd('Before query');
+            $query = DB::table('labtest as lt')->select('lt.id', DB::raw('TRIM(UPPER(lt.test_name)) as test_name'))->where('lt.test_status', '=', 1);
+            //$query = DB::table('labtest as lt')->select('lt.id', 'lt.test_name')->where('lt.test_status', '=', 1);
+            //dd($query->toSql());
             $labTests = $query->get();
+            //dd($labTests);
         }
         catch(QueryException $queryEx)
         {
+            //dd($queryEx);
             throw new HospitalException(null, ErrorEnum::LAB_LIST_ERROR, $queryEx);
         }
         catch(Exception $exc)
         {
+            //dd($exc);
             throw new HospitalException(null, ErrorEnum::LAB_LIST_ERROR, $exc);
         }
 
@@ -916,7 +922,7 @@ class HospitalImpl implements HospitalInterface{
             $hospitalQuery->where('pl.id', '=', $labTestId);
             $hospitalDetails = $hospitalQuery->get();
 
-            $query = DB::table('labtest_details as ld')->select('ld.id as ltid', 'l.id', 'l.test_name', 'ld.brief_description', 'pl.labtest_date', 'ld.labtest_report');
+            $query = DB::table('labtest_details as ld')->select('ld.id as ltid', 'l.id', DB::raw('TRIM(UPPER(l.test_name)) as test_name'), 'ld.brief_description', 'pl.labtest_date', 'ld.labtest_report');
             $query->join('patient_labtest as pl', 'pl.id', '=', 'ld.patient_labtest_id');
             $query->join('labtest as l', 'l.id', '=', 'ld.labtest_id');
             $query->where('pl.id', '=', $labTestId);
@@ -940,6 +946,7 @@ class HospitalImpl implements HospitalInterface{
             throw new HospitalException(null, ErrorEnum::LAB_DETAILS_ERROR, $exc);
         }
 
+        //dd($patientLabTests);
         return $patientLabTests;
     }
 
