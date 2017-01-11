@@ -444,8 +444,9 @@ class HospitalImpl implements HospitalInterface{
             $hospitalQuery->where('pp.id', '=', $prescriptionId);
             $hospitalDetails = $hospitalQuery->get();
 
-            $query = DB::table('prescription_details as pd')->select('b.id as brand_id', 'b.brand_name', 'd.id as drug_id',
-                        'd.drug_name',
+            $query = DB::table('prescription_details as pd')->select('b.id as brand_id', DB::raw('TRIM(UPPER(b.brand_name)) as brand_name'),
+                        'd.id as drug_id',
+                        DB::raw('TRIM(UPPER(d.drug_name)) as drug_name'),
                         'pd.dosage', 'pd.no_of_days',
                         'pd.morning', 'pd.afternoon', 'pd.night', 'pd.drug_status');
             $query->join('patient_prescription as pp', 'pp.id', '=', 'pd.patient_prescription_id');
@@ -459,6 +460,8 @@ class HospitalImpl implements HospitalInterface{
             $patientPrescription["HospitalProfile"] = $hospitalDetails;
             $patientPrescription["PatientDrugDetails"] = $prescriptionDetails;
 
+            dd($patientPrescription);
+
         }
         catch(QueryException $queryEx)
         {
@@ -469,6 +472,7 @@ class HospitalImpl implements HospitalInterface{
             throw new HospitalException(null, ErrorEnum::PRESCRIPTION_DETAILS_ERROR, $exc);
         }
 
+        //dd($patientPrescription);
         return $patientPrescription;
     }
 
@@ -736,7 +740,8 @@ class HospitalImpl implements HospitalInterface{
 
         try
         {
-            $query = DB::table('brands as b')->select('b.id as brand_id', 'b.brand_name', 'd.id as drug_id', 'd.drug_name');
+            $query = DB::table('brands as b')->select('b.id as brand_id', DB::raw('TRIM(UPPER(b.brand_name)) as brand_name'), 'd.id as drug_id',
+                DB::raw('TRIM(UPPER(d.drug_name)) as drug_name'));
             $query->join('drugs as d', 'd.id', '=', 'b.drug_id');
             $query->where('b.brand_name', 'LIKE', $keyword.'%');
             $query->where('b.brand_status', '=', 1);
@@ -751,10 +756,12 @@ class HospitalImpl implements HospitalInterface{
         }
         catch(QueryException $queryEx)
         {
+            //dd($queryEx);
             throw new HospitalException(null, ErrorEnum::BRAND_LIST_ERROR, $queryEx);
         }
         catch(Exception $exc)
         {
+            //dd($exc);
             throw new HospitalException(null, ErrorEnum::BRAND_LIST_ERROR, $exc);
         }
 
