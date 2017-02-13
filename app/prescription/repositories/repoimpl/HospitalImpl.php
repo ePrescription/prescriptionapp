@@ -295,7 +295,7 @@ class HospitalImpl implements HospitalInterface{
             //dd($query->toSql());
 
             $patientDetails = $query->get();
-            dd($patientDetails);
+            //dd($patientDetails);
         }
         catch(QueryException $queryEx)
         {
