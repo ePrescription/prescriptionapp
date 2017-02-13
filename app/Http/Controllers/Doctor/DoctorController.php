@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Doctor;
 
 use App\prescription\common\ResponseJson;
+use App\prescription\common\ResponsePrescription;
 use App\prescription\common\UserSession;
 use App\prescription\facades\HospitalServiceFacade;
 use App\prescription\mapper\PatientProfileMapper;
@@ -31,6 +32,8 @@ use Input;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+
+use Illuminate\Support\Facades\DB;
 
 use Mail;
 
@@ -102,20 +105,35 @@ class DoctorController extends Controller
     public function getHospitalByKeyword($keyword = null)
     {
         $hospitals = null;
-        $prescriptionResult = null;
+        //$prescriptionResult = null;
+        $responseJson = null;
 
         try
         {
             //dd('Inside doctor');
-            $hospitals = HospitalServiceFacade::getHospitals();
-            $prescriptionResult = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_LIST_SUCCESS));
-            $prescriptionResult->setObj($hospitals);
+            //$hospitals = HospitalServiceFacade::getHospitals();
+            $hospitals = $this->hospitalService->getHospitals();
+
+            if(!empty($hospitals))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_LIST_SUCCESS));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_HOSPITAL_LIST_FOUND));
+            }
+
+            $responseJson->setObj($hospitals);
+            $responseJson->sendSuccessResponse();
+            //$prescriptionResult = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_LIST_SUCCESS));
+            //$prescriptionResult->setObj($hospitals);
 
             //dd($prescriptionResult);
         }
         catch(HospitalException $hospitalExc)
         {
-            $prescriptionResult = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_LIST_ERROR));
+            //$prescriptionResult = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_LIST_ERROR));
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_LIST_ERROR));
             $errorMsg = $hospitalExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($hospitalExc);
             Log::error($msg);
@@ -123,11 +141,12 @@ class DoctorController extends Controller
         catch(Exception $exc)
         {
             //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_LIST_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
         }
 
-        return $prescriptionResult;
+        return $responseJson;
     }
 
     /**
@@ -141,27 +160,35 @@ class DoctorController extends Controller
     public function getDoctorsByHospitalId($hospitalId)
     {
         $doctors = null;
-        $jsonResponse = null;
+        //$jsonResponse = null;
+        $responseJson = null;
 
         try
         {
-            //dd('Inside doctor');
-            $doctors = HospitalServiceFacade::getDoctorsByHospitalId($hospitalId);
-            //dd($doctors);
+            //$doctors = HospitalServiceFacade::getDoctorsByHospitalId($hospitalId);
+
+            $doctors = $this->hospitalService->getDoctorsByHospitalId($hospitalId);
+
             if(!empty($doctors))
             {
-                $jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_DOCTOR_LIST_SUCCESS));
-                $jsonResponse->setObj($doctors);
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_DOCTOR_LIST_SUCCESS));
+                /*$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_DOCTOR_LIST_SUCCESS));
+                $jsonResponse->setObj($doctors);*/
             }
             else
             {
-                $jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_NO_DOCTORS_FOUND));
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_NO_DOCTORS_FOUND));
+                //$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_NO_DOCTORS_FOUND));
             }
+
+            $responseJson->setObj($doctors);
+            $responseJson->sendSuccessResponse();
 
         }
         catch(HospitalException $hospitalExc)
         {
-            $prescriptionResult = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_DOCTOR_LIST_ERROR));
+            //$prescriptionResult = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_DOCTOR_LIST_ERROR));
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_DOCTOR_LIST_ERROR));
             $errorMsg = $hospitalExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($hospitalExc);
             Log::error($msg);
@@ -169,11 +196,13 @@ class DoctorController extends Controller
         catch(Exception $exc)
         {
             //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_DOCTOR_LIST_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
         }
 
-        return $jsonResponse;
+        //return $jsonResponse;
+        return $responseJson;
     }
 
     //Get Appointment details
@@ -189,20 +218,39 @@ class DoctorController extends Controller
     public function getAppointmentsByHospitalAndDoctor($hospitalId, $doctorId)
     {
         $appointments = null;
-        $jsonResponse = null;
-        //dd('Inside appointment');
+        //$jsonResponse = null;
+        $responseJson = null;
 
         try
         {
-            $appointments = HospitalServiceFacade::getAppointmentsByHospitalAndDoctor($hospitalId, $doctorId);
-            $jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::APPOINTMENT_LIST_SUCCESS));
-            $jsonResponse->setObj($appointments);
+            //$appointments = HospitalServiceFacade::getAppointmentsByHospitalAndDoctor($hospitalId, $doctorId);
+            $appointments = $this->hospitalService->getAppointmentsByHospitalAndDoctor($hospitalId, $doctorId);
+
+            //dd($appointments);
+            /*$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::APPOINTMENT_LIST_SUCCESS));
+            $jsonResponse->setObj($appointments);*/
+
+            if(!empty($appointments))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::APPOINTMENT_LIST_SUCCESS));
+                /*$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_DOCTOR_LIST_SUCCESS));
+                $jsonResponse->setObj($doctors);*/
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_APPOINTMENT_LIST_FOUND));
+                //$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_NO_DOCTORS_FOUND));
+            }
+
+            $responseJson->setObj($appointments);
+            $responseJson->sendSuccessResponse();
 
             //dd($prescriptionResult);
         }
         catch(HospitalException $hospitalExc)
         {
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::APPOINTMENT_LIST_ERROR));
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::APPOINTMENT_LIST_ERROR));
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::APPOINTMENT_LIST_ERROR));
             $errorMsg = $hospitalExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($hospitalExc);
             Log::error($msg);
@@ -210,12 +258,14 @@ class DoctorController extends Controller
         catch(Exception $exc)
         {
             //dd($exc);
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::APPOINTMENT_LIST_ERROR));
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::APPOINTMENT_LIST_ERROR));
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::APPOINTMENT_LIST_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
         }
 
-        return $jsonResponse;
+        //return $jsonResponse;
+        return $responseJson;
     }
 
     //Get Patient List
@@ -230,20 +280,37 @@ class DoctorController extends Controller
     public function getPatientsByHospital($hospitalId)
     {
         $patients = null;
+        $responseJson = null;
         //$jsonResponse = null;
         //$keyword = \Input::get('keyword');
         //dd('Inside patients by hospital');
         try
         {
             //$patients = HospitalServiceFacade::getPatientsByHospital($hospitalId, $keyword);
-            $patients = HospitalServiceFacade::getPatientsByHospital($hospitalId);
-            $jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_LIST_SUCCESS));
-            $jsonResponse->setObj($patients);
+            //$patients = HospitalServiceFacade::getPatientsByHospital($hospitalId);
+            $patients = $this->hospitalService->getPatientsByHospital($hospitalId);
+
+            if(!empty($patients))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_LIST_SUCCESS));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_PATIENT_LIST_FOUND));
+            }
+
+            $responseJson->setObj($patients);
+            $responseJson->sendSuccessResponse();
+
+
+            /*$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_LIST_SUCCESS));
+            $jsonResponse->setObj($patients);*/
             //dd($jsonResponse);
         }
         catch(HospitalException $hospitalExc)
         {
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_LIST_ERROR));
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_LIST_ERROR));
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_LIST_ERROR));
             $errorMsg = $hospitalExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($hospitalExc);
             Log::error($msg);
@@ -251,12 +318,14 @@ class DoctorController extends Controller
         catch(Exception $exc)
         {
             //dd($exc);
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_LIST_ERROR));
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_LIST_ERROR));
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_LIST_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
         }
 
-        return $jsonResponse;
+        //return $jsonResponse;
+        return $responseJson;
     }
 
     /**
@@ -270,18 +339,36 @@ class DoctorController extends Controller
     public function getPatientDetailsById($patientId)
     {
         $patientDetails = null;
+        $responseJson = null;
         //$jsonResponse = null;
-        //dd('Inside patient details');
+
+        //dd('Inside patient details '.$patientId);
         try
         {
-            $patientDetails = HospitalServiceFacade::getPatientDetailsById($patientId);
-            $jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_DETAILS_SUCCESS));
-            $jsonResponse->setObj($patientDetails);
+            //$patientDetails = HospitalServiceFacade::getPatientDetailsById($patientId);
+            $patientDetails = $this->hospitalService->getPatientDetailsById($patientId);
+
+            if(!empty($patientDetails))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_DETAILS_SUCCESS));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_PATIENT_DETAILS_FOUND));
+            }
+
+            $responseJson->setObj($patientDetails);
+            $responseJson->sendSuccessResponse();
+
+
+            /*$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_DETAILS_SUCCESS));
+            $jsonResponse->setObj($patientDetails);*/
 
         }
         catch(HospitalException $hospitalExc)
         {
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
             $errorMsg = $hospitalExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($hospitalExc);
             Log::error($msg);
@@ -289,12 +376,14 @@ class DoctorController extends Controller
         catch(Exception $exc)
         {
             //dd($exc);
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
         }
 
-        return $jsonResponse;
+        //return $jsonResponse;
+        return $responseJson;
     }
 
     /**
@@ -324,9 +413,6 @@ class DoctorController extends Controller
             $jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::USER_LOGIN_SUCCESS));
             $jsonResponse->setObj($loginDetails);*/
 
-            //dd($jsonResponse);
-
-            //return $jsonResponse;
             if (Auth::attempt(['email' => $loginInfo['email'], 'password' => $loginInfo['password']]))
             {
                 if(( Auth::user()->hasRole('doctor')) &&  (Auth::user()->delete_status == 1))
@@ -383,32 +469,48 @@ class DoctorController extends Controller
     public function getDoctorDetails($doctorId)
     {
         $doctorDetails = null;
-        $jsonResponse = null;
+        //$jsonResponse = null;
+        $responseJson = null;
 
         try
         {
-            //dd($doctorId);
-            $doctorDetails = HospitalServiceFacade::getDoctorDetails($doctorId);
-            $jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::DOCTOR_DETAILS_SUCCESS));
-            $jsonResponse->setObj($doctorDetails);
+            //$doctorDetails = HospitalServiceFacade::getDoctorDetails($doctorId);
+            $doctorDetails = $this->hospitalService->getDoctorDetails($doctorId);
+
+            if(!empty($doctorDetails))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::DOCTOR_DETAILS_SUCCESS));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_DOCTOR_DETAILS_FOUND));
+            }
+
+            $responseJson->setObj($doctorDetails);
+            $responseJson->sendSuccessResponse();
+
+
+            /*$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::DOCTOR_DETAILS_SUCCESS));
+            $jsonResponse->setObj($doctorDetails);*/
         }
         catch(HospitalException $hospitalExc)
         {
             $errorMsg = $hospitalExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($hospitalExc);
             Log::error($msg);
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::DOCTOR_DETAILS_ERROR));
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::DOCTOR_DETAILS_ERROR));
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::DOCTOR_DETAILS_ERROR));
         }
         catch(Exception $exc)
         {
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::DOCTOR_DETAILS_ERROR));
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::DOCTOR_DETAILS_ERROR));
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::DOCTOR_DETAILS_ERROR));
         }
 
-        return $jsonResponse;
-
-
+        //return $jsonResponse;
+        return $responseJson;
     }
 
     //Get Patient Profile
@@ -423,28 +525,44 @@ class DoctorController extends Controller
     public function getPatientProfile($patientId)
     {
         $patientProfile = null;
-        //$jsonResponse = null;
+        $responseJson = null;
 
         try
         {
             $patientProfile = HospitalServiceFacade::getPatientProfile($patientId);
-            $jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SUCCESS));
-            $jsonResponse->setObj($patientProfile);
+
+            if(!empty($patientProfile))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SUCCESS));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_PATIENT_PROFILE_FOUND));
+            }
+
+            $responseJson->setObj($patientProfile);
+            $responseJson->sendSuccessResponse();
+            //$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SUCCESS));
+            //$jsonResponse->setObj($patientProfile);
         }
         catch(HospitalException $hospitalExc)
         {
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_PROFILE_ERROR));
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_PROFILE_ERROR));
             $errorMsg = $hospitalExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($hospitalExc);
             Log::error($msg);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_PROFILE_ERROR));
         }
         catch(Exception $exc)
         {
             //dd($exc);
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_PROFILE_ERROR));
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_PROFILE_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_PROFILE_ERROR));
         }
+
+        return $responseJson;
     }
 
     //Get Prescription List
@@ -458,30 +576,49 @@ class DoctorController extends Controller
     public function getPrescriptions($hospitalId, $doctorId)
     {
         $prescriptions = null;
+        $responseJson = null;
         //$jsonResponse = null;
-        //dd('Inside prescriptions');
         try
         {
-            $prescriptions = HospitalServiceFacade::getPrescriptions($hospitalId, $doctorId);
-            $jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_LIST_SUCCESS));
-            $jsonResponse->setObj($prescriptions);
+            //$prescriptions = HospitalServiceFacade::getPrescriptions($hospitalId, $doctorId);
+            $prescriptions = $this->hospitalService->getPrescriptions($hospitalId, $doctorId);
+
+            if(!empty($prescriptions))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_LIST_SUCCESS));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_PRESCRIPTION_LIST_FOUND));
+            }
+
+            $responseJson->setObj($prescriptions);
+            $responseJson->sendSuccessResponse();
+
+
+            /*$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_LIST_SUCCESS));
+            $jsonResponse->setObj($prescriptions);*/
         }
         catch(HospitalException $hospitalExc)
         {
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_LIST_ERROR));
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_LIST_ERROR));
             $errorMsg = $hospitalExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($hospitalExc);
             Log::error($msg);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_LIST_ERROR));
+
         }
         catch(Exception $exc)
         {
             //dd($exc);
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_LIST_ERROR));
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_LIST_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_LIST_ERROR));
         }
 
-        return $jsonResponse;
+        //return $jsonResponse;
+        return $responseJson;
     }
 
     /**
@@ -495,31 +632,49 @@ class DoctorController extends Controller
     public function getPrescriptionByPatient($patientId)
     {
         $prescriptions = null;
-        //dd('Inside Prescription by patient');
+        $responseJson = null;
+        $responseJson = null;
+        //$jsonResponse = null;
 
         try
         {
-            $prescriptions = HospitalServiceFacade::getPrescriptionByPatient($patientId);
-            $jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_LIST_SUCCESS));
-            $jsonResponse->setObj($prescriptions);
-            //dd($jsonResponse);
+            //$prescriptions = HospitalServiceFacade::getPrescriptionByPatient($patientId);
+            $prescriptions = $this->hospitalService->getPrescriptionByPatient($patientId);
+
+            if(!empty($prescriptions))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_LIST_SUCCESS));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_PRESCRIPTION_LIST_FOUND));
+            }
+
+            $responseJson->setObj($prescriptions);
+            $responseJson->sendSuccessResponse();
+
+            /*$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_LIST_SUCCESS));
+            $jsonResponse->setObj($prescriptions);*/
         }
         catch(HospitalException $hospitalExc)
         {
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_LIST_ERROR));
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_LIST_ERROR));
             $errorMsg = $hospitalExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($hospitalExc);
             Log::error($msg);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_LIST_ERROR));
         }
         catch(Exception $exc)
         {
             //dd($exc);
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_LIST_ERROR));
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_LIST_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_LIST_ERROR));
         }
 
-        return $jsonResponse;
+        //return $jsonResponse;
+        return $responseJson;
     }
 
     /**
@@ -533,31 +688,48 @@ class DoctorController extends Controller
     public function getPrescriptionDetails($prescriptionId)
     {
         $prescriptionDetails = null;
-        //dd('Inside prescription details');
+        $responseJson = null;
+        //$jsonResponse = null;
 
         try
         {
-            $prescriptionDetails = HospitalServiceFacade::getPrescriptionDetails($prescriptionId);
-            $jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SUCCESS));
-            $jsonResponse->setObj($prescriptionDetails);
-            //dd($jsonResponse);
+            //$prescriptionDetails = HospitalServiceFacade::getPrescriptionDetails($prescriptionId);
+            $prescriptionDetails = $this->hospitalService->getPrescriptionDetails($prescriptionId);
+
+            if(!empty($prescriptionDetails))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SUCCESS));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_PRESCRIPTION_DETAILS_FOUND));
+            }
+
+            $responseJson->setObj($prescriptionDetails);
+            $responseJson->sendSuccessResponse();
+
+            /*$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SUCCESS));
+            $jsonResponse->setObj($prescriptionDetails);*/
         }
         catch(HospitalException $hospitalExc)
         {
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
             $errorMsg = $hospitalExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($hospitalExc);
             Log::error($msg);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
         }
         catch(Exception $exc)
         {
             //dd($exc);
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
         }
 
-        return $jsonResponse;
+        //return $jsonResponse;
+        return $responseJson;
     }
 
     /**
@@ -570,6 +742,9 @@ class DoctorController extends Controller
 
     public function checkIsNewPatient(Request $newPatientRequest)
     {
+        $responseJson = null;
+        $jsonResponse = null;
+
         $hospitalId = $newPatientRequest->get('hospital');
         $doctorId = $newPatientRequest->get('doctor');
         $patientId = $newPatientRequest->get('patient');
@@ -580,28 +755,44 @@ class DoctorController extends Controller
 
         try
         {
-            $isNewPatient = HospitalServiceFacade::checkIsNewPatient($hospitalId, $doctorId, $patientId);
-            $jsonResponse = new ResponseJson(ErrorEnum::SUCCESS);
-            $jsonResponse->setObj($isNewPatient);
-            //dd($jsonResponse);
+            //$isNewPatient = HospitalServiceFacade::checkIsNewPatient($hospitalId, $doctorId, $patientId);
+            $isNewPatient = $this->hospitalService->checkIsNewPatient($hospitalId, $doctorId, $patientId);
+
+            $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS);
+            $responseJson->setObj($isNewPatient);
+            $responseJson->sendSuccessResponse();
+
+            //dd($responseJson->getObj());
+
+            /*if(!empty($responseJson->getObj()))
+            {
+                dd('Is empty');
+            }
+            else{
+                dd('Not empty');
+            }*/
+
+            /*$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS);
+            $jsonResponse->setObj($isNewPatient);*/
         }
         catch(HospitalException $hospitalExc)
         {
-            //dd($hospitalExc);
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::NEW_PATIENT_ERROR));
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::NEW_PATIENT_ERROR));
             $errorMsg = $hospitalExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($hospitalExc);
             Log::error($msg);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::NEW_PATIENT_ERROR));
         }
         catch(Exception $exc)
         {
-            //dd($exc);
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::NEW_PATIENT_ERROR));
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::NEW_PATIENT_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::NEW_PATIENT_ERROR));
         }
 
-        return $jsonResponse;
+        //return $jsonResponse;
+        return $responseJson;
     }
 
     /**
@@ -843,6 +1034,7 @@ class DoctorController extends Controller
     public function searchPatientByPid(Request $patientPidRequest)
     {
         $patient = null;
+        $responseJson = null;
         //$pid = \Input::get('pid');
         $pid = $patientPidRequest->get('pid');
         //return $pid;
@@ -851,8 +1043,19 @@ class DoctorController extends Controller
         try
         {
             $patient = HospitalServiceFacade::searchPatientByPid($pid);
-            $jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_LIST_SUCCESS));
-            $jsonResponse->setObj($patient);
+            if(!empty($patient))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_LIST_SUCCESS));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_PATIENT_LIST_FOUND));
+            }
+
+            $responseJson->setObj($patient);
+            $responseJson->sendSuccessResponse();
+            //$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_LIST_SUCCESS));
+            //$jsonResponse->setObj($patient);
         }
         catch(HospitalException $hospitalExc)
         {
@@ -869,7 +1072,7 @@ class DoctorController extends Controller
             Log::error($msg);
         }
 
-        return $jsonResponse;
+        return $responseJson;
     }
 
     /**
@@ -1129,8 +1332,11 @@ class DoctorController extends Controller
         $status = true;
         $jsonResponse = null;
 
+        //return json_encode($appointmentRequest->get('doctorId'));
+
         try
         {
+            //return json_encode($rec);
             $appointmentsVM = PatientProfileMapper::setPatientAppointment($appointmentRequest);
             $status = HospitalServiceFacade::saveNewAppointment($appointmentsVM);
 
@@ -1141,10 +1347,12 @@ class DoctorController extends Controller
         }
         catch(HospitalException $hospitalExc)
         {
+
             $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_NEW_APPOINTMENT_ERROR));
             $errorMsg = $hospitalExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($hospitalExc);
             Log::error($msg);
+            //json_encode($hospitalExc->getMessage());
             //return $jsonResponse;
         }
         catch(Exception $exc)
@@ -1153,6 +1361,7 @@ class DoctorController extends Controller
             $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_NEW_APPOINTMENT_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
+            //json_encode($exc->getMessage());
         }
 
         return $jsonResponse;
@@ -1297,11 +1506,16 @@ class DoctorController extends Controller
                         $LoginUserType=Session::put('LoginUserType', 'admin');
                         return redirect('admin/'.Auth::user()->id.'/dashboard');
                     }
+                    /*else if(Auth::user()->hasRole('fronthospital'))
+                    {
+                        $LoginUserType=Session::put('LoginUserType', 'admin');
+                        return redirect('admin/'.Auth::user()->id.'/dashboard');
+                    }*/
                     else
                     {
                         Auth::logout();
                         Session::flush();
-                        $msg="Login Details Incorrect! Try Again.";
+                        $msg="Login Details Incorrect! Please try Again.";
                         return redirect('/login')->with('message',$msg);
                     }
 
@@ -1341,6 +1555,7 @@ class DoctorController extends Controller
         try
         {
             $patients = HospitalServiceFacade::getPatientsByHospital($hospitalId);
+            //return json_encode('test');
 
         }
         catch(HospitalException $hospitalExc)
@@ -1491,7 +1706,7 @@ class DoctorController extends Controller
             //$pharmacyProfile = $this->pharmacyService->getProfile($pharmacyId);
             //dd($pharmacyProfile);
         }
-        catch(PharmacyException $profileExc)
+        catch(HospitalException $profileExc)
         {
             //dd($hospitalExc);
             $errorMsg = $profileExc->getMessageForCode();
@@ -1827,7 +2042,7 @@ class DoctorController extends Controller
         }
         catch(Exception $exc)
         {
-            dd($exc);
+            //dd($exc);
             //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);

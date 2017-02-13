@@ -11,6 +11,8 @@ use App\prescription\utilities\Exception\AppendMessage;
 use App\prescription\common\ResponseJson;
 use App\prescription\utilities\ErrorEnum\ErrorEnum;
 
+use App\prescription\common\ResponsePrescription;
+
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -39,22 +41,31 @@ class CommonController extends Controller
     public function getHospitalByKeyword($keyword = null)
     {
         $hospitals = null;
-        $hospitalsList = null;
+        $responseJson = null;
 
         try
         {
-            //dd('Inside doctor');
-            //$hospitals = HospitalServiceFacade::getHospitals();
             $hospitals = $this->hospitalService->getHospitals();
-            $hospitalsList = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_LIST_SUCCESS));
-            $hospitalsList->setObj($hospitals);
-            //return $prescriptionResult;
-            //dd($prescriptionResult);
+            //$hospitalsList = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_LIST_SUCCESS));
+            //$hospitalsList->setObj($hospitals);
+
+            if(!empty($hospitals))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_LIST_SUCCESS));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_HOSPITAL_LIST_FOUND));
+            }
+
+            $responseJson->setObj($hospitals);
+            $responseJson->sendSuccessResponse();
         }
         catch(HospitalException $hospitalExc)
         {
             //dd($hospitalExc);
-            $prescriptionResult = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_LIST_ERROR));
+            //$prescriptionResult = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_LIST_ERROR));
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_LIST_ERROR));
             $errorMsg = $hospitalExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($hospitalExc);
             Log::error($msg);
@@ -62,11 +73,12 @@ class CommonController extends Controller
         catch(Exception $exc)
         {
             //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_LIST_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
         }
 
-        return $hospitalsList;
+        return $responseJson;
     }
 
     /**
@@ -80,16 +92,31 @@ class CommonController extends Controller
     public function getPatientProfile($patientId)
     {
         $patientProfile = null;
+        $responseJson = null;
 
         try
         {
+            //dd('Inside function');
             $patientProfile = $this->hospitalService->getPatientProfile($patientId);
+            //dd($patientProfile);
+            if(!empty($patientProfile))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_LIST_SUCCESS));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_PATIENT_LIST_FOUND));
+            }
+
+            $responseJson->setObj($patientProfile);
+            $responseJson->sendSuccessResponse();
             //dd($patientProfile);
         }
         catch(HospitalException $hospitalExc)
         {
             //dd($hospitalExc);
-            $prescriptionResult = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_LIST_ERROR));
+            //$prescriptionResult = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_LIST_ERROR));
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_LIST_ERROR));
             $errorMsg = $hospitalExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($hospitalExc);
             Log::error($msg);
@@ -97,11 +124,12 @@ class CommonController extends Controller
         catch(Exception $exc)
         {
             //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_LIST_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
         }
 
-        return $patientProfile;
+        return $responseJson;
     }
 
     /**

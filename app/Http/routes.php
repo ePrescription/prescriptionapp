@@ -39,12 +39,19 @@ Route::get('/logout', function()
    Route::get('rest/api/{patientId}/profile', array('as' => 'patient.profile', 'uses' => 'CommonController@getPatientProfile'));
 });*/
 
+Route::group(['prefix' => 'api'], function(){
+    Route::post('token', 'AuthenticateController@authenticateUser');
+    /*Route::group(['middleware' => 'jwt-auth'], function () {
+        Route::post('getuserdetails', 'AuthenticateController@getUserDetails');
+    });*/
+});
+
 Route::group(['prefix' => 'hospital'], function()
 {
    Route::group(['namespace' => 'Common'], function()
    {
        Route::get('rest/api/get/hospitals', array('as' => 'common.hospitals', 'uses' => 'CommonController@getHospitalByKeyword'));
-       Route::get('rest/api/{patientId}/profile', array('as' => 'patient.profile', 'uses' => 'CommonController@getPatientProfile'));
+       //Route::get('rest/api/{patientId}/profile', array('as' => 'patient.profile', 'uses' => 'CommonController@getPatientProfile'));
    });
 
 });
@@ -138,6 +145,13 @@ Route::group(array('prefix' => 'hospital', 'namespace' => 'Doctor'), function()
     });
     Route::post('send', 'DoctorController@sendEmail');
 
+    /*Route::group(['middleware' => 'prescription.auth'], function () {
+
+        Route::get('rest/api/patient', array('as' => 'patient.patient', 'uses' => 'DoctorController@searchPatientByPid'));
+        Route::get('rest/api/{hospitalId}/doctors', array('as' => 'hospital.doctors', 'uses' => 'DoctorController@getDoctorsByHospitalId'));
+
+    });*/
+
     //MOBILE
    Route::get('rest/api/hospitals', array('as' => 'doctor.hospitals', 'uses' => 'DoctorController@getHospitalByKeyword'));
    Route::post('rest/api/login', array('as' => 'doctor.login', 'uses' => 'DoctorController@login'));
@@ -170,11 +184,6 @@ Route::group(array('prefix' => 'hospital', 'namespace' => 'Doctor'), function()
    Route::get('rest/api/patientstatus', array('as' => 'hospital.isnewpatient', 'uses' => 'DoctorController@checkIsNewPatient'));
 
    Route::get('rest/api/doctor/{doctorId}/doctordetails', array('as' => 'hospital.doctordetails', 'uses' => 'DoctorController@getDoctorDetails'));
-
-
-
-
-
 
 });
 

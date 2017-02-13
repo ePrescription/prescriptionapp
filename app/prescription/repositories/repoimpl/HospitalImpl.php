@@ -131,12 +131,16 @@ class HospitalImpl implements HospitalInterface{
                 'p.name as patient_name', 'p.pid',
                 'da.hospital_id', 'h.hospital_name',
                 'da.doctor_id', 'd.name as doctor_name',
-                'da.appointment_date', 'da.appointment_time', 'da.appointment_type');
+                //'da.appointment_date',
+                DB::raw('DATE_FORMAT(da.appointment_date, "%d-%b-%Y") as appointment_date'),
+                'da.appointment_time', 'da.appointment_type');
             $query->join('hospital as h', 'h.hospital_id', '=', 'da.hospital_id');
             $query->join('patient as p', 'p.patient_id', '=', 'da.patient_id');
             $query->join('doctor as d', 'd.doctor_id', '=', 'da.doctor_id');
             $query->where('da.hospital_id', '=', $hospitalId);
             $query->where('da.doctor_id', '=', $doctorId);
+
+            //dd($query->toSql());
 
             $appointments = $query->get();
         }
@@ -282,13 +286,16 @@ class HospitalImpl implements HospitalInterface{
                             'p.dob', 'p.age', 'p.place_of_birth', 'p.nationality', 'p.gender',
                             'da.appointment_date', 'da.appointment_time', 'da.brief_history');
             $query->join('doctor_appointment as da', 'da.patient_id', '=', 'p.patient_id');
-            $query->join('cities as c', 'c.id', '=', 'p.city');
-            $query->join('countries as co', 'co.id', '=', 'p.country');
-            $query->where('p.patient_id', '=', $patientId);
+            $query->leftJoin('cities as c', 'c.id', '=', 'p.city');
+            $query->leftJoin('countries as co', 'co.id', '=', 'p.country');
+            $query->where('p.patient_id', $patientId);
             $query->orderBy('da.appointment_date', 'DESC');
             $query->orderBy('da.appointment_time', 'DESC');
 
+            //dd($query->toSql());
+
             $patientDetails = $query->get();
+            dd($patientDetails);
         }
         catch(QueryException $queryEx)
         {
@@ -319,13 +326,16 @@ class HospitalImpl implements HospitalInterface{
         {
             $query = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'p.age', 'p.gender', 'p.email', 'p.telephone');
             $query->join('users as usr', 'usr.id', '=', 'p.patient_id');
-            $query->where('p.patient_id', '=', $patientId);
+            $query->where('p.patient_id', $patientId);
             $query->where('usr.delete_status', '=', 1);
 
+            //dd($query->toSql());
             $patientProfile = $query->get();
+            //dd($patientProfile);
         }
         catch(QueryException $queryEx)
         {
+            //dd($queryEx);
             throw new HospitalException(null, ErrorEnum::PATIENT_PROFILE_ERROR, $queryEx);
         }
         catch(Exception $exc)
@@ -356,6 +366,8 @@ class HospitalImpl implements HospitalInterface{
             $query->where('pp.hospital_id', '=', $hospitalId);
             $query->where('pp.doctor_id', '=', $doctorId);
             $query->orderBy('pp.id', 'DESC');
+
+            //dd($query->toSql());
 
             $prescriptions = $query->get();
         }
@@ -455,10 +467,13 @@ class HospitalImpl implements HospitalInterface{
             $query->where('pp.id', '=', $prescriptionId);
             $prescriptionDetails = $query->get();
 
-            $patientPrescription["PatientProfile"] = $patientDetails;
-            $patientPrescription["DoctorProfile"] = $doctorDetails;
-            $patientPrescription["HospitalProfile"] = $hospitalDetails;
-            $patientPrescription["PatientDrugDetails"] = $prescriptionDetails;
+            if(!empty($prescriptionDetails))
+            {
+                $patientPrescription["PatientProfile"] = $patientDetails;
+                $patientPrescription["DoctorProfile"] = $doctorDetails;
+                $patientPrescription["HospitalProfile"] = $hospitalDetails;
+                $patientPrescription["PatientDrugDetails"] = $prescriptionDetails;
+            }
 
             //dd($patientPrescription);
 
@@ -1156,7 +1171,7 @@ class HospitalImpl implements HospitalInterface{
 
     public function checkIsNewPatient($hospitalId, $doctorId, $patientId)
     {
-        $isNewPatient = true;
+        $isNewPatient = 'true';
 
         try
         {
@@ -1175,12 +1190,12 @@ class HospitalImpl implements HospitalInterface{
 
                 if($count > 0)
                 {
-                    $isNewPatient = false;
+                    $isNewPatient = 'false';
                 }
             }
             else
             {
-                $isNewPatient = false;
+                $isNewPatient = 'false';
             }
 
         }

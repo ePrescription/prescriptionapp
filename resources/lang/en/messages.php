@@ -31,7 +31,7 @@
         "117" => "Successfully saved patient profile",
         "118" => "Unable to fix new appointment",
         "119" => "Patient appointment fixed",
-        "120" => "Unable to check if the patient status",
+        "120" => "Unable to check the patient status",
 
         "121" => "Unable to retrieve prescription list",
         "122" => "Prescription list retrieved successfully",
@@ -39,6 +39,15 @@
         "124" => "Prescription details retrieved successfully",
         "125" => "Unable to save patient prescription",
         "126" => "Patient prescription saved successfully",
+
+        "127" => "No patient list found",
+        "128" => "No hospital list available",
+        "129" => "No patient profile available",
+        "130" => "No appointment list available",
+
+        "400" => "No patient details available",
+        "401" => "No prescription list available",
+        "402" => "No prescription details available",
 
         "131" => "Unable to retrieve brands list",
         "132" => "Brands list retrieved successfully",
@@ -55,6 +64,7 @@
 
         "221" => "Unable to get doctor details",
         "222" => "Successfully retrieved doctor details",
+        "223" => "No doctor details available",
 
         "304" => "Unable to retrieve patient appointments",
     ];

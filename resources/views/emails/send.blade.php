@@ -8,7 +8,7 @@
 
 <div>
     <div>{!! $title !!}</div>
-    Welcome to {!! $name !!} website!
+    Welcome to {!! $title !!} website!
     <div>Learn about {!! $content !!}</div>
 </div>
 

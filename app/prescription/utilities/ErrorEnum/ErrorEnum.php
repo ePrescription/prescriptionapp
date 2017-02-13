@@ -48,6 +48,15 @@ class ErrorEnum extends Enum{
     const PRESCRIPTION_DETAILS_SAVE_ERROR = 125;
     const PRESCRIPTION_DETAILS_SAVE_SUCCESS = 126;
 
+    const NO_PATIENT_LIST_FOUND = 127;
+    const NO_HOSPITAL_LIST_FOUND = 128;
+    const NO_PATIENT_PROFILE_FOUND = 129;
+    const NO_APPOINTMENT_LIST_FOUND = 130;
+    const NO_PATIENT_DETAILS_FOUND = 400;
+
+    const NO_PRESCRIPTION_LIST_FOUND = 401;
+    const NO_PRESCRIPTION_DETAILS_FOUND = 402;
+
     //Drug Brands
     const BRAND_LIST_ERROR = 131;
     const BRAND_LIST_SUCCESS = 132;
@@ -87,6 +96,7 @@ class ErrorEnum extends Enum{
 
     const DOCTOR_DETAILS_ERROR = 221;
     const DOCTOR_DETAILS_SUCCESS = 222;
+    const NO_DOCTOR_DETAILS_FOUND = 223;
 
 
     //Hospital Profile constants 300 to 399

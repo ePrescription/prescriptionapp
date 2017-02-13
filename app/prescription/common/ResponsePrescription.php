@@ -112,6 +112,7 @@ class ResponsePrescription extends JsonResponse
 
         if(!empty($this->obj))
         {
+            //dd('Inside not empty');
             $data = array(
                 'isSuccess' => $this->result,
                 'message' => $this->getMessage(),

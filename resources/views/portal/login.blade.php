@@ -19,6 +19,14 @@
     <div class="login-box-body">
         <p class="login-box-msg">Sign in to start your session</p>
 
+        @if (session()->has('message'))
+            <div style="padding-bottom: 5px; margin-left: -14px;">
+                                <span style="color:red; margin:4px; padding: 4px;">
+                                    <b>{{session('message')}}</b>
+                                </span>
+            </div>
+        @endif
+
         {!! Form::open( array( 'route' => array('user.dologin') ,'role' => 'form' ,'method'=>'POST', 'files'=>true,'class'=>'form-horizontal nobottommargin') ) !!}
 
             <div class="form-group has-feedback">
