@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8">
 </head>
+
 <body>
 
-<table id="example1" class="table table-bordered table-hover" border="1" style="width:600px;">
+<table id="example1" class="table table-bordered table-hover"  style="width:600px; border:1px solid; border-color:darkgray; color:#000; padding:10px">
     <tbody>
     <tr>
         <td colspan="2"><div align="center">{{$prescriptionDetails['HospitalProfile'][0]->hospital_name}}</div></td>
@@ -19,23 +20,23 @@
         <td>{{$prescriptionDetails['PatientProfile'][0]->name}}</td>
     </tr>
     <tr>
-        <td>Date of Issues</td>
+        <td>Prescription Date</td>
         <td>{{date("Y-m-d")}}</td>
     </tr>
-    <tr>
-        <td colspan="2"><div align="center">Pharmacy - Medicines</div></td>
+    <tr >
+        <td colspan="2"><div align="center" style="margin:10px; text-decoration: underline; font-weight:bold">Prescribed Drugs</div></td>
     </tr>
     <tr>
         <td colspan="2">
-            <table id="example2" class="table table-bordered table-hover"  border="1" style="width:100%">
+            <table id="example2" class="table table-bordered table-hover"  style="width:100%; border-color:darkgray; color:#000;">
                 <thead>
-                <tr>
-                    <th>Brand</th>
-                    <th>Drug</th>
-                    <th>Dosage</th>
-                    <th>Days</th>
-                    <th>Frequency</th>
-                    <th>Status</th>
+                <tr style="color:#fff; background: #3276b1;">
+                    <th style="font-weight:normal; padding:6px;">Brand</th>
+                    <th style="font-weight:normal; padding:6px;">Drug</th>
+                    <th style="font-weight:normal; padding:6px;">Dosage</th>
+                    <th style="font-weight:normal; padding:6px;">Days</th>
+                    <th style="font-weight:normal; padding:6px;">Frequency</th>
+                    <th style="font-weight:normal; padding:6px;">Status</th>
                 </tr>
                 </thead>
                 <tbody>

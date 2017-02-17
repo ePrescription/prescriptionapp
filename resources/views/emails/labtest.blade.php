@@ -5,7 +5,7 @@
 </head>
 <body>
 
-<table id="example1" class="table table-bordered table-hover" border="1" style="width:600px;">
+<table id="example1" class="table table-bordered table-hover" style="width:600px; border:1px solid; border-color:darkgray; color:#000; padding:10px">
     <tbody>
         <tr>
             <td colspan="2"><div align="center">{{$labTestDetails['HospitalProfile'][0]->hospital_name}}</div></td>
@@ -23,17 +23,17 @@
             <td>{{date("Y-m-d")}}</td>
         </tr>
         <tr>
-            <td colspan="2"><div align="center">Lab Test Details</div></td>
+            <td colspan="2"><div align="center" style="margin:10px; text-decoration: underline; font-weight:bold">Lab Tests</div></td>
         </tr>
         <tr>
             <td colspan="2">
-                <table id="example2" class="table table-bordered table-hover" border="1" style="width:100%">
+                <table id="example2" class="table table-bordered table-hover" style="width:100%; border-color:darkgray; color:#000;">
                     <thead>
-                    <tr>
-                        <th>Test Name</th>
-                        <th>Test Details</th>
-                        <th>Status</th>
-                        <th>Result</th>
+                    <tr style="color:#fff; background: #3276b1;">
+                        <th style="font-weight:normal; padding:6px;">Test Name</th>
+                        <th style="font-weight:normal; padding:6px;">Test Details</th>
+                        <th style="font-weight:normal; padding:6px;">Status</th>
+                        <th style="font-weight:normal; padding:6px;">Result</th>
                     </tr>
                     </thead>
                     <tbody>

@@ -190,6 +190,7 @@ Route::group(array('prefix' => 'hospital', 'namespace' => 'Doctor'), function()
 Route::group(array('prefix' => 'hospital','namespace' => 'Pharmacy'), function() {
 
     Route::get('rest/api/patient/prescription/{prescriptionId}/mail/{email}', array('as' => 'patient.sendemail', 'uses' => 'PharmacyController@forwardPrescriptionDetailsByMail'));
+    //Route::post('rest/api/patient/prescription/{prescriptionId}/mail', array('as' => 'patient.sendemail', 'uses' => 'PharmacyController@forwardPrescriptionDetailsByMail'));
     Route::get('rest/api/patient/prescription/{prescriptionId}/sms/{mobile}', array('as' => 'patient.sendsms', 'uses' => 'PharmacyController@forwardPrescriptionDetailsBySMS'));
 
 });
