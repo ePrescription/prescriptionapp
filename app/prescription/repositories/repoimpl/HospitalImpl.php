@@ -1045,6 +1045,7 @@ class HospitalImpl implements HospitalInterface{
             $patient->city = $patientProfileVM->getCity();
             $patient->country = $patientProfileVM->getCountry();
             $patient->pid = 'PID'.crc32(uniqid(rand()));
+            //$patient->pid = 'PID'.md5(uniqid(rand()));
             $patient->telephone = $patientProfileVM->getTelephone();
             $patient->email = $patientProfileVM->getEmail();
             $patient->patient_photo = $patientProfileVM->getPatientPhoto();
