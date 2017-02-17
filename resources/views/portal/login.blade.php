@@ -14,7 +14,7 @@
     </style>
 <div class="login-box">
     <div class="login-logo">
-        <a href="index.html"><img src="images/head-logo-new.png" width="100%"></a>
+        <a href="index.html"><img src="images/head-logo-new.png"></a>
     </div><!-- /.login-logo -->
     <div class="login-box-body">
         <p class="login-box-msg">Sign in to start your session</p>
