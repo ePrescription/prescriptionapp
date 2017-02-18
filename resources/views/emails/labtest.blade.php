@@ -33,7 +33,7 @@
                         <th style="font-weight:normal; padding:6px;">Test Name</th>
                         <th style="font-weight:normal; padding:6px;">Test Details</th>
                         <th style="font-weight:normal; padding:6px;">Status</th>
-                        <th style="font-weight:normal; padding:6px;">Result</th>
+                        <!-- <th style="font-weight:normal; padding:6px;">Result</th> -->
                     </tr>
                     </thead>
                     <tbody>
@@ -42,13 +42,13 @@
                             <td>{{$labtest->test_name}}</td>
                             <td>{{$labtest->brief_description}}</td>
                             <td>Open</td>
-                            <td>
+                            <!-- <td>
                                 @if(!is_null($labtest->labtest_report))
                                     <a target="_blank" href="{{$labtest->labtest_report}}">Download</a>
                                 @else
                                     None
                                 @endif
-                            </td>
+                            </td> -->
                         </tr>
                     @endforeach
                     </tbody>

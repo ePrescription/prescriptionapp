@@ -491,6 +491,7 @@ class LabController extends Controller
     public function forwardLabDetailsByMail(HospitalService $hospitalService, $labTestId, $email)
     {
         $labTestDetails = null;
+        $labMailInfo = null;
         //dd('Inside prescription details');
 
         try
@@ -509,7 +510,7 @@ class LabController extends Controller
             Mail::send('emails.labtest', $data, function ($m) use($to, $subject)  {
                 //$m->from('prescriptionapp1@gmail.com', $name);
                 //$m->to($to)->subject($subject);
-                $m->from('prescriptionapp1@gmail.com', 'ePrescription and Lab Tests Application');;
+                $m->from('info@daiwiksoft.com', 'ePrescription and Lab Tests Application');;
                 //$m->to('alagirivimal@gmail.com')->subject('ePrescription and Lab Tests Application');
                 $m->to($to)->subject($subject);
             });

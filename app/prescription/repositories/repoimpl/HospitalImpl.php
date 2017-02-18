@@ -252,7 +252,8 @@ class HospitalImpl implements HospitalInterface{
             //$query->where('p.name', 'LIKE', '%'.$keyword.'%');
 
             //dd($query->toSql());
-            $patients = $query->get();
+            //$patients = $query->get();
+            $patients = $query->paginate(10);
         }
         catch(QueryException $queryEx)
         {
