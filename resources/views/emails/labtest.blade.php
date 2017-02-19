@@ -8,19 +8,19 @@
 <table id="example1" class="table table-bordered table-hover" style="width:600px; border:1px solid; border-color:darkgray; color:#000; padding:10px">
     <tbody>
         <tr>
-            <td colspan="2"><div align="center">{{$labTestDetails['HospitalProfile'][0]->hospital_name}}</div></td>
+            <td colspan="2"><div align="center" style="font-weight:bold;">{{$labTestDetails['HospitalProfile'][0]->hospital_name}}</div></td>
         </tr>
         <tr>
             <td>Doctor's Name</td>
-            <td>{{$labTestDetails['DoctorProfile'][0]->name}}</td>
+            <td style="font-weight:bold;">{{$labTestDetails['DoctorProfile'][0]->name}}</td>
         </tr>
         <tr>
             <td>Patient's Name</td>
-            <td>{{$labTestDetails['PatientProfile'][0]->name}}</td>
+            <td style="font-weight:bold;">{{$labTestDetails['PatientProfile'][0]->name}}</td>
         </tr>
         <tr>
             <td>Date of Issues</td>
-            <td>{{date("Y-m-d")}}</td>
+            <td style="font-weight:bold;">{{date("Y-m-d")}}</td>
         </tr>
         <tr>
             <td colspan="2"><div align="center" style="margin:10px; text-decoration: underline; font-weight:bold">Lab Tests</div></td>
