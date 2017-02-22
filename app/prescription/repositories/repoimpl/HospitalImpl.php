@@ -249,6 +249,7 @@ class HospitalImpl implements HospitalInterface{
             $query->join('hospital as h', 'h.hospital_id', '=', 'hp.hospital_id');
             $query->join('patient as p', 'p.patient_id', '=', 'hp.patient_id');
             $query->where('hp.hospital_id', '=', $hospitalId);
+            $query->orderBy('p.created_at', 'DESC');
             //$query->where('p.name', 'LIKE', '%'.$keyword.'%');
 
             //dd($query->toSql());
@@ -1130,7 +1131,7 @@ class HospitalImpl implements HospitalInterface{
             $patient->email = $patientProfileVM->getEmail();
             $patient->patient_photo = $patientProfileVM->getPatientPhoto();
             $patient->dob = $patientProfileVM->getDob();
-            $patient->age = $patientProfileVM->getPlaceOfBirth();
+            $patient->age = $patientProfileVM->getAge();
             $patient->nationality = $patientProfileVM->getNationality();
             $patient->gender = $patientProfileVM->getGender();
             $patient->married = $patientProfileVM->getMaritalStatus();
