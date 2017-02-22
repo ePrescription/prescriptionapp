@@ -139,6 +139,7 @@ class HospitalImpl implements HospitalInterface{
             $query->join('doctor as d', 'd.doctor_id', '=', 'da.doctor_id');
             $query->where('da.hospital_id', '=', $hospitalId);
             $query->where('da.doctor_id', '=', $doctorId);
+            $query->orderBy('da.appointment_date', 'DESC');
 
             //dd($query->toSql());
 
