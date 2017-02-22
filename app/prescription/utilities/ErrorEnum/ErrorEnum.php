@@ -108,4 +108,12 @@ class ErrorEnum extends Enum{
 
     const PATIENT_APPOINTMENT_LIST_ERROR = 304;
 
+    //SMS and Email codes
+
+    const PRESCRIPTION_SMS_SUCCESS = 1001;
+    const PRESCRIPTION_SMS_ERROR = 1002;
+
+    const LABTEST_SMS_SUCCESS = 1003;
+    const LABTEST_SMS_ERROR = 1004;
+
 }

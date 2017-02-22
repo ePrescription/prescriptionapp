@@ -11,8 +11,9 @@ use App\prescription\utilities\Exception\AppendMessage;
 use App\prescription\common\ResponseJson;
 use App\prescription\utilities\ErrorEnum\ErrorEnum;
 
-
+use GuzzleHttp\Client;
 use App\prescription\model\entities\LabTestDetails;
+use App\prescription\common\ResponsePrescription;
 
 use Illuminate\Http\Request;
 
@@ -550,13 +551,51 @@ class LabController extends Controller
         $labTestDetails = null;
         //dd('Inside prescription details');
 
+        $labTestSMS = null;
+        $responseJson = null;
+
         try
         {
-            //$labTestDetails = $hospitalService->getLabTestDetails($labTestId);
+            $labTestDetails = $hospitalService->getLabTestDetails($labTestId);
             //dd($labTestDetails);
 
-            $labSMSInfo = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::LAB_DETAILS_SUCCESS));
-            $labSMSInfo->setObj("SMS Sent Successfully");
+            $patientName = $labTestDetails['PatientProfile'][0]->name;
+            $doctorName = $labTestDetails['DoctorProfile'][0]->name;
+            $hospitalName = $labTestDetails['HospitalProfile'][0]->hospital_name;
+            $labTestDate = $labTestDetails['PatientProfile'][0]->labtest_date;
+            //$mobile = $prescriptionDetails['HospitalProfile'][0]->telephone;
+
+            $labTests = $labTestDetails['PatientLabTestDetails'];
+
+            foreach($labTests as $labTest)
+            {
+                $labTestSMS .= "Lab Test Name: ".$labTest->test_name."%0a";
+                //dd($labTestSMS);
+            }
+
+            $message = "Patient Name : ".$patientName."%0a"
+                ." Doctor Name: ".$doctorName."%0a"
+                ." Hospital Name: ".$hospitalName."%0a"
+                ." Lab Test Id: ".$labTestId."%0a"
+                ." Lab Test Date: ".$labTestDate."%0a"
+                ." Lab Tests: ".$labTestSMS;
+
+            $client = new Client();
+            $response = $client->get('http://bhashsms.com/api/sendmsg.php?user=Daiwiksoft&pass=Daiwik2612&sender=daiwik&phone='.$mobile.'&text='.$message.'&priority=ndnd&stype=normal');
+
+            if($response->getStatusCode() == 200)
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::LABTEST_SMS_SUCCESS));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::LABTEST_SMS_ERROR));
+            }
+
+            $responseJson->sendSuccessResponse();
+
+            //$labSMSInfo = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::LAB_DETAILS_SUCCESS));
+            //$labSMSInfo->setObj("SMS Sent Successfully");
 
         }
         catch(LabException $labExc)
@@ -574,7 +613,7 @@ class LabController extends Controller
             Log::error($msg);
         }
 
-        return $labSMSInfo;
+        return $responseJson;
         //return view('portal.patient-labtest-details',compact('labTestDetails'));
     }
 

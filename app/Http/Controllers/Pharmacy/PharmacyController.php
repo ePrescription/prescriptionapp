@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pharmacy;
 
+use App\prescription\common\ResponsePrescription;
 use App\prescription\mapper\PharmacyMapper;
 use App\prescription\services\HospitalService;
 use App\prescription\services\PharmacyService;
@@ -11,6 +12,8 @@ use App\prescription\utilities\Exception\PharmacyException;
 use App\prescription\utilities\Exception\AppendMessage;
 use App\prescription\common\ResponseJson;
 use App\prescription\utilities\ErrorEnum\ErrorEnum;
+
+use GuzzleHttp\Client;
 
 use Illuminate\Http\Request;
 
@@ -557,14 +560,59 @@ class PharmacyController extends Controller
 
         $prescriptionDetails = null;
         $prescriptionSMSInfo = null;
+
+        $prescription = null;
+        $finalPrescriptionSMS = null;
+        $responseJson = null;
         //dd('Inside prescription details');
 
         try
         {
-            //$prescriptionDetails = $hospitalService->getPrescriptionDetails($prescriptionId);
-            //dd($labTestDetails);
-            $prescriptionSMSInfo = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SUCCESS));
-            $prescriptionSMSInfo->setObj("SMS Sent Successfully");
+            $prescriptionDetails = $hospitalService->getPrescriptionDetails($prescriptionId);
+            //dd($prescriptionDetails);
+            $patientName = $prescriptionDetails['PatientProfile'][0]->name;
+            $doctorName = $prescriptionDetails['DoctorProfile'][0]->name;
+            $hospitalName = $prescriptionDetails['HospitalProfile'][0]->hospital_name;
+            $prescriptionDate = $prescriptionDetails['PatientProfile'][0]->prescription_date;
+            //$mobile = $prescriptionDetails['HospitalProfile'][0]->telephone;
+
+            $drugDetails = $prescriptionDetails['PatientDrugDetails'];
+            //dd($drugDetails);
+
+            foreach($drugDetails as $drug)
+            {
+                $prescription .= "Drug Name: ".$drug->drug_name."%0a"." Brand Name: ".$drug->brand_name."%0a"
+                        ." Dosage: ".$drug->dosage."%0a"
+                        ." No of days: ".$drug->no_of_days."%0a"
+                        ." Frequency Morning: ".$drug->morning."%0a"
+                        ." Frequency Afternoon: ".$drug->afternoon."%0a"
+                        ." Frequency Night: ".$drug->night."%0a";
+            }
+
+            $message = "Patient Name : ".$patientName."%0a"
+                ." Doctor Name: ".$doctorName."%0a"
+                ." Hospital Name: ".$hospitalName."%0a"
+                ." Prescription Id: ".$prescriptionId."%0a"
+                ." Prescription Date: ".$prescriptionDate."%0a"
+                ." Drug Details: ".$prescription;
+
+            $client = new Client();
+            $response = $client->get('http://bhashsms.com/api/sendmsg.php?user=Daiwiksoft&pass=Daiwik2612&sender=daiwik&phone='.$mobile.'&text='.$message.'&priority=ndnd&stype=normal');
+
+            if($response->getStatusCode() == 200)
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_SMS_SUCCESS));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_SMS_ERROR));
+            }
+
+            //$responseJson->setObj($response->getStatusCode());
+            $responseJson->sendSuccessResponse();
+
+            //$prescriptionSMSInfo = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SUCCESS));
+            //$prescriptionSMSInfo->setObj("SMS Sent Successfully");
 
         }
         catch(PharmacyException $pharmacyExc)
@@ -583,7 +631,7 @@ class PharmacyController extends Controller
             Log::error($msg);
         }
 
-        return $prescriptionSMSInfo;
+        return $responseJson;
         //return view('portal.patient-labtest-details',compact('prescriptionDetails'));
     }
 

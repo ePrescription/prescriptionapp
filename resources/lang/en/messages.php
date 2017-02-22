@@ -67,4 +67,9 @@
         "223" => "No doctor details available",
 
         "304" => "Unable to retrieve patient appointments",
+
+        "1001" => "Prescription delivered successfully through SMS",
+        "1002" => "Unable to deliver prescription through SMS",
+        "1003" => "Lab test delivered successfully through SMS",
+        "1004" => "Unable to deliver lab tests through SMS",
     ];
