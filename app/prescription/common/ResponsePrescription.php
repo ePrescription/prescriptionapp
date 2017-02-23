@@ -126,6 +126,7 @@ class ResponsePrescription extends JsonResponse
                 'isSuccess' => $this->result,
                 'message' => $this->getMessage(),
                 'status' => $this::HTTP_SUCCESS_STATUS,
+                'result' => $this->obj
             );
         }
         /*if(!isEmpty($this->obj))
@@ -155,9 +156,11 @@ class ResponsePrescription extends JsonResponse
             'isSuccess' => $this->result,
             'message' => $this->getMessage(),
             'status' => $this::HTTP_SUCCESS_STATUS,
+            'result' => $this->obj
         );
         //dd('Inside send error response');
         $errorMsg = $exc->getMessageForCode();
+        //dd($errorMsg);
         $msg = AppendMessage::appendMessage($exc);
         Log::error($msg);
 

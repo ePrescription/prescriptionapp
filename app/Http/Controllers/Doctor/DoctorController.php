@@ -8,6 +8,7 @@ use App\prescription\common\UserSession;
 use App\prescription\facades\HospitalServiceFacade;
 use App\prescription\mapper\PatientProfileMapper;
 use App\prescription\utilities\ErrorEnum\ErrorEnum;
+use App\prescription\utilities\Exception\UserNotFoundException;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -885,7 +886,7 @@ class DoctorController extends Controller
         //return "HI";
         $patientProfileVM = null;
         $status = true;
-        $jsonResponse = null;
+        $responseJson = null;
         //return $patientProfileRequest->all();
 
         try
@@ -895,27 +896,48 @@ class DoctorController extends Controller
 
             if($status)
             {
-                $jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_SUCCESS));
+                //$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_SUCCESS));
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_SUCCESS));
+                $responseJson->sendSuccessResponse();
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_ERROR));
+                $responseJson->sendSuccessResponse();
             }
 
         }
         catch(HospitalException $hospitalExc)
         {
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_ERROR));
-            $errorMsg = $hospitalExc->getMessageForCode();
-            $msg = AppendMessage::appendMessage($hospitalExc);
-            Log::error($msg);
+            //dd('Inside controller exception');
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_ERROR));
+            $responseJson->sendErrorResponse($hospitalExc);
+            //$errorMsg = $hospitalExc->getMessageForCode();
+            //$msg = AppendMessage::appendMessage($hospitalExc);
+            //Log::error($msg);
+            //return $jsonResponse;
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            //dd('Inside controller exception');
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.$userExc->getUserErrorCode()));
+            $responseJson->sendErrorResponse($userExc);
+            //$errorMsg = $userExc->getMessageForCode();
+            //$msg = AppendMessage::appendMessage($userExc);
+            //Log::error($msg);
             //return $jsonResponse;
         }
         catch(Exception $exc)
         {
             //dd($exc);
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SAVE_ERROR));
-            $msg = AppendMessage::appendGeneralException($exc);
-            Log::error($msg);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_ERROR));
+            $responseJson->sendErrorResponse($exc);
+            //$msg = AppendMessage::appendGeneralException($exc);
+            //Log::error($msg);
         }
 
-        return $jsonResponse;
+        return $responseJson;
     }
 
     /**

@@ -23,6 +23,7 @@ use App\prescription\utilities\ErrorEnum\ErrorEnum;
 use App\prescription\utilities\Exception\HospitalException;
 use App\Http\ViewModels\PatientPrescriptionViewModel;
 
+use App\prescription\utilities\Exception\UserNotFoundException;
 use App\prescription\utilities\UserType;
 use App\User;
 use App\Role;
@@ -1107,6 +1108,14 @@ class HospitalImpl implements HospitalInterface{
         {
             $patientId = $patientProfileVM->getPatientId();
             $hospitalId = $patientProfileVM->getHospitalId();
+
+            $hospitalUser = User::find($hospitalId);
+
+            if(is_null($hospitalUser))
+            {
+                $status = false;
+                throw new UserNotFoundException(null, ErrorEnum::HOSPITAL_USER_NOT_FOUND);
+            }
             //dd($patientId);
 
             if($patientId == 0)
@@ -1118,10 +1127,16 @@ class HospitalImpl implements HospitalInterface{
             else
             {
                 $patient = Patient::where('patient_id', '=', $patientId)->first();
+                //dd($patient);
                 if(!is_null($patient))
                 {
                     //$user = User::find($companyId);
                     $user = $this->registerNewPatient($patientProfileVM);
+                }
+                else
+                {
+                    $status = false;
+                    throw new UserNotFoundException(null, ErrorEnum::USER_NOT_FOUND);
                 }
             }
 
@@ -1156,6 +1171,12 @@ class HospitalImpl implements HospitalInterface{
             //dd($queryEx);
             $status = false;
             throw new HospitalException(null, ErrorEnum::PATIENT_PROFILE_SAVE_ERROR, $queryEx);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            $status = false;
+            throw $userExc;
         }
         catch(Exception $exc)
         {

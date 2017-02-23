@@ -12,6 +12,7 @@ use App\prescription\facades\HospitalServiceFacade;
 use App\prescription\repositories\repointerface\HospitalInterface;
 use App\prescription\utilities\Exception\HospitalException;
 use App\prescription\utilities\ErrorEnum\ErrorEnum;
+use App\prescription\utilities\Exception\UserNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Exception;
@@ -164,6 +165,11 @@ class HospitalService {
         {
             $status = false;
             throw $hospitalExc;
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            $status = false;
+            throw $userExc;
         }
         catch (Exception $ex) {
 
