@@ -33,9 +33,9 @@ $profile_menu="0";
             </ol>
             <?php //print_r($labTestDetails); ?>
         </section>
-
+        <div style="width:98%;float: right;padding:10px;margin:10px;"><a href="" style="float: right;" ><button type="button" class="btn btn-success btn-xs" onclick="javascript:printDiv();"><i class="fa fa-print"></i> PRINT</button></a></div>
         <!-- Main content -->
-        <section class="content">
+        <section id="PagePrint" class="content">
             <div class="row">
                 <div class="col-xs-6">
 
@@ -170,5 +170,23 @@ $profile_menu="0";
     @include('portal.doctor-footer')
 </div><!-- ./wrapper -->
 
+<script>
+    function printDiv()
+    {
+
+        var divToPrint=document.getElementById('PagePrint');
+
+        var newWin=window.open('','Print-Window');
+
+        newWin.document.open();
+
+        newWin.document.write('<html><body onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
+
+        newWin.document.close();
+
+        setTimeout(function(){newWin.close();},10);
+
+    }
+</script>
 </body>
 </html>
