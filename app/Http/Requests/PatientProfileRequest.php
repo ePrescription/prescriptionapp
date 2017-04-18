@@ -34,7 +34,8 @@ class PatientProfileRequest extends BasePrescriptionRequest
         $rules['name'] = 'required';
         $rules['telephone'] = 'required';
         $rules['email'] = 'required | email | unique:users,email';
-        $rules['age'] = 'required | numeric';
+        $rules['dob'] = 'required | date_format:Y-m-d';
+        //$rules['age'] = 'required | numeric';
         $rules['gender'] = 'required';
 
         return $rules;

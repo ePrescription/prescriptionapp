@@ -62,6 +62,7 @@ class ErrorEnum extends Enum{
     //Drug Brands
     const BRAND_LIST_ERROR = 131;
     const BRAND_LIST_SUCCESS = 132;
+    const NO_BRAND_LIST_FOUND = 133;
 
     //Lab Tests List
     const LAB_LIST_ERROR = 141;
@@ -71,6 +72,7 @@ class ErrorEnum extends Enum{
     const NO_LABTEST_FOUND = 145;
     const LABTESTS_DETAILS_SAVE_ERROR = 146;
     const LABTESTS_DETAILS_SAVE_SUCCESS = 147;
+    const NO_LAB_DETAILS_FOUND = 148;
 
     //User Login 160 - 170
 
@@ -117,5 +119,6 @@ class ErrorEnum extends Enum{
 
     const LABTEST_SMS_SUCCESS = 1003;
     const LABTEST_SMS_ERROR = 1004;
+
 
 }

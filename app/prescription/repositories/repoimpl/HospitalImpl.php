@@ -430,6 +430,7 @@ class HospitalImpl implements HospitalInterface{
 
     public function getPrescriptionDetails($prescriptionId)
     {
+        $prescriptionInfo = null;
         $prescriptionDetails = null;
         $patientDetails = null;
         $doctorDetails = null;
@@ -444,6 +445,11 @@ class HospitalImpl implements HospitalInterface{
             $query->join('prescription_details as pd', 'pd.patient_prescription_id', '=', 'pp.id');
             $query->join('drugs as d', 'd.id', '=', 'pd.drug_id');
             $query->where('pp.id', '=', $prescriptionId);*/
+
+            $prescriptionQuery = DB::table('patient_prescription as pp')->select('pp.id as prescriptionId', 'pp.unique_id as PRID',
+                                    'pp.brief_description', 'pp.prescription_date');
+            $prescriptionQuery->where('pp.id', '=', $prescriptionId);
+            $prescriptionInfo = $prescriptionQuery->get();
 
             $patientQuery = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name', 'p.pid',
                     'pp.prescription_date','p.telephone', 'p.email');
@@ -474,6 +480,7 @@ class HospitalImpl implements HospitalInterface{
 
             if(!empty($prescriptionDetails))
             {
+                $patientPrescription["PrescriptionInfo"] = $prescriptionInfo;
                 $patientPrescription["PatientProfile"] = $patientDetails;
                 $patientPrescription["DoctorProfile"] = $doctorDetails;
                 $patientPrescription["HospitalProfile"] = $hospitalDetails;
@@ -911,6 +918,7 @@ class HospitalImpl implements HospitalInterface{
 
     public function getLabTestDetails($labTestId)
     {
+        $labTestInfo = null;
         $labTestDetails = null;
         $patientDetails = null;
         $doctorDetails = null;
@@ -926,6 +934,11 @@ class HospitalImpl implements HospitalInterface{
             $query->join('prescription_details as pd', 'pd.patient_prescription_id', '=', 'pp.id');
             $query->join('drugs as d', 'd.id', '=', 'pd.drug_id');
             $query->where('pp.id', '=', $prescriptionId);*/
+
+            $labTestQuery = DB::table('patient_labtest as pl')->select('pl.id as labtestId', 'pl.unique_id as LTID',
+                'pl.brief_description', 'pl.labtest_date');
+            $labTestQuery->where('pl.id', '=', $labTestId);
+            $labTestInfo = $labTestQuery->get();
 
             $patientQuery = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name', 'p.pid',
                 'pl.labtest_date','p.telephone', 'p.email');
@@ -949,10 +962,15 @@ class HospitalImpl implements HospitalInterface{
             $query->where('pl.id', '=', $labTestId);
             $labTestDetails = $query->get();
 
-            $patientLabTests["PatientProfile"] = $patientDetails;
-            $patientLabTests["DoctorProfile"] = $doctorDetails;
-            $patientLabTests["HospitalProfile"] = $hospitalDetails;
-            $patientLabTests["PatientLabTestDetails"] = $labTestDetails;
+            if(!empty($labTestDetails))
+            {
+                $patientLabTests["LabTestInfo"] = $labTestInfo;
+                $patientLabTests["PatientProfile"] = $patientDetails;
+                $patientLabTests["DoctorProfile"] = $doctorDetails;
+                $patientLabTests["HospitalProfile"] = $hospitalDetails;
+                $patientLabTests["PatientLabTestDetails"] = $labTestDetails;
+            }
+
 
             //dd($patientLabTests);
 
@@ -1186,6 +1204,7 @@ class HospitalImpl implements HospitalInterface{
         }
 
         return $status;
+        //return $patient;
     }
 
     /**

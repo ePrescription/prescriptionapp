@@ -6,7 +6,7 @@
 
 <body>
 
-<table id="example1" class="table table-bordered table-hover"  style="width:600px; border:1px solid; border-color:darkgray; color:#000; padding:10px">
+<table id="example1" class="table table-bordered table-hover"  style="width:100%; border:1px solid; border-color:darkgray; color:#000; padding:10px">
     <tbody>
     <tr>
         <td colspan="2"><div align="center" style="font-weight:bold;">{{$prescriptionDetails['HospitalProfile'][0]->hospital_name}}</div></td>
@@ -52,12 +52,30 @@
                         <td>Open</td>
                     </tr>
                 @endforeach
+
                 </tbody>
 
             </table>
 
         </td>
     </tr>
+    </tbody>
+</table>
+<table id="example1" class="table table-bordered table-hover"  style="width:100%;  margin-top:10px; border:1px solid; border-color:darkgray; color:#000; padding:5px">
+    <tbody>
+        <tr>
+            <td style="padding: 2px;">
+                <!-- <span style="font-weight:bold; margin-bottom: 10px; padding: 2px; min-width: 600px;">Notes:</span> -->
+                <div style="font-weight:bold; margin-bottom: 10px; padding: 2px;">Notes</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 2px; ">
+                <div>
+                {{$prescriptionDetails['PrescriptionInfo'][0]->brief_description}}
+                </div>
+            </td>
+        </tr>
     </tbody>
 </table>
 

@@ -46,6 +46,7 @@
         "128" => "No hospital list available",
         "129" => "No patient profile available",
         "130" => "No appointment list available",
+        "133" => "No brand list found",
 
         "400" => "No patient details available",
         "401" => "No prescription list available",
@@ -61,6 +62,7 @@
         "145" => "No lab tests found for the patient",
         "146" => "Unable to save patient lab tests",
         "147" => "Patient lab tests saved successfully",
+        "148" => "No lab test details available",
 
         "160" => "Successfully logged in",
 

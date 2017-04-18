@@ -49,6 +49,39 @@ class Handler extends ExceptionHandler
     {
         //dd($e);
         Log::error($e->getMessage());
+
+        //dd($e->getCode());
+
+        /*if ($this->isHttpException($e))
+        {
+            //dd('Inside http');
+            // Grab the HTTP status code from the Exception
+            $status = $e->getCode();
+            $status = 400;
+
+            $response = [
+                'errors' => 'Sorry, something went wrong.'
+            ];
+
+            return response()->json($response, $status);
+        }
+
+        if ($e instanceof \PDOException)
+        {
+            //dd('inside');
+            //return parent::render($request, $e);
+            $response = [
+                'errors' => 'Unable to connect to database'
+            ];
+
+            return response()->json($response);
+        }*/
+
+        // Return a JSON response with the response array and status code
+        //return response()->json($response, $status);
+
+
+
         return parent::render($request, $e);
     }
 }

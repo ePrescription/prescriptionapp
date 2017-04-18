@@ -18,16 +18,72 @@ class NewAppointmentRequest extends BasePrescriptionRequest
                 $doctorId = $this->get('doctorId');
                 $hospitalId = $this->get('hospitalId');
                 $appDate = $this->get('appointmentDate');
-                $appTime = $this->get('appointmentTime');
+                $currentAppTime = $this->get('appointmentTime');
+
+                $appDuration = strtotime("+30 minutes", strtotime($currentAppTime));
+
+                $minutes = date('i', strtotime($currentAppTime));
+                $hours = date('H', strtotime($currentAppTime));
+                $min = $minutes - ($minutes % 30);
+
+                if($min != 30)
+                {
+                    $min = date('i', $minutes - ($minutes % 30));
+                }
+                $lowestTime = $hours.":".$min;
+                $upperTime = date('H:i', strtotime("+29 minutes", strtotime($lowestTime)));
+                //$upperTime = date(""strtotime("+30 minutes", strtotime($lowestTime));
+
+                //$lowerMinute = $minutes - 30;
+                //$upperMinute = $minutes + 30;
+
+                /*$data = array();
+                $data['lower'] = $lowestTime;
+                $data['upper'] = $upperTime;
+
+                return json_encode($data);*/
 
                 $query = DB::table('doctor_appointment as da')->where('da.doctor_id', $doctorId);
                 $query->where('da.hospital_id', $hospitalId);
                 $query->whereDate('da.appointment_date', '=', $appDate);
-                $query->where('da.appointment_time', $appTime);
+                /*$query->where(function($query) use($lowestTime, $upperTime)
+                {
+                    $query->where('da.appointment_time', $lowestTime);
+                    $query->OrWhere('da.appointment_time', $upperTime);
+                });*/
+                //$query->where('da.appointment_time', $appDuration);
+                $query->where('da.appointment_time', $lowestTime);
+                $query->OrWhere('da.appointment_time', $upperTime);
 
-                $rec = $query->count();
+                //$query->whereBetween('da.appointment_time', [$appTime, $appDuration]);
 
-                if($rec == 0)
+                //dd($query->toSql());
+                $recCount = $query->count();
+
+                //if(!is_null())
+
+                //if()
+                //$appTime = $appointments->appointment_time;
+
+                //$minutes = date('i', strtotime($appTime));
+
+
+
+                //return json_encode($data);
+
+                /*if($currentAppTime >= $appTime && $currentAppTime <=  $appDuration)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }*/
+
+
+                /*$rec = $query->count();*/
+
+                if($recCount == 0)
                 {
                     return true;
                 }

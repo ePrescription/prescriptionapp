@@ -12,6 +12,7 @@ namespace App\prescription\common;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\prescription\utilities\Exception\BaseException;
 use App\prescription\utilities\Exception\AppendMessage;
+use Exception;
 use Log;
 
 class ResponsePrescription extends JsonResponse
@@ -20,8 +21,11 @@ class ResponsePrescription extends JsonResponse
     private $result;
     private $message;
     private $httpCode;
+    private $count = 0;
 
     const HTTP_SUCCESS_STATUS = 200;
+    const HTTP_NO_CONTENT = 204;
+    const HTTP_INTERNAL_SERVER_ERROR = 500;
 
     public function __construct($result, $message = null)
     {
@@ -106,6 +110,23 @@ class ResponsePrescription extends JsonResponse
 
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCount()
+    {
+        return $this->count;
+    }
+
+    /**
+     * @param mixed $count
+     */
+    public function setCount($count)
+    {
+        $this->count = $count;
+    }
+
+
     public function sendSuccessResponse()
     {
         $data = null;
@@ -117,6 +138,7 @@ class ResponsePrescription extends JsonResponse
                 'isSuccess' => $this->result,
                 'message' => $this->getMessage(),
                 'status' => $this::HTTP_SUCCESS_STATUS,
+                'count' => $this->count,
                 'result' => $this->obj
             );
         }
@@ -126,6 +148,7 @@ class ResponsePrescription extends JsonResponse
                 'isSuccess' => $this->result,
                 'message' => $this->getMessage(),
                 'status' => $this::HTTP_SUCCESS_STATUS,
+                //'count' => $this->count,
                 'result' => $this->obj
             );
         }
@@ -155,7 +178,7 @@ class ResponsePrescription extends JsonResponse
         $data = array(
             'isSuccess' => $this->result,
             'message' => $this->getMessage(),
-            'status' => $this::HTTP_SUCCESS_STATUS,
+            'status' => parent::HTTP_INTERNAL_SERVER_ERROR,
             'result' => $this->obj
         );
         //dd('Inside send error response');
@@ -164,24 +187,26 @@ class ResponsePrescription extends JsonResponse
         $msg = AppendMessage::appendMessage($exc);
         Log::error($msg);
 
-        parent::__construct($data, $this::HTTP_SUCCESS_STATUS);
+        parent::__construct($data, parent::HTTP_INTERNAL_SERVER_ERROR);
 
-        /*$data = array(
+    }
+
+    public function sendUnExpectedExpectionResponse(Exception $exc)
+    {
+        $data = array(
             'isSuccess' => $this->result,
+            'message' => $this->getMessage(),
+            'status' => parent::HTTP_INTERNAL_SERVER_ERROR,
             'result' => $this->obj
         );
 
-        try{
-            parent::__construct($data, 422);
-            //parent::
-        }
-        catch(\Exception $exc)
-        {
-            dd($exc);
-        }*/
+        //$msg = AppendMessage::appendMessage($exc);
+        //Log::error($msg);
 
-        //dd($data);
+        $msg = AppendMessage::appendGeneralException($exc);
+        Log::error($msg);
 
+        parent::__construct($data, parent::HTTP_INTERNAL_SERVER_ERROR);
 
     }
 

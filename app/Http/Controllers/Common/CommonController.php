@@ -52,6 +52,7 @@ class CommonController extends Controller
             if(!empty($hospitals))
             {
                 $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_LIST_SUCCESS));
+                $responseJson->setCount(sizeof($hospitals));
             }
             else
             {
@@ -66,16 +67,18 @@ class CommonController extends Controller
             //dd($hospitalExc);
             //$prescriptionResult = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_LIST_ERROR));
             $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_LIST_ERROR));
-            $errorMsg = $hospitalExc->getMessageForCode();
-            $msg = AppendMessage::appendMessage($hospitalExc);
-            Log::error($msg);
+            $responseJson->sendErrorResponse($hospitalExc);
+            //$errorMsg = $hospitalExc->getMessageForCode();
+            //$msg = AppendMessage::appendMessage($hospitalExc);
+            //Log::error($msg);
         }
         catch(Exception $exc)
         {
             //dd($exc);
             $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_LIST_ERROR));
-            $msg = AppendMessage::appendGeneralException($exc);
-            Log::error($msg);
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+            //$msg = AppendMessage::appendGeneralException($exc);
+            //Log::error($msg);
         }
 
         return $responseJson;
@@ -117,16 +120,15 @@ class CommonController extends Controller
             //dd($hospitalExc);
             //$prescriptionResult = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_LIST_ERROR));
             $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_LIST_ERROR));
-            $errorMsg = $hospitalExc->getMessageForCode();
-            $msg = AppendMessage::appendMessage($hospitalExc);
-            Log::error($msg);
+            $responseJson->sendErrorResponse($hospitalExc);
         }
         catch(Exception $exc)
         {
             //dd($exc);
             $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_LIST_ERROR));
-            $msg = AppendMessage::appendGeneralException($exc);
-            Log::error($msg);
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+            //$msg = AppendMessage::appendGeneralException($exc);
+            //Log::error($msg);
         }
 
         return $responseJson;
@@ -149,24 +151,38 @@ class CommonController extends Controller
         try
         {
             $patient = $this->hospitalService->searchPatientByPid($pid);
+
+            if(!empty($patient))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_DETAILS_SUCCESS));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_PATIENT_DETAILS_FOUND));
+            }
+
+            $responseJson->setObj($patient);
+            $responseJson->sendSuccessResponse();
         }
         catch(HospitalException $hospitalExc)
         {
             //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_LIST_ERROR));
-            $errorMsg = $hospitalExc->getMessageForCode();
+            /*$errorMsg = $hospitalExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($hospitalExc);
-            Log::error($msg);
+            Log::error($msg);*/
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $responseJson->sendErrorResponse($hospitalExc);
         }
         catch(Exception $exc)
         {
-            //dd($exc);
-            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_LIST_ERROR));
-            $msg = AppendMessage::appendGeneralException($exc);
-            Log::error($msg);
+            /*$msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);*/
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
         }
 
 
-        return $patient;
+        return $responseJson;
     }
 
     /* Get all the cities
