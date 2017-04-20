@@ -153,6 +153,9 @@ Route::group(array('prefix' => 'hospital', 'namespace' => 'Doctor'), function()
     });*/
 
     //MOBILE
+   Route::get('rest/api/{hospitalId}/doctornames', array('as' => 'hospital.doctors', 'uses' => 'DoctorController@getDoctorNames'));
+   Route::get('rest/api/{hospitalId}/patientnames', array('as' => 'patient.searchnames', 'uses' => 'DoctorController@getPatientNames'));
+
    Route::get('rest/api/hospitals', array('as' => 'doctor.hospitals', 'uses' => 'DoctorController@getHospitalByKeyword'));
    Route::post('rest/api/login', array('as' => 'doctor.login', 'uses' => 'DoctorController@login'));
    //Route::get('rest/api/login', array('as' => 'doctor.login', 'uses' => 'DoctorController@login'));

@@ -2076,7 +2076,107 @@ class DoctorController extends Controller
         return response()->json(['message' => 'Request completed']);
     }
 
+    /**
+     * Get the doctor names for the hospital
+     * @param $hospitalId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
 
+    public function getDoctorNames($hospitalId, Request $nameRequest)
+    {
+        $doctorNames = null;
+        $responseJson = null;
+
+        $keyword = $nameRequest->get('keyword');
+        //dd($keyword);
+        //return $keyword;
+        try
+        {
+            //$patientNames = HospitalServiceFacade::searchPatientByName($keyword);
+            $doctorNames = $this->hospitalService->getDoctorNames($hospitalId, $keyword);
+            //dd($doctorNames);
+
+            if(!empty($doctorNames))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::DOCTOR_NAME_SUCCESS));
+                $responseJson->setCount(sizeof($doctorNames));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_NO_DOCTORS_FOUND));
+            }
+
+            $responseJson->setObj($doctorNames);
+            $responseJson->sendSuccessResponse();
+            //dd($jsonResponse);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_LIST_ERROR));
+            $responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_LIST_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return $responseJson;
+    }
+
+    /**
+     * Get patient names by keyword
+     * @param $keyword
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientNames($hospitalId, Request $nameRequest)
+    {
+        $patientNames = null;
+        $responseJson = null;
+
+        $keyword = $nameRequest->get('keyword');
+        //dd($keyword);
+        //return $keyword;
+        try
+        {
+            //$patientNames = HospitalServiceFacade::searchPatientByName($keyword);
+            $patientNames = $this->hospitalService->getPatientNames($hospitalId, $keyword);
+            //dd($patientNames);
+
+            if(!empty($patientNames))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_LIST_SUCCESS));
+                $responseJson->setCount(sizeof($patientNames));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_LIST_ERROR));
+            }
+
+            $responseJson->setObj($patientNames);
+            $responseJson->sendSuccessResponse();
+            //dd($jsonResponse);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_LIST_ERROR));
+            $responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_LIST_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return $responseJson;
+    }
 
     public function PatientDetailsByHospitalForFront($hid,$patientId)
     {

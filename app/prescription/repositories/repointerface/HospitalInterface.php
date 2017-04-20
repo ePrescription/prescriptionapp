@@ -57,4 +57,6 @@ interface HospitalInterface {
 
     //Hospital
     public function getProfile($hospitalId);
+    public function getDoctorNames($hospitalId, $keyword);
+    public function getPatientNames($hospitalId, $keyword);
 }

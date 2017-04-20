@@ -624,6 +624,56 @@ class HospitalImpl implements HospitalInterface{
         return $patientNames;
     }
 
+    /**
+     * Get patient names by keyword
+     * @param $keyword
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientNames($hospitalId, $keyword)
+    {
+        $patientNames = null;
+
+        try
+        {
+            $hospitalUser = User::find($hospitalId);
+
+            if(!is_null($hospitalUser))
+            {
+                $query = DB::table('patient as p')->select('p.id', 'p.patient_id as patientId', 'p.name');
+                $query->join('users as usr', 'usr.id', '=', 'p.patient_id');
+                $query->join('hospital_patient as hp', 'hp.patient_id', '=', 'p.patient_id');
+                /*$query->join('hospital_patient as hp', function($join){
+                    $join->on('hp.patient_id', '=', 'p.patient_id');
+                    $join->on('hp.patient_id', '=', 'usr.id');
+                });*/
+                $query->where('usr.delete_status', '=', 1);
+                $query->where('hp.hospital_id', $hospitalId);
+                $query->where('p.name', 'LIKE', '%'.$keyword.'%');
+
+                //dd($query->toSql());
+
+                $patientNames = $query->get();
+            }
+            //dd($query->toSql());
+
+
+        }
+        catch(QueryException $queryEx)
+        {
+            dd($queryEx);
+            throw new HospitalException(null, ErrorEnum::PATIENT_LIST_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_LIST_ERROR, $exc);
+        }
+
+        return $patientNames;
+    }
+
     //Search by Patient Pid
     /**
      * Get patient details by PID
@@ -1455,5 +1505,44 @@ class HospitalImpl implements HospitalInterface{
         }
 
         return $hospitalProfile;
+    }
+
+    /**
+     * Get the doctor names for the hospital
+     * @param $hospitalId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getDoctorNames($hospitalId, $keyword)
+    {
+        $doctors = null;
+
+        try
+        {
+            $query = DB::table('doctor as d');
+            $query->join('users as usr', 'usr.id', '=', 'd.doctor_id');
+            $query->join('hospital_doctor as hd', 'hd.doctor_id', '=', 'd.doctor_id');
+            $query->where('usr.delete_status', '=', 1);
+            $query->where('hd.hospital_id', '=', $hospitalId);
+            $query->where('d.name', 'LIKE', '%'.$keyword.'%');
+            $query->select('d.id as doctorId', 'd.name as doctorName');
+            $query->orderBy('d.name', 'ASC');
+
+            $doctors = $query->get();
+
+        }
+        catch(QueryException $queryExc)
+        {
+            //dd($queryExc);
+            throw new HospitalException(null, ErrorEnum::HOSPITAL_NO_DOCTORS_FOUND, $queryExc);
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::HOSPITAL_NO_DOCTORS_FOUND, $exc);
+        }
+
+        return $doctors;
     }
 }

@@ -811,10 +811,66 @@ class HospitalService {
         }
         catch(Exception $exc)
         {
-            throw new PharmacyException(null, ErrorEnum::HOSPITAL_PROFILE_VIEW_ERROR, $exc);
+            throw new HospitalException(null, ErrorEnum::HOSPITAL_PROFILE_VIEW_ERROR, $exc);
         }
 
         return $hospitalProfile;
+    }
+
+    /**
+     * Get the doctor names for the hospital
+     * @param $hospitalId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getDoctorNames($hospitalId, $keyword)
+    {
+        $doctors = null;
+
+        try
+        {
+            $doctors = $this->hospitalRepo->getDoctorNames($hospitalId, $keyword);
+        }
+        catch(HospitalException $profileExc)
+        {
+            throw $profileExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::HOSPITAL_NO_DOCTORS_FOUND, $exc);
+        }
+
+        return $doctors;
+    }
+
+    /**
+     * Get patient names by keyword
+     * @param $keyword
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientNames($hospitalId, $keyword)
+    {
+        $patientNames = null;
+
+        try
+        {
+            $patientNames = $this->hospitalRepo->getPatientNames($hospitalId, $keyword);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_LIST_ERROR, $exc);
+        }
+
+        return $patientNames;
     }
 
 }

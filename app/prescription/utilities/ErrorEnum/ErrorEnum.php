@@ -41,6 +41,8 @@ class ErrorEnum extends Enum{
     const PATIENT_NEW_APPOINTMENT_ERROR = 118;
     const PATIENT_NEW_APPOINTMENT_SUCCESS = 119;
     const NEW_PATIENT_ERROR = 120;
+
+
     //Prescription List
 
     const PRESCRIPTION_LIST_ERROR = 121;
@@ -101,6 +103,7 @@ class ErrorEnum extends Enum{
     const DOCTOR_DETAILS_ERROR = 221;
     const DOCTOR_DETAILS_SUCCESS = 222;
     const NO_DOCTOR_DETAILS_FOUND = 223;
+    const DOCTOR_NAME_SUCCESS = 224;
 
 
     //Hospital Profile constants 300 to 399
@@ -119,6 +122,8 @@ class ErrorEnum extends Enum{
 
     const LABTEST_SMS_SUCCESS = 1003;
     const LABTEST_SMS_ERROR = 1004;
+
+
 
 
 }
