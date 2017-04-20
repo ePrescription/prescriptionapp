@@ -663,7 +663,7 @@ class HospitalImpl implements HospitalInterface{
         }
         catch(QueryException $queryEx)
         {
-            dd($queryEx);
+            //dd($queryEx);
             throw new HospitalException(null, ErrorEnum::PATIENT_LIST_ERROR, $queryEx);
         }
         catch(Exception $exc)
