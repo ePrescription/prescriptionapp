@@ -365,7 +365,8 @@ class HospitalImpl implements HospitalInterface{
 
         try
         {
-            $query = DB::table('patient as p')->select('pp.id as prescription_id', 'pp.unique_id as unique_id', 'p.patient_id', 'p.pid', 'p.name', 'pp.prescription_date');
+            $query = DB::table('patient as p')->select('pp.id as prescription_id', 'pp.unique_id as unique_id',
+                'p.patient_id', 'p.pid', 'p.name', 'pp.prescription_date', 'pp.brief_description as notes');
             $query->join('patient_prescription as pp', 'pp.patient_id', '=', 'p.patient_id');
             $query->where('pp.hospital_id', '=', $hospitalId);
             $query->where('pp.doctor_id', '=', $doctorId);
@@ -401,7 +402,8 @@ class HospitalImpl implements HospitalInterface{
 
         try
         {
-            $query = DB::table('patient as p')->select('pp.id as prescription_id', 'pp.unique_id as unique_id', 'pp.patient_id', 'p.pid', 'p.name', 'pp.prescription_date');
+            $query = DB::table('patient as p')->select('pp.id as prescription_id', 'pp.unique_id as unique_id',
+                'pp.patient_id', 'p.pid', 'p.name', 'pp.prescription_date', 'pp.brief_description as notes');
             $query->join('patient_prescription as pp', 'pp.patient_id', '=', 'p.patient_id');
             $query->where('pp.patient_id', '=', $patientId);
             $query->orderBy('pp.id', 'DESC');
@@ -895,7 +897,8 @@ class HospitalImpl implements HospitalInterface{
 
         try
         {
-            $query = DB::table('patient as p')->select('pl.id as labtest_id', 'pl.unique_id as unique_id', 'p.patient_id', 'p.pid', 'p.name', 'pl.labtest_date');
+            $query = DB::table('patient as p')->select('pl.id as labtest_id', 'pl.unique_id as unique_id',
+                'p.patient_id', 'p.pid', 'p.name', 'pl.labtest_date', 'pl.brief_description as notes');
             $query->join('patient_labtest as pl', 'pl.patient_id', '=', 'p.patient_id');
             $query->where('pl.hospital_id', '=', $hospitalId);
             $query->where('pl.doctor_id', '=', $doctorId);
@@ -937,7 +940,7 @@ class HospitalImpl implements HospitalInterface{
             $query->orderBy('pl.id', 'DESC');*/
 
             $query = DB::table('patient as p')->select('pl.id as labtest_id','pl.unique_id as unique_id', 'pl.patient_id',
-                    'p.pid', 'p.name', 'pl.labtest_date');
+                    'p.pid', 'p.name', 'pl.labtest_date', 'pl.brief_description as notes');
             $query->join('patient_labtest as pl', 'pl.patient_id', '=', 'p.patient_id');
             //$query->join('labtest_details as ld', 'ld.patient_labtest_id', '=', 'pl.id');
             //$query->join('labtest as l', 'l.id', '=', 'ld.labtest_id');
