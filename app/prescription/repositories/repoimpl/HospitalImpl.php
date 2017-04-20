@@ -134,7 +134,7 @@ class HospitalImpl implements HospitalInterface{
                 'da.doctor_id', 'd.name as doctor_name',
                 //'da.appointment_date',
                 DB::raw('DATE_FORMAT(da.appointment_date, "%d-%b-%Y") as appointment_date'),
-                'da.appointment_time', 'da.appointment_type');
+                'da.appointment_time', 'da.appointment_type', 'da.brief_history as notes');
             $query->join('hospital as h', 'h.hospital_id', '=', 'da.hospital_id');
             $query->join('patient as p', 'p.patient_id', '=', 'da.patient_id');
             $query->join('doctor as d', 'd.doctor_id', '=', 'da.doctor_id');
@@ -1008,7 +1008,7 @@ class HospitalImpl implements HospitalInterface{
             $query->join('doctor as d', 'd.doctor_id', '=', 'da.doctor_id');
             $query->where('da.patient_id', $patientId);
             $query->select('p.id', 'p.patient_id', 'p.pid', 'p.name as patient_name', 'h.hospital_id', 'h.hospital_name',
-                'd.doctor_id', 'd.name', 'da.appointment_date', 'da.appointment_time');
+                'd.doctor_id', 'd.name', 'da.appointment_date', 'da.appointment_time', 'da.brief_history as notes');
 
             $appointments = $query->paginate();
         }

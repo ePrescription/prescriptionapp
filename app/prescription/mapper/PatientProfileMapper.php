@@ -60,7 +60,7 @@ class PatientProfileMapper
         $appointmentVM->setPatientId($appointment->patientId);
         $appointmentVM->setHospitalId($appointment->hospitalId);
         $appointmentVM->setDoctorId($appointment->doctorId);
-        $appointmentVM->setBriefHistory($appointment->briefHistory);
+        $appointmentVM->setBriefHistory(trim($appointment->briefHistory));
         $appointmentVM->setAppointmentDate($appointment->appointmentDate);
         $appointmentVM->setAppointmentTime($appointment->appointmentTime);
 
