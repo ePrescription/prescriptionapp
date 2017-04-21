@@ -24,8 +24,8 @@ interface HospitalInterface {
     public function saveNewAppointment(NewAppointmentViewModel $appointmentVM);
 
     //Get Patient List
-    //public function getPatientsByHospital($hospitalId, $keyword);
-    public function getPatientsByHospital($hospitalId);
+    public function getPatientsByHospital($hospitalId, $keyword);
+    //public function getPatientsByHospital($hospitalId);
     public function getPatientDetailsById($patientId);
     public function getPatientProfile($patientId);
     public function getPatientAppointments($patientId);
@@ -46,7 +46,8 @@ interface HospitalInterface {
     public function searchByPatientByPidOrName($keyWord = null);
 
     //Drug list
-    public function getBrandNames($keyword);
+    public function getTradeNames($keyword);
+    public function getFormulationNames($keyword);
 
     //Lab Tests
     public function getLabTests();

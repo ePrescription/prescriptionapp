@@ -24,8 +24,11 @@ class PatientPrescriptionMapper {
         $prescriptionVM->setPatientId($prescription->patientId);
         $prescriptionVM->setHospitalId($prescription->hospitalId);
         $prescriptionVM->setBriefDescription($prescription->notes);
+        //$prescriptionVM->setIntakeForm($prescription->intakeForm);
         $prescriptionVM->setDrugDetails($prescription->drugs);
         $prescriptionVM->setPrescriptionDate(date("Y-m-d H:i:s"));
+        $prescriptionVM->setCreatedAt(date("Y-m-d H:i:s"));
+        $prescriptionVM->setUpdatedAt(date("Y-m-d H:i:s"));
 
         //$prescriptionVM->setDrugDetails($prescriptionRequests->json()->all());
 

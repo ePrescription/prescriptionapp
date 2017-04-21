@@ -65,6 +65,10 @@ class ErrorEnum extends Enum{
     const BRAND_LIST_ERROR = 131;
     const BRAND_LIST_SUCCESS = 132;
     const NO_BRAND_LIST_FOUND = 133;
+    const FORMULATION_LIST_ERROR = 134;
+    const FORMULATION_LIST_SUCCESS = 135;
+    const NO_FORMULATION_LIST_FOUND = 136;
+
 
     //Lab Tests List
     const LAB_LIST_ERROR = 141;

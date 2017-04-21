@@ -292,16 +292,16 @@ class DoctorController extends Controller
      * @author Baskar
      */
 
-    public function getPatientsByHospital($hospitalId)
+    public function getPatientsByHospital($hospitalId, Request $patientRequest)
     {
         $patients = null;
         $responseJson = null;
         //$jsonResponse = null;
-        //$keyword = \Input::get('keyword');
+        $keyword = $patientRequest->get('keyword');
         //dd('Inside patients by hospital');
         try
         {
-            $patients = $this->hospitalService->getPatientsByHospital($hospitalId);
+            $patients = $this->hospitalService->getPatientsByHospital($hospitalId, $keyword);
 
             if(!empty($patients))
             {
@@ -1123,7 +1123,7 @@ class DoctorController extends Controller
      * @author Baskar
      */
 
-    public function getBrandNames(Request $brandRequest)
+    public function getTradeNames(Request $brandRequest)
     {
         $brands = null;
         $responseJson = null;
@@ -1135,7 +1135,7 @@ class DoctorController extends Controller
         try
         {
             //$brands = HospitalServiceFacade::getBrandNames($keyword);
-            $brands = $this->hospitalService->getBrandNames($keyword);
+            $brands = $this->hospitalService->getTradeNames($keyword);
 
             if(!empty($brands))
             {
@@ -1152,13 +1152,61 @@ class DoctorController extends Controller
         }
         catch(HospitalException $hospitalExc)
         {
-            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::BRAND_LIST_SUCCESS));
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::BRAND_LIST_ERROR));
             $responseJson->sendErrorResponse($hospitalExc);
         }
         catch(Exception $exc)
         {
             //dd($exc);
-            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::BRAND_LIST_SUCCESS));
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::BRAND_LIST_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return $responseJson;
+    }
+
+    /**
+     * Get formulation names by keyword
+     * @param $keyword
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getFormulationNames(Request $formulationRequest)
+    {
+        $formulations = null;
+        $responseJson = null;
+        //$keyword = \Input::get('keyword');
+        $keyword = $formulationRequest->get('formulations');
+
+        try
+        {
+            //$brands = HospitalServiceFacade::getBrandNames($keyword);
+            $formulations = $this->hospitalService->getFormulationNames($keyword);
+
+            if(!empty($formulations))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::FORMULATION_LIST_SUCCESS));
+                $responseJson->setCount(sizeof($formulations));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_FORMULATION_LIST_FOUND));
+            }
+
+            $responseJson->setObj($formulations);
+            $responseJson->sendSuccessResponse();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FORMULATION_LIST_ERROR));
+            $responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FORMULATION_LIST_ERROR));
             $responseJson->sendUnExpectedExpectionResponse($exc);
         }
 

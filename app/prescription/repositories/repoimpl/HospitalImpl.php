@@ -239,8 +239,8 @@ class HospitalImpl implements HospitalInterface{
      * @author Baskar
      */
 
-    //public function getPatientsByHospital($hospitalId, $keyword)
-    public function getPatientsByHospital($hospitalId)
+    public function getPatientsByHospital($hospitalId, $keyword)
+    //public function getPatientsByHospital($hospitalId)
     {
         $patients = null;
 
@@ -251,6 +251,7 @@ class HospitalImpl implements HospitalInterface{
             $query->join('hospital as h', 'h.hospital_id', '=', 'hp.hospital_id');
             $query->join('patient as p', 'p.patient_id', '=', 'hp.patient_id');
             $query->where('hp.hospital_id', '=', $hospitalId);
+            $query->where('p.name', 'LIKE', '%'.$keyword.'%');
             $query->orderBy('p.created_at', 'DESC');
             //$query->where('p.name', 'LIKE', '%'.$keyword.'%');
 
@@ -469,10 +470,10 @@ class HospitalImpl implements HospitalInterface{
             $hospitalQuery->where('pp.id', '=', $prescriptionId);
             $hospitalDetails = $hospitalQuery->get();
 
-            $query = DB::table('prescription_details as pd')->select('b.id as brand_id', DB::raw('TRIM(UPPER(b.brand_name)) as brand_name'),
-                        'd.id as drug_id',
-                        DB::raw('TRIM(UPPER(d.drug_name)) as drug_name'),
-                        'pd.dosage', 'pd.no_of_days',
+            $query = DB::table('prescription_details as pd')->select('b.id as trade_id', DB::raw('TRIM(UPPER(b.brand_name)) as trade_name'),
+                        'd.id as formulation_id',
+                        DB::raw('TRIM(UPPER(d.drug_name)) as formulation_name'),
+                        'pd.dosage', 'pd.no_of_days', 'pd.intake_form',
                         'pd.morning', 'pd.afternoon', 'pd.night', 'pd.drug_status');
             $query->join('patient_prescription as pp', 'pp.id', '=', 'pd.patient_prescription_id');
             $query->join('brands as b', 'b.id', '=', 'pd.brand_id');
@@ -539,6 +540,8 @@ class HospitalImpl implements HospitalInterface{
                 $patientPrescription->prescription_date = $patientPrescriptionVM->getPrescriptionDate();
                 $patientPrescription->created_by = 'Admin';
                 $patientPrescription->modified_by = 'Admin';
+                $patientPrescription->created_at = $patientPrescriptionVM->getCreatedAt();
+                $patientPrescription->updated_at = $patientPrescriptionVM->getUpdatedAt();
                 $patientUser->prescriptions()->save($patientPrescription);
             }
 
@@ -561,6 +564,7 @@ class HospitalImpl implements HospitalInterface{
     private function savePrescriptionDetails($patientPrescription, PatientPrescriptionViewModel $patientPrescriptionVM)
     {
         $drugs = $patientPrescriptionVM->getDrugDetails();
+
         foreach($drugs as $drug)
         {
             $prescriptionDetails = new PrescriptionDetails();
@@ -568,14 +572,19 @@ class HospitalImpl implements HospitalInterface{
             $drugObj = (object) $drug;
             $prescriptionDetails->drug_id = $drugObj->drugId;
             $prescriptionDetails->brand_id = $drugObj->brandId;
-            $prescriptionDetails->brief_description = "Test";
+            //$prescriptionDetails->brief_description = "Test";
+            //$prescriptionDetails->brief_description = "Test";
             $prescriptionDetails->dosage = $drugObj->dosage;
             $prescriptionDetails->no_of_days = $drugObj->noOfDays;
+            $prescriptionDetails->intake_form = $drugObj->intakeForm;
             $prescriptionDetails->morning = $drugObj->morning;
             $prescriptionDetails->afternoon = $drugObj->afternoon;
             $prescriptionDetails->night = $drugObj->night;
             $prescriptionDetails->created_by = 'Admin';
             $prescriptionDetails->modified_by = 'Admin';
+
+            $prescriptionDetails->created_at = $patientPrescriptionVM->getCreatedAt();
+            $prescriptionDetails->updated_at = $patientPrescriptionVM->getUpdatedAt();
 
             $patientPrescription->prescriptiondetails()->save($prescriptionDetails);
         }
@@ -812,17 +821,18 @@ class HospitalImpl implements HospitalInterface{
      * @author Baskar
      */
 
-    public function getBrandNames($keyword)
+    public function getTradeNames($keyword)
     {
         $brands = null;
         //dd($keyword);
 
         try
         {
-            $query = DB::table('brands as b')->select('b.id as brand_id', DB::raw('TRIM(UPPER(b.brand_name)) as brand_name'), 'd.id as drug_id',
-                DB::raw('TRIM(UPPER(d.drug_name)) as drug_name'));
+            $query = DB::table('brands as b')->select('b.id as tradeId',
+                DB::raw('CONCAT(TRIM(UPPER(b.brand_name)), " ", b.dosage) as tradeName'), 'd.id as formulationId',
+                DB::raw('TRIM(UPPER(d.drug_name)) as formulationName'));
             $query->join('drugs as d', 'd.id', '=', 'b.drug_id');
-            $query->where('b.brand_name', 'LIKE', $keyword.'%');
+            $query->where('b.brand_name', 'LIKE', '%'.$keyword.'%');
             $query->where('b.brand_status', '=', 1);
             //dd($query->toSql());
             $brands = $query->get();
@@ -845,6 +855,46 @@ class HospitalImpl implements HospitalInterface{
         }
 
         return $brands;
+    }
+
+    /**
+     * Get formulation names by keyword
+     * @param $keyword
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getFormulationNames($keyword)
+    {
+        $formulations = null;
+        //dd($keyword);
+
+        try
+        {
+            $query = DB::table('drugs as d')->select('d.id as formulationId',
+                DB::raw('TRIM(UPPER(d.drug_name)) as formulationName'));
+                //,'b.id as tradeId',
+                //DB::raw('TRIM(UPPER(b.brand_name)) as tradeName'));
+            //$query->join('brands as b', 'b.drug_id', '=', 'd.id');
+            $query->where('d.drug_name', 'LIKE', '%'.$keyword.'%');
+            $query->where('d.drug_status', '=', 1);
+            //dd($query->toSql());
+            $formulations = $query->get();
+
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            throw new HospitalException(null, ErrorEnum::FORMULATION_LIST_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            throw new HospitalException(null, ErrorEnum::FORMULATION_LIST_ERROR, $exc);
+        }
+
+        return $formulations;
     }
 
     //Lab Tests

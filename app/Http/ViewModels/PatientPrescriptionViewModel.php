@@ -17,8 +17,11 @@ class PatientPrescriptionViewModel{
     private $briefDescription;
     private $drugDetails;
     private $prescriptionDate;
+    private $intakeForm;
     private $createdBy;
     private $modifiedBy;
+    private $createdAt;
+    private $updatedAt;
 
     /**
      * @return mixed
@@ -119,6 +122,22 @@ class PatientPrescriptionViewModel{
     /**
      * @return mixed
      */
+    public function getIntakeForm()
+    {
+        return $this->intakeForm;
+    }
+
+    /**
+     * @param mixed $intakeForm
+     */
+    public function setIntakeForm($intakeForm)
+    {
+        $this->intakeForm = $intakeForm;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCreatedBy()
     {
         return $this->createdBy;
@@ -146,6 +165,38 @@ class PatientPrescriptionViewModel{
     public function setModifiedBy($modifiedBy)
     {
         $this->modifiedBy = $modifiedBy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param mixed $createdAt
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param mixed $updatedAt
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
     }
 
 

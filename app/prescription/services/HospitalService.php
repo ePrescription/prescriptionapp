@@ -247,14 +247,14 @@ class HospitalService {
      * @author Baskar
      */
 
-    //public function getPatientsByHospital($hospitalId, $keyword)
-    public function getPatientsByHospital($hospitalId)
+    public function getPatientsByHospital($hospitalId, $keyword)
+    //public function getPatientsByHospital($hospitalId)
     {
         $patients = null;
 
         try
         {
-            $patients = $this->hospitalRepo->getPatientsByHospital($hospitalId);
+            $patients = $this->hospitalRepo->getPatientsByHospital($hospitalId, $keyword);
         }
         catch(HospitalException $hospitalExc)
         {
@@ -601,13 +601,13 @@ class HospitalService {
      * @author Baskar
      */
 
-    public function getBrandNames($keyword)
+    public function getTradeNames($keyword)
     {
         $brands = null;
 
         try
         {
-            $brands = $this->hospitalRepo->getBrandNames($keyword);
+            $brands = $this->hospitalRepo->getTradeNames($keyword);
         }
         catch(HospitalException $hospitalExc)
         {
@@ -619,6 +619,34 @@ class HospitalService {
         }
 
         return $brands;
+    }
+
+    /**
+     * Get formulation names by keyword
+     * @param $keyword
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getFormulationNames($keyword)
+    {
+        $formulations = null;
+
+        try
+        {
+            $formulations = $this->hospitalRepo->getFormulationNames($keyword);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::FORMULATION_LIST_ERROR, $exc);
+        }
+
+        return $formulations;
     }
 
     //Lab Tests

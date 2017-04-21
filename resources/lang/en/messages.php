@@ -46,14 +46,20 @@
         "128" => "No hospital list available",
         "129" => "No patient profile available",
         "130" => "No appointment list available",
+        "131" => "Unable to retrieve brands list",
+        "132" => "Brands list retrieved successfully",
         "133" => "No brand list found",
+        "134" => "Unable to retrive formulations list",
+        "135" => "Successfully retrieve formulations list",
+        "136" => "No formulation list found",
 
         "400" => "No patient details available",
         "401" => "No prescription list available",
         "402" => "No prescription details available",
 
-        "131" => "Unable to retrieve brands list",
-        "132" => "Brands list retrieved successfully",
+
+        //"133" => "No Brand list found",
+
 
         "141" => "Unable to retrieve lab tests list",
         "142" => "Lab tests retrieved successfully",
