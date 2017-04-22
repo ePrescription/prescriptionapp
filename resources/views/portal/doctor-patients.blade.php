@@ -96,6 +96,9 @@ $profile_menu="0";
                                 </tbody>
 
                             </table>
+                                <!-- <div id="paginate" style="float:right">
+                                    {!!$patients->setPath('patients');!!}
+                                </div> -->
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->
 
@@ -106,6 +109,7 @@ $profile_menu="0";
     </div><!-- /.content-wrapper -->
     @include('portal.doctor-footer')
 </div><!-- ./wrapper -->
+@endsection
 
-</body>
-</html>
+<!-- </body>
+</html> -->
