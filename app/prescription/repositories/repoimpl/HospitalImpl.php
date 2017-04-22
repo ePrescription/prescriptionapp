@@ -239,7 +239,7 @@ class HospitalImpl implements HospitalInterface{
      * @author Baskar
      */
 
-    public function getPatientsByHospital($hospitalId, $keyword)
+    public function getPatientsByHospital($hospitalId, $keyword = null)
     //public function getPatientsByHospital($hospitalId)
     {
         $patients = null;
@@ -251,7 +251,11 @@ class HospitalImpl implements HospitalInterface{
             $query->join('hospital as h', 'h.hospital_id', '=', 'hp.hospital_id');
             $query->join('patient as p', 'p.patient_id', '=', 'hp.patient_id');
             $query->where('hp.hospital_id', '=', $hospitalId);
-            $query->where('p.name', 'LIKE', '%'.$keyword.'%');
+            if($keyword != null)
+            {
+                $query->where('p.name', 'LIKE', '%'.$keyword.'%');
+            }
+
             $query->orderBy('p.created_at', 'DESC');
             //$query->where('p.name', 'LIKE', '%'.$keyword.'%');
 
@@ -450,7 +454,7 @@ class HospitalImpl implements HospitalInterface{
             $query->where('pp.id', '=', $prescriptionId);*/
 
             $prescriptionQuery = DB::table('patient_prescription as pp')->select('pp.id as prescriptionId', 'pp.unique_id as PRID',
-                                    'pp.brief_description', 'pp.prescription_date');
+                                    'pp.brief_description as notes', 'pp.prescription_date');
             $prescriptionQuery->where('pp.id', '=', $prescriptionId);
             $prescriptionInfo = $prescriptionQuery->get();
 

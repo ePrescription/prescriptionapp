@@ -15,7 +15,7 @@
         </a>
         <div style="width:700px;float:left;">
             <h2 style="padding: 0px;margin: 8px; color: #FFF; font-weight: bold;    font-size: 18px;">
-                ePrescription and Lab Tests Application <br/>
+                Dr All Caps<br/>
                 {{Session::get('AuthDisplayName')}} - {{Session::get('LoginDoctorDetails')}}
                 <br/>
                 {{Session::get('LoginHospitalDetails')}}

@@ -1658,13 +1658,15 @@ class DoctorController extends Controller
 
     }
 
-    public function getPatientsByHospitalForFront($hospitalId)
+    public function getPatientsByHospitalForFront($hospitalId, Request $patientRequest)
     {
         //dd('HI');
         $patients = null;
+        $keyword = $patientRequest->get('keyword');
+
         try
         {
-            $patients = HospitalServiceFacade::getPatientsByHospital($hospitalId);
+            $patients = HospitalServiceFacade::getPatientsByHospital($hospitalId, $keyword);
             //return json_encode('test');
 
         }
@@ -1998,17 +2000,19 @@ class DoctorController extends Controller
 
 
 
-    public function getPatientsByDoctorForFront($doctorId,$hospitalId)
+    public function getPatientsByDoctorForFront($doctorId, $hospitalId, Request $doctorRequest)
     {
         //dd('HI');
         $patients = null;
+        $keyword = $doctorRequest->get('keyword');
+
         try
         {
             //$hospitalInfo = HospitalDoctor::where('doctor_id','=',$doctorId)->first();
             //$hospitalId=$hospitalInfo['hospital_id'];
 
             //dd($hospitalId);
-            $patients = HospitalServiceFacade::getPatientsByHospital($hospitalId);
+            $patients = HospitalServiceFacade::getPatientsByHospital($hospitalId, $keyword);
 
         }
         catch(HospitalException $hospitalExc)
