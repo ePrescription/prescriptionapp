@@ -204,7 +204,7 @@ $profile_menu="0";
                 <div class="col-xs-12">
                     <div style="width:100%;float:left;">
                         <h2 style="padding: 0px;margin: 8px;color: #FFF; font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;font-weight: bold;    font-size: 18px;">
-                            Dr All Caps - Lat Test<br/>
+                            Dr All Caps - Lab Test<br/>
                             {{Session::get('AuthDisplayName')}} - {{Session::get('LoginDoctorDetails')}}
                             <br/>
                             {{Session::get('LoginHospitalDetails')}}
