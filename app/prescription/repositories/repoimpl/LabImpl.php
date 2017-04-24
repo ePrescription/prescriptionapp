@@ -82,6 +82,8 @@ class LabImpl implements LabInterface
             $query->join('hospital_lab as hl', 'hl.hospital_id', '=', 'pl.hospital_id');
             $query->where('hl.hospital_id', '=', $hospitalId);
             $query->where('hl.lab_id', '=', $labId);
+            /*$query->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'p.telephone','p.age', 'p.gender',
+                'pl.unique_id as labTestCode','pl.labtest_date');*/
             $query->distinct()->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'p.telephone','p.age', 'p.gender');
 
             //dd($query->toSql());

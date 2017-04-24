@@ -96,9 +96,7 @@ $profile_menu="0";
                                 </tbody>
 
                             </table>
-                                <!-- <div id="paginate" style="float:right">
-                                    {!!$patients->setPath('patients');!!}
-                                </div> -->
+
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->
 
