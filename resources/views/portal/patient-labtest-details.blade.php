@@ -317,7 +317,7 @@ $profile_menu="0";
                             <tr style="width:100%;line-height:30px;">
                                 <th  style="width:40%;    text-align: left;line-height:30px;">TEST NAME</th>
                                 <th  style="width:40%;    text-align: left;line-height:30px;">TEST DETAILS</th>
-                                <th  style="width:20%;    text-align: left;line-height:30px;"></th>
+                                <th  style="width:20%;    text-align: left;line-height:30px;">PATIENT REPORT</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -330,7 +330,7 @@ $profile_menu="0";
 
                                             <!-- <a target="_blank" href="{{$labtest->labtest_report}}">Download</a> -->
                                             @else
-                                                    <!-- None -->
+                                                    <!-- No Reports to Download -->
                                         @endif
                                     </td>
                                 </tr>
@@ -397,5 +397,4 @@ $profile_menu="0";
 
     }
 </script>
-</body>
-</html>
+@endsection

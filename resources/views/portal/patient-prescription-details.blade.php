@@ -318,12 +318,12 @@ $profile_menu="0";
                             <table id="example2" class="table table-bordered table-hover" border="0" style="width:100%;border:1px solid #000;padding:5px;margin:5px;">
                                 <thead>
                                 <tr style="width:100%;line-height:30px;">
-                                    <th  style="width:20%;    text-align: left;line-height:30px;">TRADE</th>
-                                    <th  style="width:20%;    text-align: left;line-height:30px;">FORMULATION</th>
+                                    <th  style="width:20%;    text-align: left;line-height:30px;">TRADE NAME</th>
+                                    <th  style="width:20%;    text-align: left;line-height:30px;">FORMULATIONS</th>
+                                    <th  style="width:15%;    text-align: left;line-height:30px;">TYPE</th>
                                     <th  style="width:10%;    text-align: left;line-height:30px;">DOSAGE</th>
                                     <th  style="width:10%;    text-align: left;line-height:30px;">DAYS</th>
-                                    <th  style="width:20%;    text-align: left;line-height:30px;">INTAKE</th>
-                                    <th  style="width:20%;    text-align: left;line-height:30px;">FREQUENCY</th>
+                                    <th  style="width:25%;    text-align: left;line-height:30px;">PERIODICITY / INTERVALS</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -331,9 +331,9 @@ $profile_menu="0";
                                     <tr style="width:100%;line-height:30px;">
                                         <td>{{$prescription->trade_name}}</td>
                                         <td>{{$prescription->formulation_name}}</td>
+                                        <td>{{$prescription->intake_form}}</td>
                                         <td>{{$prescription->dosage}}</td>
                                         <td>{{$prescription->no_of_days}}</td>
-                                        <td>{{$prescription->intake_form}}</td>
                                         <td>
                                             {{$prescription->morning}} - {{$prescription->afternoon}} - {{$prescription->night}}
                                         </td>
@@ -401,5 +401,4 @@ $profile_menu="0";
 
     }
 </script>
-</body>
-</html>
+@endsection
