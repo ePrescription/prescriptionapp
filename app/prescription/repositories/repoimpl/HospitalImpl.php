@@ -834,8 +834,8 @@ class HospitalImpl implements HospitalInterface{
         try
         {
             $query = DB::table('brands as b')->select('b.id as tradeId',
-                //DB::raw('CONCAT(TRIM(UPPER(b.brand_name)), " ", b.dosage) as tradeName'), 'd.id as formulationId',
-                'b.brand_name as tradeName', 'd.id as formulationId',
+                DB::raw('CONCAT(TRIM(UPPER(b.brand_name)), " ", b.dosage_amount, " ", b.dosage) as tradeName'), 'd.id as formulationId',
+                //'b.brand_name as tradeName', 'd.id as formulationId',
                 DB::raw('TRIM(UPPER(d.drug_name)) as formulationName'));
             $query->join('drugs as d', 'd.id', '=', 'b.drug_id');
             $query->where('b.brand_name', 'LIKE', '%'.$keyword.'%');
@@ -919,7 +919,9 @@ class HospitalImpl implements HospitalInterface{
         try
         {
             //dd('Before query');
-            $query = DB::table('labtest as lt')->select('lt.id', DB::raw('TRIM(UPPER(lt.test_name)) as test_name'))->where('lt.test_status', '=', 1);
+            $query = DB::table('labtest as lt')->select('lt.id',
+                DB::raw('TRIM(UPPER(lt.test_category)) as test_category'),
+                DB::raw('TRIM(UPPER(lt.test_name)) as test_name'))->where('lt.test_status', '=', 1);
             //$query = DB::table('labtest as lt')->select('lt.id', 'lt.test_name')->where('lt.test_status', '=', 1);
             //dd($query->toSql());
             $labTests = $query->get();
