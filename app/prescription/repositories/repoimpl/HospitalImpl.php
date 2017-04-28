@@ -881,10 +881,10 @@ class HospitalImpl implements HospitalInterface{
             $query = DB::table('drugs as d')->select('d.id as formulationId',
                 DB::raw('TRIM(UPPER(d.drug_name)) as formulationName')
                 ,'b.id as tradeId',
-                //DB::raw('CONCAT_WS(", ",TRIM(UPPER(b.brand_name)), " ", b.dosage_amount, " ", b.dosage) as tradeName'));
-                DB::raw('CONCAT(TRIM(UPPER(b.brand_name)), " ", b.dosage_amount, " ", b.dosage) as tradeName'));
-                /*DB::raw('CONCAT(TRIM(UPPER(b.brand_name)),
-                    COALESCE(b.dosage_amount," "), IF(LENGTH(b.dosage_amount), "", " ")) as tradeName'));*/
+                //DB::raw('CONCAT_WS(" ",TRIM(UPPER(b.brand_name)), NULLIF(b.dosage_amount, ""), NULLIF(b.dosage, "") as tradeName'));
+                DB::raw('CONCAT_WS(" ",TRIM(UPPER(b.brand_name)), NULLIF(b.dosage_amount, ""), NULLIF(b.dosage, "")) as tradeName'));
+                //DB::raw('CONCAT(TRIM(UPPER(b.brand_name)), " ", b.dosage_amount, " ", b.dosage) as tradeName'));
+
                 //DB::raw('TRIM(UPPER(b.brand_name)) as tradeName'));
             $query->join('brands as b', 'b.drug_id', '=', 'd.id');
             $query->where('d.drug_name', 'LIKE', '%'.$keyword.'%');
@@ -892,6 +892,8 @@ class HospitalImpl implements HospitalInterface{
             //dd($query->toSql());
             $formulations = $query->get();
 
+            /*DB::raw('CONCAT(TRIM(UPPER(b.brand_name)),
+                    COALESCE(b.dosage_amount," "), IF(LENGTH(b.dosage_amount), "", " ")) as tradeName'));*/
             /*$query = DB::table('brands as b')->select('b.id as tradeId',
                 DB::raw('CONCAT(TRIM(UPPER(b.brand_name)), " ", b.dosage_amount, " ", b.dosage) as tradeName'), 'd.id as formulationId',
                 //'b.brand_name as tradeName', 'd.id as formulationId',
