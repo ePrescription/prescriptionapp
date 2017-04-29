@@ -11,4 +11,7 @@ return [
     'base_patient_id' => '1000001',
     'rid_prefix' => 'HVMR',
     'default_rid' => '1000001',
+
+    'locale' => 'en_IN',
+    'currency' => 'INR',
 ];

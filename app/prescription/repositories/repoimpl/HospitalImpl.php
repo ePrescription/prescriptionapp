@@ -30,6 +30,8 @@ use App\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Exception;
+use Numbers_Words;
+use Config as CA;
 
 
 class HospitalImpl implements HospitalInterface{
@@ -1619,5 +1621,152 @@ class HospitalImpl implements HospitalInterface{
         }
 
         return $doctors;
+    }
+
+    //Fee Receipts
+
+    /**
+     * Get list of fee receipts for the hospital and doctor
+     * @param $hospitalId, $doctorId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getFeeReceipts($hospitalId, $doctorId)
+    {
+        $feeReceipts = null;
+
+        try
+        {
+            $doctor = User::find($doctorId);
+            $hospital = User::find($hospitalId);
+
+            if(!is_null($doctor) && !is_null($hospital))
+            {
+                $query = DB::table('fee_receipt as fr')->join('patient as p', 'p.patient_id', '=', 'fr.patient_id');
+                $query->join('doctor as d', 'd.doctor_id', '=', 'fr.doctor_id');
+                $query->where('fr.hospital_id', '=', $hospitalId);
+                $query->where('fr.doctor_id', '=', $doctorId);
+                $query->select('fr.id as receiptId', 'p.id as patientId', 'p.name as patientName', 'p.pid as PID', 'p.patient_spouse_name as spouseName',
+                        'p.telephone as contactNumber', 'd.name as doctorName', 'fr.fee');
+
+                $feeReceipts = $query->get();
+
+            }
+
+        }
+        catch(QueryException $queryExc)
+        {
+            throw new HospitalException(null, ErrorEnum::FEE_RECEIPT_LIST_ERROR, $queryExc);
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::FEE_RECEIPT_LIST_ERROR, $exc);
+        }
+
+        //dd($feeReceipts);
+        return $feeReceipts;
+    }
+
+    /**
+     * Get fee receipt details, doctor details, patient details
+     * @param $hospitalId, $doctorId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getReceiptDetails($receiptId)
+    {
+        $feeInfo = null;
+        $doctorId = null;
+        $patientId = null;
+        $hospitalId = null;
+        $feeWords = null;
+        $fees = null;
+
+        $patientDetails = null;
+        $doctorDetails = null;
+        $hospitalDetails = null;
+        $feeReceiptDetails = null;
+
+        try
+        {
+            $feeDetailsQuery = DB::table('fee_receipt as fr')->where('fr.id', '=', $receiptId);
+            $feeDetailsQuery->select('fr.id as receiptId', 'fr.patient_id as patientId', 'fr.doctor_id as doctorId',
+                        'fr.hospital_id as hospitalId', 'fr.fee');
+
+            $feeInfo = $feeDetailsQuery->first();
+
+            //dd($feeInfo);
+
+            $doctorId = $feeInfo->doctorId;
+            $hospitalId = $feeInfo->hospitalId;
+            $patientId = $feeInfo->patientId;
+            $fees = $feeInfo->fee;
+
+            $feeWords = $this->convertFee($fees);
+            //dd($feeWords);
+
+            //$feeDetails = (array)$feeInfo;
+            $feeDetails['inWords'] = $feeWords;
+            $feeDetails['fee'] = $fees;
+
+            //array_push($feeDetails, $feeWords);
+            //dd($feeDetails);
+
+            $patientQuery = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name', 'p.pid',
+                'p.telephone', 'p.patient_spouse_name as spouseName', 'p.address');
+            $patientQuery->where('p.patient_id', '=', $patientId);
+            $patientDetails = $patientQuery->first();
+
+            $doctorQuery = DB::table('doctor as d')->select('d.id', 'd.doctor_id', 'd.name', 'd.did', 'd.designation',
+                        'd.specialty as department');
+            $doctorQuery->where('d.doctor_id', '=', $doctorId);
+            $doctorDetails = $doctorQuery->first();
+
+            $hospitalQuery = DB::table('hospital as h')->select('h.id', 'h.hospital_id', 'h.hospital_name', 'h.hid',
+                    'h.address', 'h.hospital_logo', 'c.city_name as cityName', 'co.name as country');
+            $hospitalQuery->join('cities as c', 'c.id', '=', 'h.city');
+            $hospitalQuery->join('countries as co', 'co.id', '=', 'h.country');
+            $hospitalQuery->where('h.hospital_id', '=', $hospitalId);
+            $hospitalDetails = $hospitalQuery->first();
+
+            $feeReceiptDetails["patientDetails"] = $patientDetails;
+            $feeReceiptDetails["doctorDetails"] = $doctorDetails;
+            $feeReceiptDetails["hospitalDetails"] = $hospitalDetails;
+            $feeReceiptDetails["feeDetails"] = $feeDetails;
+
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            throw new HospitalException(null, ErrorEnum::FEE_RECEIPT_DETAILS_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            throw new HospitalException(null, ErrorEnum::FEE_RECEIPT_DETAILS_ERROR, $exc);
+        }
+
+        //dd($feeReceiptDetails);
+        return $feeReceiptDetails;
+    }
+
+    private function convertFee($fee)
+    {
+        $feeInWords = null;
+        $currency = CA::get('constants.currency');
+        $locale = CA::get('constants.locale');
+
+        $numberWords = new Numbers_Words();
+        if(!is_null($numberWords))
+        {
+            //$feeInWords = $numberWords->toWords($fee);
+            $feeInWords = $numberWords->toCurrency($fee, $locale, $currency);
+        }
+
+        return $feeInWords;
     }
 }

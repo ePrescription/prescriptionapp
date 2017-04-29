@@ -83,4 +83,12 @@
         "1002" => "Unable to deliver prescription through SMS",
         "1003" => "Lab test delivered successfully through SMS",
         "1004" => "Unable to deliver lab tests through SMS",
+
+        //Fee Receipts messages
+
+        "500" => "Unable to retrieve fee receipts",
+        "501" => "Successfully retrieved fee receipts",
+        "502" => "Unable to get fee receipt details",
+        "503" => "Successfully retrieved fee receipt details",
+        "504" => "No fee receipt details available",
     ];

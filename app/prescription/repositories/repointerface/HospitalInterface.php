@@ -60,4 +60,8 @@ interface HospitalInterface {
     public function getProfile($hospitalId);
     public function getDoctorNames($hospitalId, $keyword);
     public function getPatientNames($hospitalId, $keyword);
+
+    //Fee receipt
+    public function getFeeReceipts($hospitalId, $doctorId);
+    public function getReceiptDetails($receiptId);
 }

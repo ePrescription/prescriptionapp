@@ -34,6 +34,7 @@
           "app/prescription/utilities/HHSCache",
           "app/prescription/common",
           "app/prescription/mapper",
+          "app/Numbers_Words-0.18.1",
           "database"
         ],
         "psr-4": {

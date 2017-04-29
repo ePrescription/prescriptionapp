@@ -901,4 +901,61 @@ class HospitalService {
         return $patientNames;
     }
 
+    //Fee Receipts
+
+    /**
+     * Get list of fee receipts for the hospital and doctor
+     * @param $hospitalId, $doctorId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getFeeReceipts($hospitalId, $doctorId)
+    {
+        $feeReceipts = null;
+
+        try
+        {
+            $feeReceipts = $this->hospitalRepo->getFeeReceipts($hospitalId, $doctorId);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::FEE_RECEIPT_LIST_ERROR, $exc);
+        }
+
+        return $feeReceipts;
+    }
+
+    /**
+     * Get fee receipt details, doctor details, patient details
+     * @param $hospitalId, $doctorId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getReceiptDetails($receiptId)
+    {
+        $feeReceiptDetails = null;
+
+        try
+        {
+            $feeReceiptDetails = $this->hospitalRepo->getReceiptDetails($receiptId);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::FEE_RECEIPT_DETAILS_ERROR, $exc);
+        }
+
+        return $feeReceiptDetails;
+    }
 }

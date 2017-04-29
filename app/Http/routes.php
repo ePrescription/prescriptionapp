@@ -189,6 +189,10 @@ Route::group(array('prefix' => 'hospital', 'namespace' => 'Doctor'), function()
 
    Route::get('rest/api/doctor/{doctorId}/doctordetails', array('as' => 'hospital.doctordetails', 'uses' => 'DoctorController@getDoctorDetails'));
 
+   //Fee Receipts
+   Route::get('rest/api/{hospitalId}/doctor/{doctorId}/feereceipts', array('as' => 'hospital.feereceipts', 'uses' => 'DoctorController@getFeeReceipts'));
+   Route::get('rest/api/receipt/{receiptId}/details', array('as' => 'hospital.feereceiptdetails', 'uses' => 'DoctorController@getReceiptDetails'));
+
 });
 
 Route::group(array('prefix' => 'hospital','namespace' => 'Pharmacy'), function() {

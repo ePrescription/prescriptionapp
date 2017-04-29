@@ -56,6 +56,8 @@ class ErrorEnum extends Enum{
     const NO_HOSPITAL_LIST_FOUND = 128;
     const NO_PATIENT_PROFILE_FOUND = 129;
     const NO_APPOINTMENT_LIST_FOUND = 130;
+
+
     const NO_PATIENT_DETAILS_FOUND = 400;
 
     const NO_PRESCRIPTION_LIST_FOUND = 401;
@@ -127,7 +129,12 @@ class ErrorEnum extends Enum{
     const LABTEST_SMS_SUCCESS = 1003;
     const LABTEST_SMS_ERROR = 1004;
 
-
+    //Fee receipt codes 500 - 550
+    const FEE_RECEIPT_LIST_ERROR = 500;
+    const FEE_RECEIPT_LIST_SUCCESS = 501;
+    const FEE_RECEIPT_DETAILS_ERROR = 502;
+    const FEE_RECEIPT_DETAILS_SUCCESS = 503;
+    const NO_FEE_RECEIPT_DETAILS_FOUND = 504;
 
 
 }
