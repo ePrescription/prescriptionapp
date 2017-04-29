@@ -181,8 +181,14 @@ class Numbers_Words
         }
 
         $currency = explode($decimalPoint, $num, 2);
+        if($currency[1] == '00')
+        {
+            $currency[1] = false;
+        }
+        //dd($currency);
 
         $len = strlen($currency[1]);
+        //dd($len);
 
         if ($len == 1) {
             // add leading zero
@@ -204,6 +210,9 @@ class Numbers_Words
 
                 $currency[0] = substr($int_str, 0, -2);
                 $currency[1] = substr($int_str, -2);
+
+                //dd($currency[1]);
+
 
                 // check if the rounded decimal part became zero
                 if ($currency[1] == '00') {
