@@ -1797,7 +1797,9 @@ class HospitalImpl implements HospitalInterface{
             $hospitalUser = User::find($hospitalId);
             $patientUser = User::find($patientId);
 
-            $doctor = Doctor::where('doctor_id', '=', $doctorUser->id)->first();
+            //$doctor = Doctor::where('doctor_id', '=', $feeReceiptVM->getDoctorId())->first();
+
+            //dd($doctor);
 
             if (!is_null($doctorUser) && !is_null($hospitalUser) && !is_null($patientUser))
             {
@@ -1814,17 +1816,20 @@ class HospitalImpl implements HospitalInterface{
                 $feeReceipt->created_at = $feeReceiptVM->getCreatedAt();
                 $feeReceipt->updated_at = $feeReceiptVM->getUpdatedAt();
 
-                $doctor->feereceipts()->save($feeReceipt);
+                //$doctor->feereceipts()->save($feeReceipt);$doctorUser
+                $doctorUser->feereceipts()->save($feeReceipt);
             }
 
         }
         catch(QueryException $queryEx)
         {
+            //dd($queryEx);
             $status = false;
             throw new HospitalException(null, ErrorEnum::FEE_RECEIPT_SAVE_ERROR, $queryEx);
         }
         catch(Exception $exc)
         {
+            //dd($exc);
             $status = false;
             throw new HospitalException(null, ErrorEnum::FEE_RECEIPT_SAVE_ERROR, $exc);
         }

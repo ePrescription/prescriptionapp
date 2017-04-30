@@ -192,6 +192,7 @@ Route::group(array('prefix' => 'hospital', 'namespace' => 'Doctor'), function()
    //Fee Receipts
    Route::get('rest/api/{hospitalId}/doctor/{doctorId}/feereceipts', array('as' => 'hospital.feereceipts', 'uses' => 'DoctorController@getFeeReceipts'));
    Route::get('rest/api/receipt/{receiptId}/details', array('as' => 'hospital.feereceiptdetails', 'uses' => 'DoctorController@getReceiptDetails'));
+   Route::post('rest/api/feereceipt', array('as' => 'hospital.feereceipt', 'uses' => 'DoctorController@saveFeeReceipt'));
 
 });
 

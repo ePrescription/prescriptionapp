@@ -84,4 +84,9 @@ class User extends Model implements AuthenticatableContract,
             ->withPivot('created_by', 'updated_by')
             ->withTimestamps();
     }
+
+    public function feereceipts()
+    {
+        return $this->hasMany('App\prescription\model\entities\FeeReceipt', 'doctor_id');
+    }
 }

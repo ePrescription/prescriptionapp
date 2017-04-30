@@ -975,7 +975,7 @@ class HospitalService {
         {
             DB::transaction(function() use ($feeReceiptVM, &$status)
             {
-                //$status = $this->hospitalRepo->saveFeeReceipt($feeReceiptVM);
+                $status = $this->hospitalRepo->saveFeeReceipt($feeReceiptVM);
             });
 
         }

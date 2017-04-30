@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class FeeReceiptRequest extends Request
+class FeeReceiptRequest extends BasePrescriptionRequest
 {
     /**
      * Determine if the user is authorized to make this request.
