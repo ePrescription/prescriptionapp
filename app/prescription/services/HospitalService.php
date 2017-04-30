@@ -958,4 +958,38 @@ class HospitalService {
 
         return $feeReceiptDetails;
     }
+
+    /**
+     * Save fee receipt
+     * @param $feeReceiptVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function saveFeeReceipt($feeReceiptVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($feeReceiptVM, &$status)
+            {
+                //$status = $this->hospitalRepo->saveFeeReceipt($feeReceiptVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::FEE_RECEIPT_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
 }

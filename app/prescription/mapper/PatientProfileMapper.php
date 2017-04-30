@@ -8,11 +8,12 @@
 
 namespace App\prescription\mapper;
 
-
-
+use App\Http\ViewModels\FeeReceiptViewModel;
 use App\Http\ViewModels\NewAppointmentViewModel;
 use App\Http\ViewModels\PatientProfileViewModel;
 use Illuminate\Http\Request;
+use App\Http\Requests\FeeReceiptRequest;
+use Session;
 
 class PatientProfileMapper
 {
@@ -70,6 +71,28 @@ class PatientProfileMapper
         $appointmentVM->setUpdatedAt(date("Y-m-d H:i:s"));
 
         return $appointmentVM;
+    }
+
+    public static function setFeeReceipt(FeeReceiptRequest $feeReceiptRequest)
+    {
+        $feeReceiptVM = new FeeReceiptViewModel();
+
+        $feeReceipt = (object)$feeReceiptRequest->all();
+
+        $userName = Session::get('DisplayName');
+        //$userName = 'Admin';
+
+        $feeReceiptVM->setPatientId($feeReceipt->patientId);
+        $feeReceiptVM->setHospitalId($feeReceipt->hospitalId);
+        $feeReceiptVM->setDoctorId($feeReceipt->doctorId);
+        $feeReceiptVM->setFees($feeReceipt->fees);
+
+        $feeReceiptVM->setCreatedBy($userName);
+        $feeReceiptVM->setUpdatedBy($userName);
+        $feeReceiptVM->setCreatedAt(date("Y-m-d H:i:s"));
+        $feeReceiptVM->setUpdatedAt(date("Y-m-d H:i:s"));
+
+        return $feeReceiptVM;
     }
 
 }

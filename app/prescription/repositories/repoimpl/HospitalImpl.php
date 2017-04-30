@@ -8,10 +8,13 @@
 
 namespace App\prescription\repositories\repoimpl;
 
+use App\Http\ViewModels\FeeReceiptViewModel;
 use App\Http\ViewModels\NewAppointmentViewModel;
 use App\Http\ViewModels\PatientLabTestViewModel;
 use App\Http\ViewModels\PatientProfileViewModel;
+use App\prescription\model\entities\Doctor;
 use App\prescription\model\entities\DoctorAppointments;
+use App\prescription\model\entities\FeeReceipt;
 use App\prescription\model\entities\Hospital;
 use App\prescription\model\entities\LabTestDetails;
 use App\prescription\model\entities\Patient;
@@ -836,7 +839,9 @@ class HospitalImpl implements HospitalInterface{
         try
         {
             $query = DB::table('brands as b')->select('b.id as tradeId',
-                DB::raw('CONCAT(TRIM(UPPER(b.brand_name)), " ", b.dosage_amount, " ", b.dosage) as tradeName'), 'd.id as formulationId',
+                DB::raw('TRIM(UPPER(b.brand_name)) as tradeName'),
+                'b.dosage_amount', 'b.dosage as quantity', 'b.dispensing_form',
+                'd.id as formulationId',
                 //'b.brand_name as tradeName', 'd.id as formulationId',
                 DB::raw('TRIM(UPPER(d.drug_name)) as formulationName'));
             $query->join('drugs as d', 'd.id', '=', 'b.drug_id');
@@ -1768,5 +1773,62 @@ class HospitalImpl implements HospitalInterface{
         }
 
         return $feeInWords;
+    }
+
+    /**
+     * Save fee receipt
+     * @param $feeReceiptVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function saveFeeReceipt(FeeReceiptViewModel $feeReceiptVM)
+    {
+        $status = true;
+
+        try
+        {
+            $doctorId = $feeReceiptVM->getDoctorId();
+            $patientId = $feeReceiptVM->getPatientId();
+            $hospitalId = $feeReceiptVM->getHospitalId();
+
+            $doctorUser = User::find($doctorId);
+            $hospitalUser = User::find($hospitalId);
+            $patientUser = User::find($patientId);
+
+            $doctor = Doctor::where('doctor_id', '=', $doctorUser->id)->first();
+
+            if (!is_null($doctorUser) && !is_null($hospitalUser) && !is_null($patientUser))
+            {
+                $feeReceipt = new FeeReceipt();
+                $feeReceipt->hospital_id = $hospitalId;
+                $feeReceipt->patient_id = $patientId;
+                //$patientLabTests->unique_id = "LTID".time();
+
+                $feeReceipt->fee = $feeReceiptVM->getFees();
+                $feeReceipt->created_by = 'Admin';
+                $feeReceipt->modified_by = 'Admin';
+                //$feeReceipt->created_by = $feeReceiptVM->getCreatedBy();
+                //$feeReceipt->modified_by = $feeReceiptVM->getUpdatedBy();
+                $feeReceipt->created_at = $feeReceiptVM->getCreatedAt();
+                $feeReceipt->updated_at = $feeReceiptVM->getUpdatedAt();
+
+                $doctor->feereceipts()->save($feeReceipt);
+            }
+
+        }
+        catch(QueryException $queryEx)
+        {
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::FEE_RECEIPT_SAVE_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::FEE_RECEIPT_SAVE_ERROR, $exc);
+        }
+
+        return $status;
     }
 }

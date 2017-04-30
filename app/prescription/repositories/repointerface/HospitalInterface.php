@@ -6,6 +6,7 @@
  * Time: 5:07 PM
  */
 
+use App\Http\ViewModels\FeeReceiptViewModel;
 use App\Http\ViewModels\NewAppointmentViewModel;
 use App\Http\ViewModels\PatientLabTestViewModel;
 use App\Http\ViewModels\PatientPrescriptionViewModel;
@@ -64,4 +65,5 @@ interface HospitalInterface {
     //Fee receipt
     public function getFeeReceipts($hospitalId, $doctorId);
     public function getReceiptDetails($receiptId);
+    public function saveFeeReceipt(FeeReceiptViewModel $feeReceiptVM);
 }

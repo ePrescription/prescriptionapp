@@ -91,4 +91,6 @@
         "502" => "Unable to get fee receipt details",
         "503" => "Successfully retrieved fee receipt details",
         "504" => "No fee receipt details available",
+        "505" => "Unable to save fee receipt",
+        "506" => "Successfully saved fee receipt",
     ];

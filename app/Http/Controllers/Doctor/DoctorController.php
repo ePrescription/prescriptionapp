@@ -25,6 +25,7 @@ use App\prescription\model\entities\HospitalDoctor;
 use App\Http\Requests\DoctorLoginRequest;
 use App\Http\Requests\PatientProfileRequest;
 use App\Http\Requests\NewAppointmentRequest;
+use App\Http\Requests\FeeReceiptRequest;
 
 use App\prescription\mapper\HospitalMapper;
 
@@ -1418,31 +1419,6 @@ class DoctorController extends Controller
         $responseJson = null;
         try
         {
-            //return json_encode($rec);
-
-            /*$currentAppTime = $appointmentRequest->get('appointmentTime');
-
-            $appDuration = strtotime("+30 minutes", strtotime($currentAppTime));
-
-            $minutes = date('i', strtotime($currentAppTime));
-            $hours = date('H', strtotime($currentAppTime));
-            $min = $minutes - ($minutes % 30);
-
-            if($min != 30)
-            {
-                $min = date('i', $minutes - ($minutes % 30));
-            }
-            $lowestTime = $hours.":".$min;
-            $upperTime = date('H:i', strtotime("+30 minutes", strtotime($lowestTime)));
-
-            $data = array();
-            $data['lower'] = $lowestTime;
-            $data['upper'] = $upperTime;
-            $data['date'] = $appointmentRequest->get('appointmentDate');
-
-            return json_encode($data);*/
-
-
             $appointmentsVM = PatientProfileMapper::setPatientAppointment($appointmentRequest);
             //$status = HospitalServiceFacade::saveNewAppointment($appointmentsVM);
             $status = $this->hospitalService->saveNewAppointment($appointmentsVM);
@@ -2356,6 +2332,51 @@ class DoctorController extends Controller
         {
             //dd($exc);
             $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_DETAILS_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return $responseJson;
+    }
+
+    /**
+     * Save fee receipt
+     * @param $feeReceiptRequest
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function saveFeeReceipt(FeeReceiptRequest $feeReceiptRequest)
+    {
+        $feeReceiptVM = null;
+        $status = true;
+        $responseJson = null;
+
+        try
+        {
+            $feeReceiptVM = PatientProfileMapper::setFeeReceipt($feeReceiptRequest);
+            $status = $this->hospitalService->saveFeeReceipt($feeReceiptVM);
+
+            if($status)
+            {
+                //$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_SUCCESS));
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::FEE_RECEIPT_SAVE_SUCCESS));
+                $responseJson->sendSuccessResponse();
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_SAVE_ERROR));
+                $responseJson->sendSuccessResponse();
+            }
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_SAVE_ERROR));
+            $responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_SAVE_ERROR));
             $responseJson->sendUnExpectedExpectionResponse($exc);
         }
 
