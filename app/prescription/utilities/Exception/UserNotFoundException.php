@@ -11,4 +11,5 @@ namespace App\prescription\utilities\Exception;
 
 class UserNotFoundException extends BaseException{
 
+
 }

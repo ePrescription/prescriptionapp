@@ -13,13 +13,13 @@ class FeeReceipt extends Model
 
     protected $guarded = array('id');
 
-    /*public function doctor()
-    {
-        return $this->belongsTo('App\prescription\model\entities\Doctor', 'doctor_id');
-    }*/
-
     public function doctor()
     {
-        return $this->belongsTo('App\User', 'doctor_id');
+        return $this->belongsTo('App\prescription\model\entities\Doctor', 'doctor_id');
     }
+
+    /*public function doctor()
+    {
+        return $this->belongsTo('App\User', 'doctor_id');
+    }*/
 }

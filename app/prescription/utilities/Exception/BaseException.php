@@ -68,8 +68,7 @@ abstract class BaseException extends Exception
         $errorMsg = trans('messages.'.$msgCode);
         return $errorMsg;
     }
-    
-    
+
 }
 
 

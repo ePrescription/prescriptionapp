@@ -181,6 +181,7 @@ class ResponsePrescription extends JsonResponse
             'status' => parent::HTTP_INTERNAL_SERVER_ERROR,
             'result' => $this->obj
         );
+
         //dd('Inside send error response');
         $errorMsg = $exc->getMessageForCode();
         //dd($errorMsg);

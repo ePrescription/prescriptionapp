@@ -2278,7 +2278,8 @@ class DoctorController extends Controller
         }
         catch(HospitalException $hospitalExc)
         {
-            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_LIST_ERROR));
+            //dd($hospitalExc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.$hospitalExc->getUserErrorCode()));
             $responseJson->sendErrorResponse($hospitalExc);
         }
         catch(Exception $exc)
@@ -2371,7 +2372,7 @@ class DoctorController extends Controller
         }
         catch(HospitalException $hospitalExc)
         {
-            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_SAVE_ERROR));
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.$hospitalExc->getUserErrorCode()));
             $responseJson->sendErrorResponse($hospitalExc);
         }
         catch(Exception $exc)

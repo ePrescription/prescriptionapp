@@ -923,6 +923,11 @@ class HospitalService {
         {
             throw $hospitalExc;
         }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            throw $userExc;
+        }
         catch(Exception $exc)
         {
             throw new HospitalException(null, ErrorEnum::FEE_RECEIPT_LIST_ERROR, $exc);

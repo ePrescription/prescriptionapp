@@ -4,6 +4,6 @@ use App\prescription\utilities\Exception\BaseException;
 
 class HospitalException extends BaseException
 {
-    
+
 }
 

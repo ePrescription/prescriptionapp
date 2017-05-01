@@ -89,4 +89,9 @@ class User extends Model implements AuthenticatableContract,
     {
         return $this->hasMany('App\prescription\model\entities\FeeReceipt', 'doctor_id');
     }
+
+    public function doctor()
+    {
+        return $this->hasOne('App\prescription\model\entities\Doctor', 'doctor_id');
+    }
 }
