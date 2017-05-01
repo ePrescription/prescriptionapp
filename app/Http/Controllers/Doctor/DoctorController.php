@@ -1437,7 +1437,7 @@ class DoctorController extends Controller
         }
         catch(HospitalException $hospitalExc)
         {
-            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_NEW_APPOINTMENT_ERROR));
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.$hospitalExc->getUserErrorCode()));
             $responseJson->sendErrorResponse($hospitalExc);
         }
         catch(Exception $exc)

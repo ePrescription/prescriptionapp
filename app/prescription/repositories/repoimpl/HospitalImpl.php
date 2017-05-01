@@ -788,11 +788,33 @@ class HospitalImpl implements HospitalInterface{
             $patientId = $appointmentVM->getPatientId();
             $hospitalId = $appointmentVM->getHospitalId();
 
-            $doctorUser = User::find($doctorId);
-            $hospitalUser = User::find($hospitalId);
+            $doctorQuery = User::query();
+            $doctorQuery->join('doctor as d', 'd.doctor_id', '=', 'users.id');
+            $doctorQuery->where('d.doctor_id', '=', $doctorId);
+
+            $doctorUser = $doctorQuery->first();
+
+            $hospitalQuery = User::query();
+            $hospitalQuery->join('hospital as h', 'h.hospital_id', '=', 'users.id');
+            $hospitalQuery->where('h.hospital_id', '=', $hospitalId);
+
+            $hospitalUser = $hospitalQuery->first();
+
+            if(is_null($doctorUser))
+            {
+                throw new UserNotFoundException(null, ErrorEnum::USER_NOT_FOUND, null);
+            }
+
+            if(is_null($hospitalUser))
+            {
+                throw new UserNotFoundException(null, ErrorEnum::HOSPITAL_USER_NOT_FOUND, null);
+            }
+
+            $doctor = User::find($doctorId);
+            $hospital = User::find($hospitalId);
             $patientUser = User::find($patientId);
 
-            if (!is_null($doctorUser) && !is_null($hospitalUser) && !is_null($patientUser))
+            if (!is_null($doctor) && !is_null($hospital) && !is_null($patientUser))
             {
                 $appointment = new DoctorAppointments();
                 $appointment->patient_id = $patientId;
@@ -805,7 +827,7 @@ class HospitalImpl implements HospitalInterface{
                 $appointment->created_at = $appointmentVM->getCreatedAt();
                 $appointment->updated_at = $appointmentVM->getUpdatedAt();
 
-                $doctorUser->appointments()->save($appointment);
+                $doctor->appointments()->save($appointment);
             }
 
         }
@@ -813,6 +835,10 @@ class HospitalImpl implements HospitalInterface{
         {
             $status = false;
             throw new HospitalException(null, ErrorEnum::PATIENT_NEW_APPOINTMENT_ERROR, $queryEx);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
         }
         catch(Exception $exc)
         {
@@ -1863,7 +1889,7 @@ class HospitalImpl implements HospitalInterface{
                 $feeReceipt = new FeeReceipt();
                 $feeReceipt->hospital_id = $hospitalId;
                 $feeReceipt->patient_id = $patientId;
-                $feeReceipt->doctor_id = $doctorUser->doctor_id;
+                $feeReceipt->doctor_id = $doctorId;
                 //$patientLabTests->unique_id = "LTID".time();
 
                 $feeReceipt->fee = $feeReceiptVM->getFees();
