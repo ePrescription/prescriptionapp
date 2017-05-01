@@ -32,11 +32,11 @@ class PatientProfileRequest extends BasePrescriptionRequest
         $rules = [];
 
         $rules['name'] = 'required';
-        $rules['telephone'] = 'required';
-        $rules['email'] = 'required | email | unique:users,email';
-        $rules['dob'] = 'required | date_format:Y-m-d';
+        $rules['address'] = 'required';
+        $rules['email'] = 'email | unique:users,email';
+        $rules['dob'] = 'date_format:Y-m-d';
         //$rules['age'] = 'required | numeric';
-        $rules['gender'] = 'required';
+        //$rules['gender'] = 'required';
 
         return $rules;
     }
