@@ -1636,8 +1636,11 @@ class HospitalImpl implements HospitalInterface{
             $query->where('usr.delete_status', '=', 1);
             $query->where('hd.hospital_id', '=', $hospitalId);
             $query->where('d.name', 'LIKE', '%'.$keyword.'%');
-            $query->select('d.id as doctorId', 'd.name as doctorName', 'd.specialty as department', 'd.designation');
+            $query->select('d.doctor_id as doctorId', 'd.name as doctorName', 'd.specialty as department', 'd.designation',
+                        'hd.hospital_id as hospitalId');
             $query->orderBy('d.name', 'ASC');
+
+            //dd($query->toSql());
 
             $doctors = $query->get();
 
