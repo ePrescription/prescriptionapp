@@ -217,8 +217,8 @@ class HospitalImpl implements HospitalInterface{
             $query->where('d.doctor_id', '=', $doctorId);
             $query->where('usr1.delete_status', '=', 1);
             $query->select('d.id as id', 'd.doctor_id as doctorId', 'd.name as doctorName', 'd.did as doctorUniqueId',
+                'd.specialty as department', 'd.designation',
                 DB::raw('CONCAT(d.qualifications, " (", d.specialty, ") ", d.experience, " years") as doctorDetails'));
-
 
             //DB::raw('CONCAT(h.address, " ", c.city_name, " ", co.name) as hospital_details'));
 
@@ -1300,6 +1300,7 @@ class HospitalImpl implements HospitalInterface{
                 $user = $this->registerNewPatient($patientProfileVM);
                 $this->attachPatientRole($user);
                 $patient = new Patient();
+                $patient->pid = 'PID'.crc32(uniqid(rand()));
             }
             else
             {
@@ -1321,7 +1322,7 @@ class HospitalImpl implements HospitalInterface{
             $patient->address = $patientProfileVM->getAddress();
             $patient->city = $patientProfileVM->getCity();
             $patient->country = $patientProfileVM->getCountry();
-            $patient->pid = 'PID'.crc32(uniqid(rand()));
+
             $patient->telephone = $patientProfileVM->getTelephone();
             $patient->email = $patientProfileVM->getEmail();
             $patient->patient_photo = $patientProfileVM->getPatientPhoto();
@@ -1338,9 +1339,11 @@ class HospitalImpl implements HospitalInterface{
 
             $user->patient()->save($patient);
 
-            $user->patienthospitals()->attach($hospitalId, array('created_by' => $patientProfileVM->getCreatedBy(),
-                'updated_by' => $patientProfileVM->getUpdatedBy()));
-
+            if($patientId == 0)
+            {
+                $user->patienthospitals()->attach($hospitalId, array('created_by' => $patientProfileVM->getCreatedBy(),
+                    'updated_by' => $patientProfileVM->getUpdatedBy()));
+            }
 
         }
         catch(QueryException $queryEx)
@@ -1351,9 +1354,8 @@ class HospitalImpl implements HospitalInterface{
         }
         catch(UserNotFoundException $userExc)
         {
-            //dd($userExc);
             $status = false;
-            throw $userExc;
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
         }
         catch(Exception $exc)
         {

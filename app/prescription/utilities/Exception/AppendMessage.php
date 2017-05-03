@@ -19,7 +19,8 @@ class AppendMessage {
                 .PHP_EOL." User Error code: ". $ex->getMessageForCode()
                 .PHP_EOL." Error Message: ". $ex->getMessage()
                 .PHP_EOL." Error File: ". $ex->getFile()
-                .PHP_EOL." Error Line: ". $ex->getLine();
+                .PHP_EOL." Error Line: ". $ex->getLine()
+                .PHP_EOL."--------------------------------------------------------------------------";
 
         return $msg;
     }
@@ -29,7 +30,8 @@ class AppendMessage {
         $msg = "Error code : ". $ex->getCode()
             .PHP_EOL." Error Message: ". $ex->getMessage()
             .PHP_EOL." Error File: ". $ex->getFile()
-            .PHP_EOL." Error Line: ". $ex->getLine();
+            .PHP_EOL." Error Line: ". $ex->getLine()
+            .PHP_EOL."-------------------------------------------------------------------------------";
 
         return $msg;
     }

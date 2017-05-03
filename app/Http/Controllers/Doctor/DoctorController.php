@@ -887,15 +887,15 @@ class DoctorController extends Controller
         }
         catch(HospitalException $hospitalExc)
         {
-            //dd('Inside controller exception');
-            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_ERROR));
+            //dd($hospitalExc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.$hospitalExc->getUserErrorCode()));
             $responseJson->sendErrorResponse($hospitalExc);
         }
-        catch(UserNotFoundException $userExc)
+        /*catch(UserNotFoundException $userExc)
         {
             $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.$userExc->getUserErrorCode()));
             $responseJson->sendErrorResponse($userExc);
-        }
+        }*/
         catch(Exception $exc)
         {
             //dd($exc);
