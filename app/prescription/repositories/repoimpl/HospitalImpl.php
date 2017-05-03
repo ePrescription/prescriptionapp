@@ -1301,6 +1301,7 @@ class HospitalImpl implements HospitalInterface{
                 $this->attachPatientRole($user);
                 $patient = new Patient();
                 $patient->pid = 'PID'.crc32(uniqid(rand()));
+                $patient->email = $patientProfileVM->getEmail();
             }
             else
             {
@@ -1322,9 +1323,7 @@ class HospitalImpl implements HospitalInterface{
             $patient->address = $patientProfileVM->getAddress();
             $patient->city = $patientProfileVM->getCity();
             $patient->country = $patientProfileVM->getCountry();
-
             $patient->telephone = $patientProfileVM->getTelephone();
-            $patient->email = $patientProfileVM->getEmail();
             $patient->patient_photo = $patientProfileVM->getPatientPhoto();
             $patient->dob = $patientProfileVM->getDob();
             $patient->age = $patientProfileVM->getAge();

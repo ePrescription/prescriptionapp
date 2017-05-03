@@ -24,6 +24,7 @@ use App\prescription\model\entities\HospitalDoctor;
 
 use App\Http\Requests\DoctorLoginRequest;
 use App\Http\Requests\PatientProfileRequest;
+use App\Http\Requests\EditPatientProfileRequest;
 use App\Http\Requests\NewAppointmentRequest;
 use App\Http\Requests\FeeReceiptRequest;
 
@@ -428,8 +429,8 @@ class DoctorController extends Controller
 
                     $loginDetails['doctor']['id'] = $userId;
                     $loginDetails['doctor']['name'] = $userName;
-                    $loginDetails['doctor']['details'] = "MBBS MD (Cardiology) 10 years";
-                    //$loginDetails['doctor']['details'] = $doctorDetails;
+                    //$loginDetails['doctor']['details'] = "MBBS MD (Cardiology) 10 years";
+                    $loginDetails['doctor']['details'] = $doctorDetails;
 
                     $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::USER_LOGIN_SUCCESS));
                     $responseJson->setObj($loginDetails);
@@ -896,6 +897,65 @@ class DoctorController extends Controller
             $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.$userExc->getUserErrorCode()));
             $responseJson->sendErrorResponse($userExc);
         }*/
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return $responseJson;
+    }
+
+    /**
+     * Save patient profile
+     * @param $patientProfileRequest
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    //public function savePatientProfile(Request $patientProfileRequest)
+    public function editPatientProfile(EditPatientProfileRequest $patientProfileRequest)
+    {
+        //return "HI";
+        $patientProfileVM = null;
+        $status = true;
+        $responseJson = null;
+        //return $patientProfileRequest->all();
+
+        try
+        {
+            $patientProfileVM = PatientProfileMapper::setPatientProfile($patientProfileRequest);
+            $status = $this->hospitalService->savePatientProfile($patientProfileVM);
+
+            //$status = HospitalServiceFacade::savePatientProfile($patientProfileVM);
+            //$patient = HospitalServiceFacade::savePatientProfile($patientProfileVM);
+
+            if($status)
+            {
+                //$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_SUCCESS));
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_SUCCESS));
+                $responseJson->sendSuccessResponse();
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_ERROR));
+                $responseJson->sendSuccessResponse();
+            }
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            //dd($hospitalExc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.$hospitalExc->getUserErrorCode()));
+            $responseJson->sendErrorResponse($hospitalExc);
+        }
+            /*catch(UserNotFoundException $userExc)
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.$userExc->getUserErrorCode()));
+                $responseJson->sendErrorResponse($userExc);
+            }*/
         catch(Exception $exc)
         {
             //dd($exc);

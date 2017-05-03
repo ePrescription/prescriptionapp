@@ -29,11 +29,18 @@ class PatientProfileRequest extends BasePrescriptionRequest
      */
     public function rules()
     {
+
+        $profile = (object) $this->all();
+
         $rules = [];
 
         $rules['name'] = 'required';
         $rules['address'] = 'required';
-        $rules['email'] = 'email | unique:users,email';
+
+        if($profile->patientId == 0)
+        {
+            $rules['email'] = 'email | unique:users,email';
+        }
         $rules['dob'] = 'date_format:Y-m-d';
         $rules['doctorId'] = 'required';
         $rules['hospitalId'] = 'required';
