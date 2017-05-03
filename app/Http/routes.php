@@ -152,6 +152,8 @@ Route::group(array('prefix' => 'hospital', 'namespace' => 'Doctor'), function()
 
     });*/
 
+    //Route::get('rest/api/{doctorId}/doctordetails', array('as' => 'doctor.details', 'uses' => 'DoctorController@getDoctorDetails'));
+
     //MOBILE
    Route::get('rest/api/{hospitalId}/doctornames', array('as' => 'hospital.doctors', 'uses' => 'DoctorController@getDoctorNames'));
    Route::get('rest/api/{hospitalId}/patientnames', array('as' => 'patient.searchnames', 'uses' => 'DoctorController@getPatientNames'));

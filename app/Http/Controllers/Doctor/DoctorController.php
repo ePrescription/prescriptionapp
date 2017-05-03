@@ -390,6 +390,8 @@ class DoctorController extends Controller
      */
 
 
+
+
     //public function login()
     //public function login(Request $loginRequest)
     public function login(DoctorLoginRequest $loginRequest)
@@ -427,12 +429,25 @@ class DoctorController extends Controller
                     $doctorDetails = HospitalServiceFacade::getDoctorDetails($userId);
 
 
-                    $loginDetails['doctor']['id'] = $userId;
+                    /*$loginDetails['doctor']['id'] = $userId;
                     $loginDetails['doctor']['name'] = $userName;
                     //$loginDetails['doctor']['details'] = "MBBS MD (Cardiology) 10 years";
-                    $loginDetails['doctor']['details'] = $doctorDetails;
+                    $loginDetails['doctor']['details'] = $doctorDetails;*/
+
+                    //$details = (object)$doctorDetails;
+
+                    $loginDetails['id'] = $userId;
+                    $loginDetails['name'] = $userName;
+                    $loginDetails['department'] = $doctorDetails[0]->department;
+                    $loginDetails['designation'] = $doctorDetails[0]->designation;
+                    //$loginDetails['dept'] = $doctorDetails[0]->doctorId;
+                    //$doctorDetails['department'] =
+                    //$loginDetails['department'] = $doctorDetails['department'];
+                    //dd($doctorDetails->department);
+                    //$loginDetails['department'] = $doctorDetails['details'];
 
                     $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::USER_LOGIN_SUCCESS));
+                    $responseJson->setCount(sizeof($doctorDetails));
                     $responseJson->setObj($loginDetails);
                     $responseJson->sendSuccessResponse();
 
@@ -470,11 +485,13 @@ class DoctorController extends Controller
         $doctorDetails = null;
         //$jsonResponse = null;
         $responseJson = null;
+        //dd($doctorId);
 
         try
         {
             //$doctorDetails = HospitalServiceFacade::getDoctorDetails($doctorId);
             $doctorDetails = $this->hospitalService->getDoctorDetails($doctorId);
+            //dd($doctorDetails);
 
             if(!empty($doctorDetails))
             {
