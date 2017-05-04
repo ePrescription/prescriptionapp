@@ -88,5 +88,4 @@ $profile_menu="0";
     @include('portal.pharmacy-footer')
 </div><!-- ./wrapper -->
 
-</body>
-</html>
+@endsection
