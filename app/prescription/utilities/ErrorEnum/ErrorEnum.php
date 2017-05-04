@@ -11,6 +11,7 @@ class ErrorEnum extends Enum{
     const VALIDATION_ERRORS = 3;
     const USER_NOT_FOUND = 4;
     const HOSPITAL_USER_NOT_FOUND = 5;
+    const PATIENT_USER_NOT_FOUND = 6;
     const UNKNOWN_ERROR = 100;
 
     //const USER_NOT_FOUND_ERROR = 101;

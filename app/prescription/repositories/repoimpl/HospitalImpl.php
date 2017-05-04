@@ -1743,6 +1743,68 @@ class HospitalImpl implements HospitalInterface{
     }
 
     /**
+     * Get list of fee receipts for the patient
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getFeeReceiptsByPatient($patientId)
+    {
+        $feeReceipts = null;
+
+        try
+        {
+            $patientQuery = User::query();
+            $patientQuery->join('patient as p', 'p.patient_id', '=', 'users.id');
+            $patientQuery->where('p.patient_id', '=', $patientId);
+            $patientQuery->where('users.delete_status', '=', 1);
+
+            $patient = $patientQuery->first();
+
+            if(is_null($patient))
+            {
+                throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
+            }
+
+            if(!is_null($patient))
+            {
+                $query = DB::table('fee_receipt as fr')->join('patient as p', 'p.patient_id', '=', 'fr.patient_id');
+                $query->join('doctor as d', 'd.doctor_id', '=', 'fr.doctor_id');
+                //$query->where('fr.doctor_id', '=', 'd.doctor_id');
+                $query->where('p.patient_id', '=', $patientId);
+                $query->select('fr.id as receiptId', 'p.id as patientId', 'p.name as patientName', 'p.pid as PID', 'p.patient_spouse_name as spouseName',
+                    'p.telephone as contactNumber', 'd.name as doctorName', 'fr.fee');
+
+                //dd($query->toSql());
+                $feeReceipts = $query->get();
+                //dd($feeReceipts);
+
+            }
+
+        }
+        catch(QueryException $queryExc)
+        {
+            //dd($queryExc);
+            throw new HospitalException(null, ErrorEnum::FEE_RECEIPT_LIST_ERROR, $queryExc);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            throw new HospitalException(null, ErrorEnum::FEE_RECEIPT_LIST_ERROR, $exc);
+        }
+
+        //dd($feeReceipts);
+        return $feeReceipts;
+    }
+
+    /**
      * Get fee receipt details, doctor details, patient details
      * @param $hospitalId, $doctorId
      * @throws $hospitalException

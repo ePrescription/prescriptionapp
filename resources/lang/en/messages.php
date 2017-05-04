@@ -11,6 +11,7 @@
         "3" => "Validation errors",
         "4" => "No doctor found",
         "5" => "No hospital found",
+        "6" => "No patient found",
 
         "101" => "Unable to retrieve hospital list",
         "102" => "Hospital list retrieved successfully",
