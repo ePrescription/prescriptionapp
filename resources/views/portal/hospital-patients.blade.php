@@ -29,7 +29,7 @@ $profile_menu="0";
 
                 <li class="active">Hospital Patients List</li>
             </ol>
-            <?php //print_r($patients); ?>
+
         </section>
 
         <!-- Main content -->
