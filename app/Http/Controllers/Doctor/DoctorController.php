@@ -1615,6 +1615,13 @@ class DoctorController extends Controller
                 if(( Auth::user()->hasRole('hospital')) &&  (Auth::user()->delete_status==1) )
                     {
                         $LoginUserType=Session::put('LoginUserType', 'hospital');
+
+                        $hospitalInfo = HospitalServiceFacade::getProfile(Auth::user()->id);
+
+                        Session::put('LoginHospitalDetails', $hospitalInfo[0]->hospital_name.' '.$hospitalInfo[0]->address);
+
+                        //$hospitalId = HospitalServiceFacade::getHospitalId(UserType::USERTYPE_DOCTOR, $doctorid);
+
                         return redirect('fronthospital/'.Auth::user()->id.'/dashboard');
                     }
                     else if( Auth::user()->hasRole('doctor')  && (Auth::user()->delete_status==1) )
@@ -1720,6 +1727,7 @@ class DoctorController extends Controller
         try
         {
             $patients = HospitalServiceFacade::getPatientsByHospital($hospitalId, $keyword);
+            //dd($patients);
             //return json_encode('test');
 
         }

@@ -29,7 +29,7 @@ $profile_menu="0";
 
                 <li class="active">Hospital Patients List</li>
             </ol>
-            <?php //print_r($patients); ?>
+            <?php print_r($patients); ?>
         </section>
 
         <!-- Main content -->
@@ -38,7 +38,7 @@ $profile_menu="0";
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title" style="line-height:30px;">Hospital Patients Details List</h3>
+                            <!-- <h3 class="box-title" style="line-height:30px;">Hospital Patients Details List</h3> -->
 
                             <a href="{{URL::to('/')}}/fronthospital/rest/api/{{Auth::user()->id}}/addpatient" style="float:right;"><button type="submit" class="btn btn-success"><i class="fa fa-edit"></i><b> Create New Patient</b></button></a>
 

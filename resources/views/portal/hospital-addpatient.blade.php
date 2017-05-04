@@ -23,11 +23,11 @@ $profile_menu="0";
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>Add Patient Profile Details</h1>
+            <h1>Add Patient Profile</h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
 
-                <li class="active">Add Patient Profile Details</li>
+                <li class="active">Add Patient Profile</li>
             </ol>
             <?php //print_r($pharmacyProfile); ?>
             <?php //print_r($cities); ?>
@@ -39,7 +39,7 @@ $profile_menu="0";
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title" style="line-height:30px;">Hospital Profile Details</h3>
+                            <!-- <h3 class="box-title" style="line-height:30px;">Hospital Profile Details</h3> -->
                             <!--
                             <a href="doctorcreate.html" style="float:right;"><button type="submit" class="btn btn-success"><i class="fa fa-edit"></i><b> Create New Doctor</b></button></a>
                             -->
@@ -121,5 +121,4 @@ $profile_menu="0";
     @include('portal.hospital-footer')
 </div><!-- ./wrapper -->
 
-</body>
-</html>
+@endsection
