@@ -120,5 +120,4 @@ $profile_menu="1";
     @include('portal.lab-footer')
 </div><!-- ./wrapper -->
 
-</body>
-</html>
+@endsection

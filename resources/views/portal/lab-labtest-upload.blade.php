@@ -93,5 +93,4 @@ $profile_menu="0";
     @include('portal.lab-footer')
 </div><!-- ./wrapper -->
 
-</body>
-</html>
+@endsection

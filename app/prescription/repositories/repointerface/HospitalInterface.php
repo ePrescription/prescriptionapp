@@ -64,6 +64,7 @@ interface HospitalInterface {
 
     //Fee receipt
     public function getFeeReceipts($hospitalId, $doctorId);
+    public function getFeeReceiptsByPatient($patientId);
     public function getReceiptDetails($receiptId);
     public function saveFeeReceipt(FeeReceiptViewModel $feeReceiptVM);
 }

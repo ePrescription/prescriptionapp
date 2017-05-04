@@ -104,7 +104,7 @@ $profile_menu="0";
                                 <div class="form-group col-md-12">
                                     <label class="col-sm-3 control-label">Appointment Created Date</label>
                                     <div class="col-sm-9">
-                                        {{date('Y-m-d h:i:s')}}
+                                        {{date('Y-m-d')}}
                                     </div>
                                 </div>
                                 <div class="form-group col-md-12">
@@ -143,5 +143,4 @@ $profile_menu="0";
     @include('portal.hospital-footer')
 </div><!-- ./wrapper -->
 
-</body>
-</html>
+@endsection

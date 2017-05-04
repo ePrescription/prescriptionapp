@@ -228,5 +228,4 @@ $profile_menu="0";
     @include('portal.doctor-footer')
 </div><!-- ./wrapper -->
 
-</body>
-</html>
+@endsection
