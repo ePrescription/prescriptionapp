@@ -150,6 +150,7 @@ $profile_menu="0";
                                 </tr>
                                 </thead>
                                 <tbody>
+
                                 @foreach($prescriptionDetails['PatientDrugDetails'] as $prescription)
                                     <tr>
                                         <td>{{$prescription->trade_name}}</td>
@@ -162,6 +163,7 @@ $profile_menu="0";
                                         </td>
                                     </tr>
                                 @endforeach
+
                                 </tbody>
 
                             </table>

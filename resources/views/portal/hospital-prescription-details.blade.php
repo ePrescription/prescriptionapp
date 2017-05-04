@@ -402,5 +402,4 @@ $profile_menu="0";
 
     }
 </script>
-</body>
-</html>
+@endsection

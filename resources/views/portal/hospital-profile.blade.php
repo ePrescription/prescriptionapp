@@ -113,5 +113,4 @@ $profile_menu="1";
     @include('portal.hospital-footer')
 </div><!-- ./wrapper -->
 
-</body>
-</html>
+@endsection
