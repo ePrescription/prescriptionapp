@@ -2193,7 +2193,7 @@ class DoctorController extends Controller
     {
         $doctorNames = null;
         $responseJson = null;
-
+        //dd('HI');
         $keyword = $nameRequest->get('keyword');
         //dd($keyword);
         //return $keyword;
@@ -2456,6 +2456,124 @@ class DoctorController extends Controller
         {
             $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_SAVE_ERROR));
             $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return $responseJson;
+    }
+
+
+
+    public function getDoctorsForFront($hospitalId, Request $nameRequest)
+    {
+        $doctorNames = null;
+        $responseJson = null;
+        //dd('HI');
+        $keyword = $nameRequest->get('keyword');
+        //dd($keyword);
+        //return $keyword;
+        try
+        {
+            //$patientNames = HospitalServiceFacade::searchPatientByName($keyword);
+            $doctors = $this->hospitalService->getDoctorNames($hospitalId, $keyword);
+            //dd($doctors);
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            dd($hospitalExc);
+            //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_NO_DOCTORS_FOUND));
+            //$responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            dd($exc);
+            //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_NO_DOCTORS_FOUND));
+            //$responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        //return $responseJson;
+        return view('portal.hospital-doctors',compact('doctors'));
+    }
+
+
+    public function getFeeReceiptsForFront($hospitalId, $doctorId)
+    {
+        $feeReceipts = null;
+        $responseJson = null;
+        //dd($doctorId);
+
+        try
+        {
+            $feeReceipts = $this->hospitalService->getFeeReceipts($hospitalId, $doctorId);
+            //dd($feeReceipts);
+            /*
+            if(!empty($feeReceipts))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::FEE_RECEIPT_LIST_SUCCESS));
+                $responseJson->setCount(sizeof($feeReceipts));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::FEE_RECEIPT_LIST_ERROR));
+            }
+
+            $responseJson->setObj($feeReceipts);
+            $responseJson->sendSuccessResponse();
+            */
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            dd($hospitalExc);
+            //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.$hospitalExc->getUserErrorCode()));
+            //$responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            dd($exc);
+            //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_LIST_ERROR));
+            //$responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return view('portal.hospital-doctor-fees',compact('feeReceipts'));
+        //return $responseJson;
+    }
+
+    public function getReceiptDetailsForFront($receiptId)
+    {
+        $feeReceiptDetails = null;
+        $responseJson = null;
+        //dd($receiptId);
+
+        try
+        {
+            $feeReceiptDetails = $this->hospitalService->getReceiptDetails($receiptId);
+            dd($feeReceiptDetails);
+            /*
+            if(!is_null($feeReceiptDetails) && !empty($feeReceiptDetails))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::FEE_RECEIPT_DETAILS_SUCCESS));
+                $responseJson->setCount(sizeof($feeReceiptDetails));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_FEE_RECEIPT_DETAILS_FOUND));
+            }
+
+            $responseJson->setObj($feeReceiptDetails);
+            $responseJson->sendSuccessResponse();
+            */
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            dd($hospitalExc);
+            //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_DETAILS_ERROR));
+            //$responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            dd($exc);
+            //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_DETAILS_ERROR));
+            //$responseJson->sendUnExpectedExpectionResponse($exc);
         }
 
         return $responseJson;

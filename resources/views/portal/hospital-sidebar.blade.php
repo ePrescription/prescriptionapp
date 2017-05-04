@@ -32,6 +32,13 @@
                 <i class="fa fa-users"></i> <span>Patients</span>
             </a>
         </li>
+        <?php if(!isset($doctor_menu)) { $doctor_menu=0; } ?>
+        <li class="@if($doctor_menu==1) active @endif treeview">
+            <a href="{{URL::to('/')}}/fronthospital/rest/api/{{Auth::user()->id}}/doctorlist">
+                <i class="fa fa-users"></i> <span>Doctor Fee</span>
+            </a>
+        </li>
+
         <li class="@if($profile_menu==1) active @endif treeview">
             <a href="#myaccount.html">
                 <i class="fa fa-book"></i> <span>My Account</span>
