@@ -2027,12 +2027,12 @@ class DoctorController extends Controller
                 //$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_SUCCESS));
 
                 $msg = "Patient Appointment Added Successfully.";
-                return redirect('fronthospital/rest/api/'.Auth::user()->id.'/patients')->with('success',$msg);
+                return redirect('fronthospital/rest/api/'.Auth::user()->id.'/patient/'.$appointmentRequest->patientId.'/completeappointment')->with('success',$msg);
             }
             else
             {
                 $msg = "Patient Appointment Details Invalid / Incorrect! Try Again.";
-                return redirect('fronthospital/rest/api/'.Auth::user()->id.'/patients')->with('message',$msg);
+                return redirect('fronthospital/rest/api/'.Auth::user()->id.'/patient/'.$appointmentRequest->patientId.'/completeappointment')->with('message',$msg);
             }
 
         }
@@ -2057,6 +2057,37 @@ class DoctorController extends Controller
         return redirect('fronthospital/rest/api/'.Auth::user()->id.'/patients')->with('message',$msg);
         //return $jsonResponse;
 
+    }
+
+    public function completeAppointmentByHospitalForFront($hospitalId,$patientId)
+    {
+        //dd('HI');
+        $doctors = null;
+        $patientProfile = null;
+        try
+        {
+            //dd($patientId);
+            $doctors = HospitalServiceFacade::getDoctorsByHospitalId($hospitalId);
+            //$patientDetails = HospitalServiceFacade::getPatientDetailsById($patientId);
+            $patientProfile = HospitalServiceFacade::getPatientProfile($patientId);
+            //dd($doctors);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            //dd($hospitalExc);
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        return view('portal.hospital-completeappointment',compact('doctors','patientProfile'));
     }
 
 
@@ -2603,7 +2634,7 @@ class DoctorController extends Controller
         try
         {
             $feeReceiptDetails = $this->hospitalService->getReceiptDetails($receiptId);
-            dd($feeReceiptDetails);
+            //dd($feeReceiptDetails);
             /*
             if(!is_null($feeReceiptDetails) && !empty($feeReceiptDetails))
             {
@@ -2632,6 +2663,7 @@ class DoctorController extends Controller
             //$responseJson->sendUnExpectedExpectionResponse($exc);
         }
 
-        return $responseJson;
+        return view('portal.hospital-fee-details',compact('feeReceiptDetails'));
+        //return $responseJson;
     }
 }
