@@ -2666,4 +2666,54 @@ class DoctorController extends Controller
         return view('portal.hospital-fee-details',compact('feeReceiptDetails'));
         //return $responseJson;
     }
+
+    public function addFeeReceiptForFront($hospitalId)
+    {
+        //dd('HI');
+        $feeReceiptDetails = null;
+        $responseJson = null;
+        //dd($hospitalId);
+        $keyword = null;
+
+        try
+        {
+
+            $patients = $this->hospitalService->getPatientsByHospital($hospitalId, $keyword);
+            //dd($patients);
+
+            $doctors = $this->hospitalService->getDoctorsByHospitalId($hospitalId);
+            //dd($doctors);
+            //$feeReceiptDetails = $this->hospitalService->getReceiptDetails($receiptId);
+            //dd($feeReceiptDetails);
+            /*
+            if(!is_null($feeReceiptDetails) && !empty($feeReceiptDetails))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::FEE_RECEIPT_DETAILS_SUCCESS));
+                $responseJson->setCount(sizeof($feeReceiptDetails));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_FEE_RECEIPT_DETAILS_FOUND));
+            }
+
+            $responseJson->setObj($feeReceiptDetails);
+            $responseJson->sendSuccessResponse();
+            */
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            dd($hospitalExc);
+            //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_DETAILS_ERROR));
+            //$responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            dd($exc);
+            //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_DETAILS_ERROR));
+            //$responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return view('portal.hospital-fee-add',compact('patients','doctors'));
+        //return $responseJson;
+    }
 }

@@ -41,7 +41,7 @@ $profile_menu="0";
                         <div class="box-header">
                             <h3 class="box-title" style="line-height:30px;">Hospital Doctor Fees Details List</h3>
 
-                            <a href="#{{URL::to('/')}}/fronthospital/rest/api/{{Auth::user()->id}}/addpatient" style="float:right;"><button type="submit" class="btn btn-success"><i class="fa fa-edit"></i><b> Create New Bill</b></button></a>
+                            <a href="{{URL::to('/')}}/fronthospital/rest/api/{{Auth::user()->id}}/addfeereceipt" style="float:right;"><button type="submit" class="btn btn-success"><i class="fa fa-edit"></i><b> Create New Bill</b></button></a>
 
                         </div><!-- /.box-header -->
                         <div class="box-body">
