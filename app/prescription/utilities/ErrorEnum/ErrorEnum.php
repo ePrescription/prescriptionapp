@@ -138,6 +138,7 @@ class ErrorEnum extends Enum{
     const NO_FEE_RECEIPT_DETAILS_FOUND = 504;
     const FEE_RECEIPT_SAVE_ERROR = 505;
     const FEE_RECEIPT_SAVE_SUCCESS = 506;
+    const NO_FEE_RECEIPT_LIST = 507;
 
 
 }

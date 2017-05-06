@@ -1898,16 +1898,16 @@ class HospitalImpl implements HospitalInterface{
         $currency = CA::get('constants.currency');
         $locale = CA::get('constants.locale');
 
-        /*
+
         $numberWords = new Numbers_Words();
         if(!is_null($numberWords))
         {
             //$feeInWords = $numberWords->toWords($fee);
             $feeInWords = $numberWords->toCurrency($fee, $locale, $currency);
         }
-        */
 
-        $feeInWords  = $fee." VALUE";
+
+        //$feeInWords  = $fee." VALUE";
         return $feeInWords;
     }
 

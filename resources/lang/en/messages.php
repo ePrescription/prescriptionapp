@@ -94,4 +94,5 @@
         "504" => "No fee receipt details available",
         "505" => "Unable to save fee receipt",
         "506" => "Successfully saved fee receipt",
+        "507" => "No fee receipt listed for the selected hospital and doctor",
     ];

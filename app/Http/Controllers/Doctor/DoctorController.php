@@ -2386,7 +2386,7 @@ class DoctorController extends Controller
             }
             else
             {
-                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::FEE_RECEIPT_LIST_ERROR));
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_FEE_RECEIPT_LIST));
             }
 
             $responseJson->setObj($feeReceipts);
