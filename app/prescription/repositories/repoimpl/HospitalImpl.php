@@ -916,7 +916,8 @@ class HospitalImpl implements HospitalInterface{
                 DB::raw('TRIM(UPPER(d.drug_name)) as formulationName')
                 ,'b.id as tradeId',
                 //DB::raw('CONCAT_WS(" ",TRIM(UPPER(b.brand_name)), NULLIF(b.dosage_amount, ""), NULLIF(b.dosage, "") as tradeName'));
-                DB::raw('CONCAT_WS(" ",TRIM(UPPER(b.brand_name)), NULLIF(b.dosage_amount, ""), NULLIF(b.dosage, "")) as tradeName'));
+                DB::raw('CONCAT_WS(" ",TRIM(UPPER(b.brand_name)), NULLIF(b.dosage_amount, ""), NULLIF(b.dosage, "")) as tradeName'),
+                'b.dosage_amount', 'b.dosage as quantity', 'b.dispensing_form');
                 //DB::raw('CONCAT(TRIM(UPPER(b.brand_name)), " ", b.dosage_amount, " ", b.dosage) as tradeName'));
 
                 //DB::raw('TRIM(UPPER(b.brand_name)) as tradeName'));
