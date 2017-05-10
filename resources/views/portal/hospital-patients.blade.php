@@ -84,7 +84,9 @@ $profile_menu="0";
                                     <td>@if($patient->gender==1) Male @else Female @endif</td>
                                     <td>
                                         <a href="{{URL::to('/')}}/fronthospital/rest/api/{{Auth::user()->id}}/patient/{{$patient->patient_id}}/details" style="float:rightx;">View Profile</a>
-<br/>
+                                        <br/>
+                                        <a href="{{URL::to('/')}}/fronthospital/rest/api/{{Auth::user()->id}}/patient/{{$patient->patient_id}}/edit" style="float:rightx;">Edit Profile</a>
+                                        <br/>
                                         <a href="{{URL::to('/')}}/fronthospital/rest/api/{{Auth::user()->id}}/patient/{{$patient->patient_id}}/addappointment" style="float:rightx;">Book Appointment</a>
 <!--
                                         <a href="#doctorview.html"><button type="submit" class="btn btn-success btn-xs"><i class="fa fa-eye"></i> View</button></a>
