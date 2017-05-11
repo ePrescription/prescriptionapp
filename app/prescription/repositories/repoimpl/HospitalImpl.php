@@ -297,7 +297,7 @@ class HospitalImpl implements HospitalInterface{
         try
         {
             $query = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name as name', 'p.address','p.pid', 'c.city_name',
-                            'co.name as country','p.telephone', 'p.email', 'p.relationship', 'p.patient_spouse_name',
+                            'co.name as country','p.telephone', 'p.email', 'p.relationship', 'p.patient_spouse_name as spouseName',
                             'p.dob', 'p.age', 'p.place_of_birth', 'p.nationality', 'p.gender'
                             ,'da.appointment_date', 'da.appointment_time', 'da.brief_history');
             $query->leftJoin('doctor_appointment as da', 'da.patient_id', '=', 'p.patient_id');
@@ -340,7 +340,7 @@ class HospitalImpl implements HospitalInterface{
         try
         {
             $query = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'p.age',
-                'p.gender', 'p.email', 'p.relationship', 'p.patient_spouse_name', 'p.telephone');
+                'p.gender', 'p.email', 'p.relationship', 'p.patient_spouse_name as spouseName', 'p.telephone');
             $query->join('users as usr', 'usr.id', '=', 'p.patient_id');
             $query->where('p.patient_id', $patientId);
             $query->where('usr.delete_status', '=', 1);
@@ -1720,7 +1720,8 @@ class HospitalImpl implements HospitalInterface{
                 $query->join('doctor as d', 'd.doctor_id', '=', 'fr.doctor_id');
                 $query->where('fr.hospital_id', '=', $hospitalId);
                 $query->where('fr.doctor_id', '=', $doctorId);
-                $query->select('fr.id as receiptId', 'p.id as patientId', 'p.name as patientName', 'p.pid as PID', 'p.patient_spouse_name as spouseName',
+                $query->select('fr.id as receiptId', 'p.id as patientId', 'p.name as patientName', 'p.pid as PID',
+                        'p.relationship','p.patient_spouse_name as spouseName',
                         'p.telephone as contactNumber', 'd.name as doctorName', 'fr.fee');
 
                 //dd($query->toSql());
@@ -1781,7 +1782,8 @@ class HospitalImpl implements HospitalInterface{
                 $query->join('doctor as d', 'd.doctor_id', '=', 'fr.doctor_id');
                 //$query->where('fr.doctor_id', '=', 'd.doctor_id');
                 $query->where('p.patient_id', '=', $patientId);
-                $query->select('fr.id as receiptId', 'p.id as patientId', 'p.name as patientName', 'p.pid as PID', 'p.patient_spouse_name as spouseName',
+                $query->select('fr.id as receiptId', 'p.id as patientId', 'p.name as patientName', 'p.pid as PID',
+                    'p.relationship','p.patient_spouse_name as spouseName',
                     'p.telephone as contactNumber', 'd.name as doctorName', 'fr.fee');
 
                 //dd($query->toSql());
@@ -1859,7 +1861,7 @@ class HospitalImpl implements HospitalInterface{
             //dd($feeDetails);
 
             $patientQuery = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name', 'p.pid',
-                'p.telephone', 'p.patient_spouse_name as spouseName', 'p.address');
+                'p.telephone', 'p.relationship', 'p.patient_spouse_name as spouseName', 'p.address');
             $patientQuery->where('p.patient_id', '=', $patientId);
             $patientDetails = $patientQuery->first();
 
