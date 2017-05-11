@@ -297,7 +297,7 @@ class HospitalImpl implements HospitalInterface{
         try
         {
             $query = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name as name', 'p.address','p.pid', 'c.city_name',
-                            'co.name as country','p.telephone', 'p.email',
+                            'co.name as country','p.telephone', 'p.email', 'p.relationship', 'p.patient_spouse_name',
                             'p.dob', 'p.age', 'p.place_of_birth', 'p.nationality', 'p.gender'
                             ,'da.appointment_date', 'da.appointment_time', 'da.brief_history');
             $query->leftJoin('doctor_appointment as da', 'da.patient_id', '=', 'p.patient_id');
@@ -339,7 +339,8 @@ class HospitalImpl implements HospitalInterface{
 
         try
         {
-            $query = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'p.age', 'p.gender', 'p.email', 'p.telephone');
+            $query = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'p.age',
+                'p.gender', 'p.email', 'p.relationship', 'p.patient_spouse_name', 'p.telephone');
             $query->join('users as usr', 'usr.id', '=', 'p.patient_id');
             $query->where('p.patient_id', $patientId);
             $query->where('usr.delete_status', '=', 1);
