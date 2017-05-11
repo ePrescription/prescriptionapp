@@ -1325,6 +1325,8 @@ class HospitalImpl implements HospitalInterface{
             $patient->city = $patientProfileVM->getCity();
             $patient->country = $patientProfileVM->getCountry();
             $patient->telephone = $patientProfileVM->getTelephone();
+            $patient->relationship = $patientProfileVM->getRelationship();
+            $patient->patient_spouse_name = $patientProfileVM->getSpouseName();
             $patient->patient_photo = $patientProfileVM->getPatientPhoto();
             $patient->dob = $patientProfileVM->getDob();
             $patient->age = $patientProfileVM->getAge();

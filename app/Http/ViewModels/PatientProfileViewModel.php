@@ -19,6 +19,8 @@ class PatientProfileViewModel
     private $pid;
     private $telephone;
     private $email;
+    private $relationship;
+    private $spouseName;
     private $patientPhoto;
     private $dob;
     private $age;
@@ -160,6 +162,38 @@ class PatientProfileViewModel
     public function setEmail($email)
     {
         $this->email = $email;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRelationship()
+    {
+        return $this->relationship;
+    }
+
+    /**
+     * @param mixed $relationship
+     */
+    public function setRelationship($relationship)
+    {
+        $this->relationship = $relationship;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSpouseName()
+    {
+        return $this->spouseName;
+    }
+
+    /**
+     * @param mixed $spouseName
+     */
+    public function setSpouseName($spouseName)
+    {
+        $this->spouseName = $spouseName;
     }
 
     /**

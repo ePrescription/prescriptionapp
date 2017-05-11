@@ -32,6 +32,8 @@ class PatientProfileMapper
         $profileVM->setCountry(property_exists($profile, 'country') ? $profile->country : null);
         $profileVM->setTelephone($profile->telephone);
         $profileVM->setEmail(property_exists($profile, 'email') ? $profile->email : null);
+        $profileVM->setRelationship(property_exists($profile, 'relationship') ? $profile->relationship : null);
+        $profileVM->setSpouseName(property_exists($profile, 'spouseName') ? $profile->spouseName : null);
         $profileVM->setPatientPhoto(property_exists($profile, 'patientPhoto') ? $profile->patientPhoto : null);
         $profileVM->setDob(property_exists($profile, 'dob') ? $profile->dob : null);
         $profileVM->setAge(property_exists($profile, 'age') ? $profile->age : null);
