@@ -124,6 +124,7 @@ class LabImpl implements LabInterface
             $query->where('hl.lab_id', '=', $labId);
             $query->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'pl.id as labtest_id', 'pl.unique_id as plid', 'pl.labtest_date');
 
+            //dd($query->toSql());
             $labTests = $query->get();
             //dd($prescriptions);
         }
