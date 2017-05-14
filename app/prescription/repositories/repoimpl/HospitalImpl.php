@@ -1117,7 +1117,10 @@ class HospitalImpl implements HospitalInterface{
             $hospitalQuery->where('pl.id', '=', $labTestId);
             $hospitalDetails = $hospitalQuery->get();
 
-            $query = DB::table('labtest_details as ld')->select('ld.id as ltid', 'l.id', DB::raw('TRIM(UPPER(l.test_name)) as test_name'), 'ld.brief_description', 'pl.labtest_date', 'ld.labtest_report');
+            $query = DB::table('labtest_details as ld')->select('ld.id as ltid',
+                'l.id', DB::raw('TRIM(UPPER(l.test_name)) as test_name'),
+                'l.test_category',
+                'ld.brief_description', 'pl.labtest_date', 'ld.labtest_report');
             $query->join('patient_labtest as pl', 'pl.id', '=', 'ld.patient_labtest_id');
             $query->join('labtest as l', 'l.id', '=', 'ld.labtest_id');
             $query->where('pl.id', '=', $labTestId);
