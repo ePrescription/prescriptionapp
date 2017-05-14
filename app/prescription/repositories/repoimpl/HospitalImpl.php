@@ -281,6 +281,48 @@ class HospitalImpl implements HospitalInterface{
         return $patients;
     }
 
+    /**
+     * Get list of patients for the hospital and doctor
+     * @param $hospitalId, $doctorId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientsByHospitalAndDoctor($hospitalId, $doctorId)
+    {
+        $patients = null;
+
+        try
+        {
+            $query = DB::table('hospital_patient as hp')->select('p.id', 'p.patient_id', 'p.pid', 'p.name', 'p.age', 'p.gender', 'p.telephone',
+                'h.hospital_id', 'h.hospital_name');
+            $query->join('hospital as h', 'h.hospital_id', '=', 'hp.hospital_id');
+            $query->join('patient as p', 'p.patient_id', '=', 'hp.patient_id');
+            $query->join('hospital_doctor as hd', 'hd.hospital_id', '=', 'hp.hospital_id');
+            $query->where('hp.hospital_id', '=', $hospitalId);
+            $query->where('hd.doctor_id', '=', $doctorId);
+
+            $query->orderBy('hp.created_at', 'DESC');
+            //$query->where('p.name', 'LIKE', '%'.$keyword.'%');
+
+            dd($query->toSql());
+            $patients = $query->get();
+            //$patients = $query->paginate(15);
+        }
+        catch(QueryException $queryEx)
+        {
+            dd($queryEx);
+            throw new HospitalException(null, ErrorEnum::PATIENT_LIST_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_LIST_ERROR, $exc);
+        }
+
+        return $patients;
+    }
+
     //Get Patient Details
     /**
      * Get patient details by patient id
@@ -1188,6 +1230,44 @@ class HospitalImpl implements HospitalInterface{
         return $appointments;
     }
 
+    /**
+     * Get patient appointments by hospital
+     * @param $patientId, $hospitalId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientAppointmentsByHospital($patientId, $hospitalId)
+    {
+        $appointments = null;
+
+        try
+        {
+            $query = DB::table('doctor_appointment as da')->join('hospital as h', 'h.hospital_id', '=', 'da.hospital_id');
+            $query->join('patient as p', 'p.patient_id', '=', 'da.patient_id');
+            $query->join('doctor as d', 'd.doctor_id', '=', 'da.doctor_id');
+            $query->join('hospital_doctor as hd', 'hd.doctor_id', '=', 'da.doctor_id');
+            $query->where('hd.hospital_id', $hospitalId);
+            $query->where('da.patient_id', $patientId);
+            $query->select('p.id', 'p.patient_id', 'p.pid', 'p.name as patient_name', 'h.hospital_id', 'h.hospital_name',
+                'd.doctor_id', 'd.name', 'da.appointment_date', 'da.appointment_time', 'da.brief_history as notes');
+
+            //
+            $appointments = $query->paginate();
+        }
+        catch(QueryException $queryEx)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_APPOINTMENT_LIST_ERROR, $queryEx);
+        }
+        catch(Exception $ex)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_APPOINTMENT_LIST_ERROR, $ex);
+        }
+
+        return $appointments;
+    }
+
 
     /**
      * Save patient profile
@@ -1651,7 +1731,7 @@ class HospitalImpl implements HospitalInterface{
                         'hd.hospital_id as hospitalId');
             $query->orderBy('d.name', 'ASC');
 
-            dd($query->toSql());
+            //dd($query->toSql());
 
             $doctors = $query->get();
 

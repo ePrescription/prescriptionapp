@@ -2090,13 +2090,11 @@ class DoctorController extends Controller
         return view('portal.hospital-completeappointment',compact('doctors','patientProfile'));
     }
 
-
-
     public function getPatientsByDoctorForFront($doctorId, $hospitalId, Request $doctorRequest)
     {
         //dd('HI');
         $patients = null;
-        $keyword = $doctorRequest->get('keyword');
+        //$keyword = $doctorRequest->get('keyword');
 
         try
         {
@@ -2104,7 +2102,7 @@ class DoctorController extends Controller
             //$hospitalId=$hospitalInfo['hospital_id'];
 
             //dd($hospitalId);
-            $patients = HospitalServiceFacade::getPatientsByHospital($hospitalId, $keyword);
+            $patients = HospitalServiceFacade::getPatientsByHospitalAndDoctor($hospitalId, $doctorId);
 
         }
         catch(HospitalException $hospitalExc)
@@ -2335,7 +2333,8 @@ class DoctorController extends Controller
             $patientDetails = HospitalServiceFacade::getPatientProfile($patientId);
             $patientPrescriptions = HospitalServiceFacade::getPrescriptionByPatient($patientId);
             $labTests = HospitalServiceFacade::getLabTestsByPatient($patientId);
-            $patientAppointment = HospitalServiceFacade::getPatientAppointments($patientId);
+            //$patientAppointment = HospitalServiceFacade::getPatientAppointments($patientId);
+            $patientAppointment = HospitalServiceFacade::getPatientAppointmentsByHospital($patientId, $hid);
             //dd($patientAppointment);
         }
         catch(HospitalException $hospitalExc)
@@ -2653,15 +2652,15 @@ class DoctorController extends Controller
         }
         catch(HospitalException $hospitalExc)
         {
-            dd($hospitalExc);
-            //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_NO_DOCTORS_FOUND));
-            //$responseJson->sendErrorResponse($hospitalExc);
+            //dd($hospitalExc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_NO_DOCTORS_FOUND));
+            $responseJson->sendErrorResponse($hospitalExc);
         }
         catch(Exception $exc)
         {
-            dd($exc);
-            //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_NO_DOCTORS_FOUND));
-            //$responseJson->sendUnExpectedExpectionResponse($exc);
+            //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_NO_DOCTORS_FOUND));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
         }
 
         //return $responseJson;

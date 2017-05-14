@@ -26,10 +26,14 @@ interface HospitalInterface {
 
     //Get Patient List
     public function getPatientsByHospital($hospitalId, $keyword = null);
+
+    public function getPatientsByHospitalAndDoctor($hospitalId, $doctorId);
     //public function getPatientsByHospital($hospitalId);
     public function getPatientDetailsById($patientId);
     public function getPatientProfile($patientId);
     public function getPatientAppointments($patientId);
+
+    public function getPatientAppointmentsByHospital($patientId, $hospitalId);
 
     //Get Prescription List
     public function getPrescriptions($hospitalId, $doctorId);

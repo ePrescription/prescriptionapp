@@ -269,6 +269,34 @@ class HospitalService {
     }
 
     /**
+     * Get list of patients for the hospital and doctor
+     * @param $hospitalId, $doctorId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientsByHospitalAndDoctor($hospitalId, $doctorId)
+    {
+        $patients = null;
+
+        try
+        {
+            $patients = $this->hospitalRepo->getPatientsByHospitalAndDoctor($hospitalId, $doctorId);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_LIST_ERROR, $exc);
+        }
+
+        return $patients;
+    }
+
+    /**
      * Get patient details by patient id
      * @param $patientId
      * @throws $hospitalException
@@ -397,6 +425,34 @@ class HospitalService {
         try
         {
             $appointments = $this->hospitalRepo->getPatientAppointments($patientId);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_APPOINTMENT_LIST_ERROR, $exc);
+        }
+
+        return $appointments;
+    }
+
+    /**
+     * Get patient appointments by hospital
+     * @param $patientId, $hospitalId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientAppointmentsByHospital($patientId, $hospitalId)
+    {
+        $appointments = null;
+
+        try
+        {
+            $appointments = $this->hospitalRepo->getPatientAppointmentsByHospital($patientId, $hospitalId);
         }
         catch(HospitalException $hospitalExc)
         {
