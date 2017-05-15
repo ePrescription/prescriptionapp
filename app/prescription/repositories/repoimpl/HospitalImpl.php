@@ -306,7 +306,7 @@ class HospitalImpl implements HospitalInterface{
             $query->orderBy('hp.created_at', 'DESC');
             //$query->where('p.name', 'LIKE', '%'.$keyword.'%');
 
-            dd($query->toSql());
+            //dd($query->toSql());
             $patients = $query->get();
             //$patients = $query->paginate(15);
         }
