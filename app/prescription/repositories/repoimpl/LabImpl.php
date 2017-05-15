@@ -85,6 +85,7 @@ class LabImpl implements LabInterface
             /*$query->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'p.telephone','p.age', 'p.gender',
                 'pl.unique_id as labTestCode','pl.labtest_date');*/
             $query->distinct()->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'p.telephone','p.age', 'p.gender');
+            //$query->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'p.telephone','p.age', 'p.gender');
 
             //dd($query->toSql());
             $patients = $query->get();
