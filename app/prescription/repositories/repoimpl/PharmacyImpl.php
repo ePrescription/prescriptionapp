@@ -85,7 +85,8 @@ class PharmacyImpl implements PharmacyInterface
             $query->join('hospital_pharmacy as hp', 'hp.hospital_id', '=', 'pp.hospital_id');
             $query->where('hp.hospital_id', '=', $hospitalId);
             $query->where('hp.pharmacy_id', '=', $pharmacyId);
-            $query->distinct()->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'p.telephone','p.age', 'p.gender');
+            $query->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'p.telephone','p.age', 'p.gender');
+            //$query->distinct()->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'p.telephone','p.age', 'p.gender');
 
             //dd($query->toSql());
             $patients = $query->get();
@@ -124,6 +125,7 @@ class PharmacyImpl implements PharmacyInterface
             $query->where('hp.pharmacy_id', '=', $pharmacyId);
             $query->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'pp.id as prescription_id', 'pp.unique_id as prid', 'pp.prescription_date');
 
+            //dd($query->toSql());
             $prescriptions = $query->get();
             //dd($prescriptions);
         }
