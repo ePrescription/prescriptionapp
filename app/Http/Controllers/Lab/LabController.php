@@ -569,7 +569,7 @@ class LabController extends Controller
 
             foreach($labTests as $labTest)
             {
-                $labTestSMS .= "Lab Test Name: ".$labTest->test_name."%0a";
+                $labTestSMS .= "Lab Test Name: ".$labTest->test_name."%0a"."Lab Test Category: ".$labTest->test_category;
                 //dd($labTestSMS);
             }
 
@@ -600,17 +600,14 @@ class LabController extends Controller
         }
         catch(LabException $labExc)
         {
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::LAB_DETAILS_ERROR));
-            $errorMsg = $labExc->getMessageForCode();
-            $msg = AppendMessage::appendMessage($labExc);
-            Log::error($msg);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::LAB_DETAILS_ERROR));
+            $responseJson->sendErrorResponse($labExc);
         }
         catch(Exception $exc)
         {
             //dd($exc);
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::LAB_DETAILS_ERROR));
-            $msg = AppendMessage::appendGeneralException($exc);
-            Log::error($msg);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::LAB_DETAILS_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
         }
 
         return $responseJson;
