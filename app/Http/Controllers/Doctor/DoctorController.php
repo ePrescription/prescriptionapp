@@ -480,6 +480,124 @@ class DoctorController extends Controller
         return $responseJson;
     }
 
+
+    public function doctorloginform()
+    {
+        //dd('HI');
+        $feeReceiptDetails = null;
+        $responseJson = null;
+        $hospitals = null;
+
+        try
+        {
+            $hospitals = $this->hospitalService->getHospitals();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            dd($hospitalExc);
+            //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_DETAILS_ERROR));
+            //$responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            dd($exc);
+            //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_DETAILS_ERROR));
+            //$responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return view('portal.doctor-login',compact('hospitals'));
+        //return $responseJson;
+    }
+
+    public function doctorlogin(DoctorLoginRequest $loginRequest)
+    {
+        //dd('Test');
+        $loginInfo = $loginRequest->all();
+        //dd($loginInfo);
+        //dd($loginInfo);
+        //$userSession = null;
+
+        try
+        {
+            if (Auth::attempt(['email' => $loginInfo['email'], 'password' => $loginInfo['password']]))
+            {
+                //dd(Auth::user());
+
+                /*
+                $userSession = new UserSession();
+                $userSession->setLoginUserId(Auth::user()->id);
+                $userSession->setDisplayName(ucfirst(Auth::user()->name));
+                $userSession->setLoginUserType(UserType::USERTYPE_DOCTOR);
+                $userSession->setAuthDisplayName(ucfirst(Auth::user()->name));
+
+                Session::put('loggedUser', $userSession);
+                */
+                //dd(Auth::user());
+                $DisplayName=Session::put('DisplayName', ucfirst(Auth::user()->name));
+                $LoginUserId=Session::put('LoginUserId', Auth::user()->id);
+                $DisplayName=Session::put('DisplayName', ucfirst(Auth::user()->name));
+                $AuthDisplayName=Session::put('AuthDisplayName', ucfirst(Auth::user()->name));
+                $AuthDisplayPhoto=Session::put('AuthDisplayPhoto', "no-image.jpg");
+
+
+                if( Auth::user()->hasRole('doctor')  && (Auth::user()->delete_status==1) )
+                {
+                    $LoginUserType=Session::put('LoginUserType', 'doctor');
+
+                    $doctorid = Auth::user()->id;
+                    //dd($doctorid);
+                    //$hospitalId = HospitalServiceFacade::getHospitalId(UserType::USERTYPE_DOCTOR, $doctorid);
+                    //dd($hospitalId);
+
+                    Session::put('LoginUserHospital', $loginInfo['hospital']);
+
+                    $hospitalInfo = HospitalServiceFacade::getProfile($loginInfo['hospital']);
+                    //dd($hospitalInfo);
+                    Session::put('LoginHospitalDetails', $hospitalInfo[0]->hospital_name.' '.$hospitalInfo[0]->address);
+
+                    $doctorInfo = HospitalServiceFacade::getDoctorDetails($doctorid);
+                    //dd($doctorInfo);
+                    Session::put('LoginDoctorDetails', $doctorInfo[0]->doctorDetails);
+
+                    return redirect('doctor/'.Auth::user()->id.'/dashboard');
+                }
+                else
+                {
+                    Auth::logout();
+                    Session::flush();
+                    $msg="Login Details Incorrect! Please try Again.";
+                    return redirect('/doctor/login')->with('message',$msg);
+                }
+
+                //return redirect('hospital/login')->with('message',$msg);
+
+            }
+            else
+            {
+                //$prescriptionResult = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::DOCTOR_LOGIN_FAILURE));
+                $msg = "Login Details Incorrect! Try Again.";
+                return redirect('/login')->with('message',$msg);
+            }
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            //dd("1");
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
+            $prescriptionResult = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FAILURE));
+        }
+        catch(Exception $exc)
+        {
+            //dd("2".$exc);
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+            $prescriptionResult = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FAILURE));
+        }
+
+    }
+
     public function getDoctorDetails($doctorId)
     {
         $doctorDetails = null;
@@ -1626,6 +1744,13 @@ class DoctorController extends Controller
                     }
                     else if( Auth::user()->hasRole('doctor')  && (Auth::user()->delete_status==1) )
                     {
+                        Auth::logout();
+                        Session::flush();
+                        $msg="Login Details Incorrect! Please try Again. OR Missing Hospital Details";
+                        return redirect('/doctor/login')->with('message',$msg);
+
+                        //dd('ISSUES');
+
                         $LoginUserType=Session::put('LoginUserType', 'doctor');
 
                         $doctorid = Auth::user()->id;
@@ -2800,5 +2925,47 @@ class DoctorController extends Controller
 
         return view('portal.hospital-fee-add',compact('patients','doctors'));
         //return $responseJson;
+    }
+
+
+
+    public function saveFeeReceiptForFront(FeeReceiptRequest $feeReceiptRequest)
+    {
+        $feeReceiptVM = null;
+        $status = true;
+        $responseJson = null;
+
+        try
+        {
+            $feeReceiptVM = PatientProfileMapper::setFeeReceipt($feeReceiptRequest);
+            $status = $this->hospitalService->saveFeeReceipt($feeReceiptVM);
+            //dd($status);
+
+            if($status)
+            {
+                $msg=trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_SUCCESS);
+                return redirect('fronthospital/rest/api/'.Auth::user()->id.'/addfeereceipt')->with('success',$msg);
+            }
+            else
+            {
+                $msg=trans('messages.'.ErrorEnum::FEE_RECEIPT_SAVE_ERROR);
+                return redirect('fronthospital/rest/api/'.Auth::user()->id.'/addfeereceipt')->with('message',$msg);
+            }
+
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.$hospitalExc->getUserErrorCode()));
+            $responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_SAVE_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        //return $responseJson;
+
     }
 }

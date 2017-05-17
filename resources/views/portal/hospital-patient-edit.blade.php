@@ -178,6 +178,20 @@ $profile_menu="0";
                                                 <input type="radio" class="form-controlx" name="gender" value="2" required="required" @if($patientDetails[0]->gender==2) checked @endif />Female
                                             </div>
                                         </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label class="col-sm-3 control-label">Relationship</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" name="relationship" value="{{$patientDetails[0]->relationship}}" required="required" />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label class="col-sm-3 control-label">Spouse Name</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" name="spouseName" value="{{$patientDetails[0]->spouseName}}" required="required" />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-md-1"></div>
                                     <div class="box-footer">
