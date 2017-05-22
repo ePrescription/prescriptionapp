@@ -1418,7 +1418,7 @@ class DoctorController extends Controller
      * @author Baskar
      */
 
-    public function getLabTests()
+    public function getLabTests(Request $labRequest)
     {
         $labTests = null;
         $responseJson = null;
@@ -1426,7 +1426,9 @@ class DoctorController extends Controller
         try
         {
             //$labTests = HospitalServiceFacade::getLabTests();
-            $labTests = $this->hospitalService->getLabTests();
+            $keyword = $labRequest->get('labtests');
+
+            $labTests = $this->hospitalService->getLabTests($keyword);
 
             if(!empty($labTests))
             {

@@ -708,19 +708,19 @@ class HospitalService {
     //Lab Tests
     /**
      * Get all lab tests
-     * @param none
+     * @param $keyword
      * @throws $hospitalException
      * @return array | null
      * @author Baskar
      */
 
-    public function getLabTests()
+    public function getLabTests($keyword)
     {
         $labTests = null;
 
         try
         {
-            $labTests = $this->hospitalRepo->getLabTests();
+            $labTests = $this->hospitalRepo->getLabTests($keyword);
         }
         catch(HospitalException $hospitalExc)
         {

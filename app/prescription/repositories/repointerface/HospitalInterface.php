@@ -55,7 +55,7 @@ interface HospitalInterface {
     public function getFormulationNames($keyword);
 
     //Lab Tests
-    public function getLabTests();
+    public function getLabTests($keyword);
     public function getLabTestsForPatient($hospitalId, $doctorId);
     public function getLabTestsByPatient($patientId);
     public function getLabTestDetails($labTestId);

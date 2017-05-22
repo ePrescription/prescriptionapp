@@ -1004,7 +1004,7 @@ class HospitalImpl implements HospitalInterface{
      * @author Baskar
      */
 
-    public function getLabTests()
+    public function getLabTests($keyword)
     {
         $labTests = null;
 
@@ -1013,7 +1013,9 @@ class HospitalImpl implements HospitalInterface{
             //dd('Before query');
             $query = DB::table('labtest as lt')->select('lt.id',
                 DB::raw('TRIM(UPPER(lt.test_category)) as test_category'),
-                DB::raw('TRIM(UPPER(lt.test_name)) as test_name'))->where('lt.test_status', '=', 1);
+                DB::raw('TRIM(UPPER(lt.test_name)) as test_name'));
+            $query->where('lt.test_status', '=', 1);
+            $query->where('lt.test_name', 'LIKE', $keyword.'%');
             //$query = DB::table('labtest as lt')->select('lt.id', 'lt.test_name')->where('lt.test_status', '=', 1);
             //dd($query->toSql());
             $labTests = $query->get();
