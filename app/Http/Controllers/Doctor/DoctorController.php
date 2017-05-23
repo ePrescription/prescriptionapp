@@ -39,6 +39,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
 use Mail;
+use GuzzleHttp\Client;
 
 use App\Http\ViewModels\PatientPrescriptionViewModel;
 
@@ -2760,6 +2761,239 @@ class DoctorController extends Controller
         return $responseJson;
     }
 
+    /**
+     * Forward fee receipt details by SMS
+     * @param $receiptId, $mobile
+     * @throws HospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function forwardFeeReceiptBySMS($receiptId, $mobile)
+    {
+        $feeReceiptDetails = null;
+        $responseJson = null;
+        $status = true;
+
+        try
+        {
+            $feeReceiptDetails = $this->hospitalService->getReceiptDetails($receiptId);
+            //dd($feeReceiptDetails);
+
+            if(!is_null($feeReceiptDetails) && !empty($feeReceiptDetails))
+            {
+                $status = $this->sendFeeReceiptAsSMS($feeReceiptDetails, $mobile);
+            }
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_ERROR));
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
+            //return $jsonResponse;
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SAVE_ERROR));
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        //return $responseJson;
+        //return redirect('fronthospital/rest/api/'.Auth::user()->id.'/addpatient')->with('message',$msg);
+    }
+
+    /**
+     * Forward fee receipt details by Email
+     * @param $receiptId, $mail
+     * @throws HospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function forwardFeeReceiptApiByMail($receiptId, $email)
+    {
+        $feeReceiptDetails = null;
+        $responseJson = null;
+        $status = true;
+
+        try
+        {
+            $feeReceiptDetails = $this->hospitalService->getReceiptDetails($receiptId);
+            //dd($prescriptionDetails);
+
+            if(!is_null($feeReceiptDetails) && !empty($feeReceiptDetails))
+            {
+                $subject = "Fee Receipt";
+                $name = "ePrescription and Lab Tests Application";
+                $title = "Fee Receipt";
+                //$content = $prescriptionDetails;
+                $to = $email;
+                $data = array('name' => $name, 'title' => $title, 'feeReceiptDetails' => $feeReceiptDetails);
+
+                Mail::send('emails.prescription', $data, function ($m) use($to, $subject){
+                    //$m->from('prescriptionapp1@gmail.com', $name);
+                    //$m->to($to)->subject($subject);
+                    $m->from('prescriptionapp1@gmail.com', 'ePrescription and Lab Tests Application');;
+                    //$m->to('alagirivimal@gmail.com')->subject('ePrescription and Lab Tests Application');
+                    $m->to($to)->subject($subject);
+                });
+
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::FEERECEIPT_EMAIL_SUCCESS));
+                $responseJson->setObj("Mail Sent Successfully");
+            }
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEERECEIPT_EMAIL_ERROR));
+            $responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEERECEIPT_EMAIL_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return $responseJson;
+        //return view('portal.patient-labtest-details',compact('prescriptionDetails'));
+    }
+
+    /**
+     * Forward fee receipt details by Email
+     * @param $receiptId, $mail
+     * @throws HospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function forwardFeeReceiptByMail($receiptId, $email)
+    {
+        $feeReceiptDetails = null;
+        $responseJson = null;
+        $status = true;
+
+        try
+        {
+            $feeReceiptDetails = $this->hospitalService->getReceiptDetails($receiptId);
+            //dd($prescriptionDetails);
+
+            if(!is_null($feeReceiptDetails) && !empty($feeReceiptDetails))
+            {
+                $subject = "Fee Receipt";
+                $name = "ePrescription and Lab Tests Application";
+                $title = "Fee Receipt";
+                //$content = $prescriptionDetails;
+                $to = $email;
+                $data = array('name' => $name, 'title' => $title, 'feeReceiptDetails' => $feeReceiptDetails);
+
+                Mail::send('emails.prescription', $data, function ($m) use($to, $subject){
+                    //$m->from('prescriptionapp1@gmail.com', $name);
+                    //$m->to($to)->subject($subject);
+                    $m->from('prescriptionapp1@gmail.com', 'ePrescription and Lab Tests Application');;
+                    //$m->to('alagirivimal@gmail.com')->subject('ePrescription and Lab Tests Application');
+                    $m->to($to)->subject($subject);
+                });
+
+            }
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        //return $responseJson;
+        //return redirect('fronthospital/rest/api/'.Auth::user()->id.'/addpatient')->with('message',$msg);
+    }
+
+    /**
+     * Forward fee receipt details by SMS
+     * @param $receiptId, $mobile
+     * @throws HospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function forwardFeeReceiptApiBySMS($receiptId, $mobile)
+    {
+        $feeReceiptDetails = null;
+        $responseJson = null;
+        $status = true;
+
+        try
+        {
+            $feeReceiptDetails = $this->hospitalService->getReceiptDetails($receiptId);
+            //dd($feeReceiptDetails);
+
+            if(!is_null($feeReceiptDetails) && !empty($feeReceiptDetails))
+            {
+                $status = $this->sendFeeReceiptAsSMS($feeReceiptDetails, $mobile);
+            }
+
+            if($status)
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::FEERECEIPT_SMS_SUCCESS));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEERECEIPT_SMS_ERROR));
+            }
+
+            //$responseJson->setObj($response->getStatusCode());
+            $responseJson->sendSuccessResponse();
+        }
+        catch(HospitalException $pharmacyExc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_DETAILS_ERROR));
+            $responseJson->sendErrorResponse($pharmacyExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_DETAILS_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return $responseJson;
+    }
+
+    private function sendFeeReceiptAsSMS($feeReceiptDetails, $mobile)
+    {
+        $patientName = $feeReceiptDetails['patientDetails']->name;
+        $doctorName = $feeReceiptDetails['doctorDetails']->name;
+        $hospitalName = $feeReceiptDetails['hospitalDetails']->hospital_name;
+        $doctorFee = $feeReceiptDetails['feeDetails']['fee'];
+        //dd($doctorFee);
+        $feeInWords = $feeReceiptDetails['feeDetails']['inWords'];
+        $status = true;
+
+        $message = "Patient Name : ".$patientName."%0a"
+            ." Doctor Name: ".$doctorName."%0a"
+            ." Hospital Name: ".$hospitalName."%0a"
+            ." Received Fee: ".$doctorFee." (In Words ".$feeInWords.") with thanks towards doctor consultation charges"."%0a";
+
+        $client = new Client();
+        $response = $client->get('http://bhashsms.com/api/sendmsg.php?user=Daiwiksoft&pass=Daiwik2612&sender=daiwik&phone='.$mobile.'&text='.$message.'&priority=ndnd&stype=normal');
+
+        if($response->getStatusCode() != 200)
+        {
+            $status = false;
+        }
+
+        return $status;
+    }
 
 
     public function getDoctorsForFront($hospitalId, Request $nameRequest)
@@ -2822,15 +3056,18 @@ class DoctorController extends Controller
         }
         catch(HospitalException $hospitalExc)
         {
-            dd($hospitalExc);
-            //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.$hospitalExc->getUserErrorCode()));
-            //$responseJson->sendErrorResponse($hospitalExc);
+            //dd($hospitalExc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
         }
         catch(Exception $exc)
         {
-            dd($exc);
-            //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_LIST_ERROR));
-            //$responseJson->sendUnExpectedExpectionResponse($exc);
+            //dd($exc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
         }
 
         return view('portal.hospital-doctor-fees',compact('feeReceipts'));
@@ -2846,33 +3083,22 @@ class DoctorController extends Controller
         try
         {
             $feeReceiptDetails = $this->hospitalService->getReceiptDetails($receiptId);
-            //dd($feeReceiptDetails);
-            /*
-            if(!is_null($feeReceiptDetails) && !empty($feeReceiptDetails))
-            {
-                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::FEE_RECEIPT_DETAILS_SUCCESS));
-                $responseJson->setCount(sizeof($feeReceiptDetails));
-            }
-            else
-            {
-                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_FEE_RECEIPT_DETAILS_FOUND));
-            }
 
-            $responseJson->setObj($feeReceiptDetails);
-            $responseJson->sendSuccessResponse();
-            */
         }
         catch(HospitalException $hospitalExc)
         {
-            dd($hospitalExc);
-            //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_DETAILS_ERROR));
-            //$responseJson->sendErrorResponse($hospitalExc);
+            //dd($hospitalExc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
         }
         catch(Exception $exc)
         {
-            dd($exc);
-            //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_DETAILS_ERROR));
-            //$responseJson->sendUnExpectedExpectionResponse($exc);
+            //dd($exc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
         }
 
         return view('portal.hospital-fee-details',compact('feeReceiptDetails'));
@@ -2897,32 +3123,22 @@ class DoctorController extends Controller
             //dd($doctors);
             //$feeReceiptDetails = $this->hospitalService->getReceiptDetails($receiptId);
             //dd($feeReceiptDetails);
-            /*
-            if(!is_null($feeReceiptDetails) && !empty($feeReceiptDetails))
-            {
-                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::FEE_RECEIPT_DETAILS_SUCCESS));
-                $responseJson->setCount(sizeof($feeReceiptDetails));
-            }
-            else
-            {
-                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_FEE_RECEIPT_DETAILS_FOUND));
-            }
 
-            $responseJson->setObj($feeReceiptDetails);
-            $responseJson->sendSuccessResponse();
-            */
         }
         catch(HospitalException $hospitalExc)
         {
-            dd($hospitalExc);
-            //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_DETAILS_ERROR));
-            //$responseJson->sendErrorResponse($hospitalExc);
+            //dd($hospitalExc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
         }
         catch(Exception $exc)
         {
-            dd($exc);
-            //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_DETAILS_ERROR));
-            //$responseJson->sendUnExpectedExpectionResponse($exc);
+            //dd($exc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
         }
 
         return view('portal.hospital-fee-add',compact('patients','doctors'));
@@ -2946,7 +3162,7 @@ class DoctorController extends Controller
             if($status)
             {
                 $msg=trans('messages.'.ErrorEnum::PATIENT_PROFILE_SAVE_SUCCESS);
-                return redirect('fronthospital/rest/api/'.Auth::user()->id.'/addfeereceipt')->with('success',$msg);
+
             }
             else
             {
@@ -2958,14 +3174,21 @@ class DoctorController extends Controller
         }
         catch(HospitalException $hospitalExc)
         {
-            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.$hospitalExc->getUserErrorCode()));
-            $responseJson->sendErrorResponse($hospitalExc);
+            //dd($hospitalExc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
         }
         catch(Exception $exc)
         {
-            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_SAVE_ERROR));
-            $responseJson->sendUnExpectedExpectionResponse($exc);
+            //dd($exc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
         }
+
+        return redirect('fronthospital/rest/api/'.Auth::user()->id.'/addfeereceipt')->with('success',$msg);
 
         //return $responseJson;
 

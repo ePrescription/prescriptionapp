@@ -95,4 +95,8 @@
         "505" => "Unable to save fee receipt",
         "506" => "Successfully saved fee receipt",
         "507" => "No fee receipt listed for the selected hospital and doctor",
+        "508" => "Fee receipt delivered successfully through SMS",
+        "509" => "Unable to deliver fee receipts through SMS",
+        "510" => "Fee receipt delivered successfully through email",
+        "511" => "Unable to deliver fee receipts through email",
     ];

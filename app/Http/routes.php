@@ -151,6 +151,14 @@ Route::group(array('prefix' => 'fronthospital', 'namespace' => 'Doctor'), functi
     Route::get('rest/api/receipt/{receiptId}/details', array('as' => 'hospital.feereceiptdetails', 'uses' => 'DoctorController@getReceiptDetailsForFront'));
     Route::get('rest/api/{hospitalId}/addfeereceipt', array('as' => 'hospital.addfeereceipt', 'uses' => 'DoctorController@addFeeReceiptForFront'));
     Route::post('rest/api/savefeereceipt', array('as' => 'hospital.feereceipt', 'uses' => 'DoctorController@saveFeeReceiptForFront'));
+
+    Route::get('rest/api/receipt/{receiptId}/sms/{mobile}', array('as' => 'apifeereceipt.sendsms', 'uses' => 'DoctorController@forwardFeeReceiptApiBySMS'));
+    Route::get('receipt/{receiptId}/sms/{mobile}', array('as' => 'feereceipt.sendsms', 'uses' => 'DoctorController@forwardFeeReceiptBySMS'));
+
+    Route::get('rest/api/receipt/{receiptId}/mail/{email}', array('as' => 'apifeereceipt.sendsms', 'uses' => 'DoctorController@forwardFeeReceiptApiByMail'));
+    Route::get('receipt/{receiptId}/mail/{email}', array('as' => 'feereceipt.sendsms', 'uses' => 'DoctorController@forwardFeeReceiptByMail'));
+    //Route::get('rest/api/patient/receipts/{receipts}/sms/{mobile}', array('as' => 'feereceipt.sendsms', 'uses' => 'DoctorController@forwardFeeReceiptsBySMS'));
+    //Route
 });
 
 Route::group(array('prefix' => 'hospital', 'namespace' => 'Doctor'), function()
@@ -213,6 +221,8 @@ Route::group(array('prefix' => 'hospital', 'namespace' => 'Doctor'), function()
    Route::get('rest/api/receipt/{receiptId}/details', array('as' => 'hospital.feereceiptdetails', 'uses' => 'DoctorController@getReceiptDetails'));
    Route::post('rest/api/feereceipt', array('as' => 'hospital.feereceipt', 'uses' => 'DoctorController@saveFeeReceipt'));
 
+
+
 });
 
 Route::group(array('prefix' => 'hospital','namespace' => 'Pharmacy'), function() {
@@ -225,8 +235,8 @@ Route::group(array('prefix' => 'hospital','namespace' => 'Pharmacy'), function()
 
 Route::group(array('prefix' => 'hospital','namespace' => 'Lab'), function() {
 
-Route::get('rest/api/patient/labtest/{labTestId}/mail/{email}', array('as' => 'patient.sendemail', 'uses' => 'LabController@forwardLabDetailsByMail'));
-Route::get('rest/api/patient/labtest/{labTestId}/sms/{mobile}', array('as' => 'patient.sendsms', 'uses' => 'LabController@forwardLabDetailsBySMS'));
+    Route::get('rest/api/patient/labtest/{labTestId}/mail/{email}', array('as' => 'patient.sendemail', 'uses' => 'LabController@forwardLabDetailsByMail'));
+    Route::get('rest/api/patient/labtest/{labTestId}/sms/{mobile}', array('as' => 'patient.sendsms', 'uses' => 'LabController@forwardLabDetailsBySMS'));
 
 });
 
@@ -250,7 +260,7 @@ Route::group(['prefix' => 'pharmacy'], function()
         Route::post('rest/api/pharmacy', array('as' => 'pharmacy.editpharmacy', 'uses' => 'PharmacyController@editPharmacy'));
 
         Route::get('rest/api/prescription/{prescriptionId}/mail', array('as' => 'patient.sendemail', 'uses' => 'PharmacyController@forwardPrescriptionDetailsByMail'));
-        Route::get('rest/api/prescription/{prescriptionId}/sms', array('as' => 'patient.send sms', 'uses' => 'PharmacyController@forwardPrescriptionDetailsBySMS'));
+        Route::get('rest/api/prescription/{prescriptionId}/sms', array('as' => 'patient.sendsms', 'uses' => 'PharmacyController@forwardPrescriptionDetailsBySMS'));
 
         //Route::get('rest/api/{labId}/changepassword', array('as' => 'lab.changepassword', 'uses' => 'PharmacyController@editChangePassword'));
         //Route::post('rest/api/pharmacy', array('as' => 'pharmacy.editpharmacy', 'uses' => 'PharmacyController@editPharmacy'));

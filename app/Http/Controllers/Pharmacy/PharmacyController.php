@@ -523,7 +523,7 @@ class PharmacyController extends Controller
                 $m->to($to)->subject($subject);
             });
 
-            $prescriptionMailInfo = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SUCCESS));
+            $prescriptionMailInfo = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SUCCESS));
             $prescriptionMailInfo->setObj("Mail Sent Successfully");
 
         }

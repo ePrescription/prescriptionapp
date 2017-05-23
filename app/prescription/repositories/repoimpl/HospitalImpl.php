@@ -308,6 +308,7 @@ class HospitalImpl implements HospitalInterface{
 
             //dd($query->toSql());
             $patients = $query->get();
+            //dd($patients);
             //$patients = $query->paginate(15);
         }
         catch(QueryException $queryEx)
