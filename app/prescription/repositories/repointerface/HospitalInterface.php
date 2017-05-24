@@ -18,6 +18,8 @@ interface HospitalInterface {
     public function getHospitalId($userTypeId, $userId);
     public function getDoctorsByHospitalId($hospitalId);
 
+    public function getHospitalsForDoctor($email);
+
     public function getDoctorDetails($doctorId);
 
     //Get Appointment details

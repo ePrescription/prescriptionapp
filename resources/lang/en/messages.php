@@ -53,6 +53,7 @@
         "134" => "Unable to retrive formulations list",
         "135" => "Successfully retrieve formulations list",
         "136" => "No formulation list found",
+        "137" => "No hospitals listed for the doctor",
 
         "400" => "No patient details available",
         "401" => "No prescription list available",

@@ -224,6 +224,60 @@ class DoctorController extends Controller
         return $responseJson;
     }
 
+    /**
+     * Get list of hospitals for the doctor
+     * @param $email
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getHospitalsForDoctor(Request $request)
+    {
+        $hospitals = null;
+        $email = $request->get('email');
+        //$jsonResponse = null;
+        $responseJson = null;
+        //$count = 0;
+
+        try
+        {
+            $hospitals = $this->hospitalService->getHospitalsForDoctor($email);
+
+            if(!empty($hospitals))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_LIST_SUCCESS));
+                $responseJson->setCount(sizeof($hospitals));
+                /*$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_DOCTOR_LIST_SUCCESS));
+                $jsonResponse->setObj($doctors);*/
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_HOSPITALS_FOUND));
+                //$jsonResponse = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_NO_DOCTORS_FOUND));
+            }
+
+            //$responseJson->setCount($count);
+            $responseJson->setObj($hospitals);
+            $responseJson->sendSuccessResponse();
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_LIST_ERROR));
+            $responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_LIST_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        //return $jsonResponse;
+        return $responseJson;
+    }
+
+
     //Get Appointment details
 
     /**

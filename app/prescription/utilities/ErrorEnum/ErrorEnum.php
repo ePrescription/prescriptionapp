@@ -58,12 +58,6 @@ class ErrorEnum extends Enum{
     const NO_PATIENT_PROFILE_FOUND = 129;
     const NO_APPOINTMENT_LIST_FOUND = 130;
 
-
-    const NO_PATIENT_DETAILS_FOUND = 400;
-
-    const NO_PRESCRIPTION_LIST_FOUND = 401;
-    const NO_PRESCRIPTION_DETAILS_FOUND = 402;
-
     //Drug Brands
     const BRAND_LIST_ERROR = 131;
     const BRAND_LIST_SUCCESS = 132;
@@ -71,6 +65,8 @@ class ErrorEnum extends Enum{
     const FORMULATION_LIST_ERROR = 134;
     const FORMULATION_LIST_SUCCESS = 135;
     const NO_FORMULATION_LIST_FOUND = 136;
+    const NO_HOSPITALS_FOUND = 137;
+
 
 
     //Lab Tests List
@@ -122,13 +118,10 @@ class ErrorEnum extends Enum{
 
     const PATIENT_APPOINTMENT_LIST_ERROR = 304;
 
-    //SMS and Email codes
+    const NO_PATIENT_DETAILS_FOUND = 400;
 
-    const PRESCRIPTION_SMS_SUCCESS = 1001;
-    const PRESCRIPTION_SMS_ERROR = 1002;
-
-    const LABTEST_SMS_SUCCESS = 1003;
-    const LABTEST_SMS_ERROR = 1004;
+    const NO_PRESCRIPTION_LIST_FOUND = 401;
+    const NO_PRESCRIPTION_DETAILS_FOUND = 402;
 
     //Fee receipt codes 500 - 550
     const FEE_RECEIPT_LIST_ERROR = 500;
@@ -143,6 +136,16 @@ class ErrorEnum extends Enum{
     const FEERECEIPT_SMS_ERROR = 509;
     const FEERECEIPT_EMAIL_SUCCESS = 510;
     const FEERECEIPT_EMAIL_ERROR = 511;
+
+    //SMS and Email codes
+
+    const PRESCRIPTION_SMS_SUCCESS = 1001;
+    const PRESCRIPTION_SMS_ERROR = 1002;
+
+    const LABTEST_SMS_SUCCESS = 1003;
+    const LABTEST_SMS_ERROR = 1004;
+
+
 
 
 
