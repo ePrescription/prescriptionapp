@@ -79,10 +79,25 @@ $profile_menu="0";
                                     </div>
                                 </div>
 
+
                                 <div class="form-group col-md-6">
                                     <label class="col-sm-6 control-label">Patient Gender</label>
                                     <div class="col-sm-6">
                                         @if($patientDetails[0]->gender==1) Male @else Female @endif
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label class="col-sm-6 control-label">Patient Relationship</label>
+                                    <div class="col-sm-6">
+                                        {{$patientDetails[0]->relationship}}
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label class="col-sm-6 control-label">Patient Relation Name</label>
+                                    <div class="col-sm-6">
+                                        {{$patientDetails[0]->spouseName}}
                                     </div>
                                 </div>
 

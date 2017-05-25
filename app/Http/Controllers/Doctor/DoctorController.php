@@ -2927,6 +2927,7 @@ class DoctorController extends Controller
 
     public function forwardFeeReceiptByMail($receiptId, $email)
     {
+
         $feeReceiptDetails = null;
         $responseJson = null;
         $status = true;
@@ -2934,7 +2935,7 @@ class DoctorController extends Controller
         try
         {
             $feeReceiptDetails = $this->hospitalService->getReceiptDetails($receiptId);
-            //dd($prescriptionDetails);
+            //dd($feeReceiptDetails);
 
             if(!is_null($feeReceiptDetails) && !empty($feeReceiptDetails))
             {
@@ -2945,7 +2946,7 @@ class DoctorController extends Controller
                 $to = $email;
                 $data = array('name' => $name, 'title' => $title, 'feeReceiptDetails' => $feeReceiptDetails);
 
-                Mail::send('emails.prescription', $data, function ($m) use($to, $subject){
+                Mail::send('emails.hospital-fee', $data, function ($m) use($to, $subject){
                     //$m->from('prescriptionapp1@gmail.com', $name);
                     //$m->to($to)->subject($subject);
                     $m->from('prescriptionapp1@gmail.com', 'ePrescription and Lab Tests Application');;
@@ -3155,7 +3156,7 @@ class DoctorController extends Controller
             Log::error($msg);
         }
 
-        return view('portal.hospital-fee-details',compact('feeReceiptDetails'));
+        return view('portal.hospital-fee-details',compact('feeReceiptDetails','receiptId'));
         //return $responseJson;
     }
 

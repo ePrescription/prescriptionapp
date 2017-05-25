@@ -6,7 +6,8 @@
 @stop
 <?php
 $dashboard_menu="0";
-$patient_menu="1";
+$patient_menu="0";
+$doctor_menu="1";
 $profile_menu="0";
 ?>
 @section('content')

@@ -1984,7 +1984,7 @@ class HospitalImpl implements HospitalInterface{
             //array_push($feeDetails, $feeWords);
             //dd($feeDetails);
 
-            $patientQuery = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name', 'p.pid',
+            $patientQuery = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name', 'p.email', 'p.pid',
                 'p.telephone', 'p.relationship', 'p.patient_spouse_name as spouseName', 'p.address');
             $patientQuery->where('p.patient_id', '=', $patientId);
             $patientDetails = $patientQuery->first();

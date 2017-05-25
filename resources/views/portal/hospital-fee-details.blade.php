@@ -6,7 +6,8 @@
 @stop
 <?php
 $dashboard_menu="0";
-$patient_menu="1";
+$patient_menu="0";
+$doctor_menu="1";
 $profile_menu="0";
 ?>
 @section('content')
@@ -34,7 +35,16 @@ $profile_menu="0";
 
         <!-- Main content -->
 
-        <div style="width:98%;float: right;padding:10px;margin:10px;"><a href="" style="float: right;" ><button type="button" class="btn btn-success btn-xs" onclick="javascript:printDiv();"><i class="fa fa-print"></i> PRINT</button></a></div>
+        <div style="width:98%;float: right;padding:10px;margin:10px;">
+
+            <a href="" style="float: right;" ><button type="button" class="btn btn-success btn-xs" onclick="javascript:printDiv();"><i class="fa fa-print"></i> PRINT</button></a>
+
+            <a href="{{URL::to('/')}}/fronthospital/receipt/{{$receiptId}}/sms/{{$feeReceiptDetails['patientDetails']->telephone}}" style="float: right;padding-right:10px;" target="_blank" ><button type="button" class="btn btn-success btn-xs" ><i class="fa fa-mobile"></i> SMS</button></a>
+
+            <a href="{{URL::to('/')}}/fronthospital/receipt/{{$receiptId}}/mail/{{$feeReceiptDetails['patientDetails']->email}}" style="float: right;padding-right:10px;" target="_blank" ><button type="button" class="btn btn-success btn-xs" ><i class="fa fa-envelope-o"></i> E-MAIL</button></a>
+
+        </div>
+
         <!-- Main content -->
         <section id="PagePrintX" class="content">
             <div class="row">
@@ -47,18 +57,30 @@ $profile_menu="0";
                         </div><!-- /.box-header -->
                         <div class="box-body">
                             <div class="col-md-12">
+                                <?php if(!empty($feeReceiptDetails['hospitalDetails']->hospital_logo)) { ?>
                                 <div class="form-group col-md-3">
                                         {{$feeReceiptDetails['hospitalDetails']->hospital_logo}}
                                 </div>
                                 <div class="form-group col-md-9">
-                                    <div class="col-sm-12">
+                                    <div class="col-sm-6">
                                         {{$feeReceiptDetails['hospitalDetails']->hospital_name}}
                                          ( {{$feeReceiptDetails['hospitalDetails']->hid}} )
                                     </div>
-                                    <div class="col-sm-12">
+                                    <div class="col-sm-6">
                                         {{$feeReceiptDetails['hospitalDetails']->address}}, {{$feeReceiptDetails['hospitalDetails']->cityName}}, {{$feeReceiptDetails['hospitalDetails']->country}}
                                     </div>
                                 </div>
+                                <?php } else { ?>
+                                    <div class="form-group col-md-12">
+                                        <div class="col-sm-6">
+                                            {{$feeReceiptDetails['hospitalDetails']->hospital_name}}
+                                            ( {{$feeReceiptDetails['hospitalDetails']->hid}} )
+                                        </div>
+                                        <div class="col-sm-6">
+                                            {{$feeReceiptDetails['hospitalDetails']->address}}, {{$feeReceiptDetails['hospitalDetails']->cityName}}, {{$feeReceiptDetails['hospitalDetails']->country}}
+                                        </div>
+                                    </div>
+                                <?php } ?>
 
                             </div>
                             <div class="col-md-1"></div>
@@ -78,34 +100,45 @@ $profile_menu="0";
                         <div class="box-body">
 
                             <div class="col-md-12">
-                                <div class="form-group col-md-12">
+                                <div class="form-group col-md-6">
                                     <label class="col-sm-6 control-label">Patient ID</label>
                                     <div class="col-sm-6">
                                         {{$feeReceiptDetails['patientDetails']->pid}}
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="form-group col-md-6">
                                     <label class="col-sm-6 control-label">Patient Name</label>
                                     <div class="col-sm-6">
                                         {{$feeReceiptDetails['patientDetails']->name}}
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group col-md-6">
                                     <label class="col-sm-6 control-label">Phone Number</label>
                                     <div class="col-sm-6">
                                         {{$feeReceiptDetails['patientDetails']->telephone}}
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
-                                    <label class="col-sm-6 control-label">Patient Spouse</label>
-                                    <div class="col-sm-6">
-                                        {{$feeReceiptDetails['patientDetails']->spouseName}}
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-12">
+
+                                <div class="form-group col-md-6">
                                     <label class="col-sm-6 control-label">Patient Address</label>
                                     <div class="col-sm-6">
                                         {{$feeReceiptDetails['patientDetails']->address}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group col-md-6">
+                                    <label class="col-sm-6 control-label">Patient Relationship</label>
+                                    <div class="col-sm-6">
+                                        {{$feeReceiptDetails['patientDetails']->relationship}}
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="col-sm-6 control-label">Patient Relation Name</label>
+                                    <div class="col-sm-6">
+                                        {{$feeReceiptDetails['patientDetails']->spouseName}}
                                     </div>
                                 </div>
                             </div>
@@ -125,25 +158,27 @@ $profile_menu="0";
                         <div class="box-body">
 
                             <div class="col-md-12">
-                                <div class="form-group col-md-12">
+                                <div class="form-group col-md-6">
                                     <label class="col-sm-6 control-label">Doctor ID</label>
                                     <div class="col-sm-6">
                                         {{$feeReceiptDetails['doctorDetails']->did}}
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="form-group col-md-6">
                                     <label class="col-sm-6 control-label">Doctor Name</label>
                                     <div class="col-sm-6">
                                         {{$feeReceiptDetails['doctorDetails']->name}}
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group col-md-6">
                                     <label class="col-sm-6 control-label">Doctor Designation</label>
                                     <div class="col-sm-6">
                                         {{$feeReceiptDetails['doctorDetails']->designation}}
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="form-group col-md-6">
                                     <label class="col-sm-6 control-label">Doctor Department</label>
                                     <div class="col-sm-6">
                                         {{$feeReceiptDetails['doctorDetails']->department}}
@@ -215,34 +250,40 @@ $profile_menu="0";
                         </div><!-- /.box-header -->
                         <div class="box-body">
                             <div class="col-md-12" style="width:100%;float:left;">
-                                <div class="form-group col-md-12" style="width:100%;float:left;">
+                                <div class="form-group col-md-12" style="width:50%;float:left;">
                                     <label class="col-sm-6 control-label" style="width:50%;float:left;">Patient ID</label>
                                     <div class="col-sm-6" style="width:50%;float:left;">
                                         {{$feeReceiptDetails['patientDetails']->pid}}
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12" style="width:100%;float:left;">
+                                <div class="form-group col-md-12" style="width:50%;float:left;">
                                     <label class="col-sm-6 control-label" style="width:50%;float:left;">Patient Name</label>
                                     <div class="col-sm-6" style="width:50%;float:left;">
                                         {{$feeReceiptDetails['patientDetails']->name}}
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12" style="width:100%;float:left;">
+                                <div class="form-group col-md-12" style="width:50%;float:left;">
                                     <label class="col-sm-6 control-label" style="width:50%;float:left;">Phone Number</label>
                                     <div class="col-sm-6" style="width:50%;float:left;">
                                         {{$feeReceiptDetails['patientDetails']->telephone}}
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12" style="width:100%;float:left;">
-                                    <label class="col-sm-6 control-label" style="width:50%;float:left;">Patient Spouse</label>
-                                    <div class="col-sm-6" style="width:50%;float:left;">
-                                        {{$feeReceiptDetails['patientDetails']->spouseName}}
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-12" style="width:100%;float:left;">
+                                <div class="form-group col-md-12" style="width:50%;float:left;">
                                     <label class="col-sm-6 control-label" style="width:50%;float:left;">Patient Address</label>
                                     <div class="col-sm-6" style="width:50%;float:left;">
                                         {{$feeReceiptDetails['patientDetails']->address}}
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12" style="width:50%;float:left;">
+                                    <label class="col-sm-6 control-label" style="width:50%;float:left;">Patient Relationship</label>
+                                    <div class="col-sm-6" style="width:50%;float:left;">
+                                        {{$feeReceiptDetails['patientDetails']->relationship}}
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12" style="width:50%;float:left;">
+                                    <label class="col-sm-6 control-label" style="width:50%;float:left;">Patient Relation Name</label>
+                                    <div class="col-sm-6" style="width:50%;float:left;">
+                                        {{$feeReceiptDetails['patientDetails']->spouseName}}
                                     </div>
                                 </div>
                             </div>
@@ -261,25 +302,25 @@ $profile_menu="0";
                         <div class="box-body">
 
                             <div class="col-md-12" style="width:100%;float:left;">
-                                <div class="form-group col-md-12" style="width:100%;float:left;">
+                                <div class="form-group col-md-12" style="width:50%;float:left;">
                                     <label class="col-sm-6 control-label" style="width:50%;float:left;">Doctor ID</label>
                                     <div class="col-sm-6" style="width:50%;float:left;">
                                         {{$feeReceiptDetails['doctorDetails']->did}}
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12"  style="width:100%;float:left;">
+                                <div class="form-group col-md-12"  style="width:50%;float:left;">
                                     <label class="col-sm-6 control-label" style="width:50%;float:left;">Doctor Name</label>
                                     <div class="col-sm-6" style="width:50%;float:left;">
                                         {{$feeReceiptDetails['doctorDetails']->name}}
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12" style="width:100%;float:left;">
+                                <div class="form-group col-md-12" style="width:50%;float:left;">
                                     <label class="col-sm-6 control-label" style="width:50%;float:left;">Doctor Designation</label>
                                     <div class="col-sm-6" style="width:50%;float:left;">
                                         {{$feeReceiptDetails['doctorDetails']->designation}}
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12" style="width:100%;float:left;">
+                                <div class="form-group col-md-12" style="width:50%;float:left;">
                                     <label class="col-sm-6 control-label" style="width:50%;float:left;">Doctor Department</label>
                                     <div class="col-sm-6" style="width:50%;float:left;">
                                         {{$feeReceiptDetails['doctorDetails']->department}}
