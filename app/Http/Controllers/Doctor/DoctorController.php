@@ -2877,7 +2877,7 @@ class DoctorController extends Controller
         try
         {
             $feeReceiptDetails = $this->hospitalService->getReceiptDetails($receiptId);
-            //dd($prescriptionDetails);
+            //dd($feeReceiptDetails);
 
             if(!is_null($feeReceiptDetails) && !empty($feeReceiptDetails))
             {
@@ -2887,6 +2887,7 @@ class DoctorController extends Controller
                 //$content = $prescriptionDetails;
                 $to = $email;
                 $data = array('name' => $name, 'title' => $title, 'feeReceiptDetails' => $feeReceiptDetails);
+
 
                 Mail::send('emails.hospital-fee', $data, function ($m) use($to, $subject){
                     //$m->from('prescriptionapp1@gmail.com', $name);
@@ -2898,11 +2899,14 @@ class DoctorController extends Controller
 
                 $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::FEERECEIPT_EMAIL_SUCCESS));
                 $responseJson->setObj("Mail Sent Successfully");
+
+                //dd($responseJson);
             }
 
         }
         catch(HospitalException $hospitalExc)
         {
+            //dd($hospitalExc);
             $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEERECEIPT_EMAIL_ERROR));
             $responseJson->sendErrorResponse($hospitalExc);
         }
