@@ -2969,7 +2969,7 @@ class DoctorController extends Controller
             Log::error($msg);
         }
 
-        return view('portal.hospital-fee-details');
+        //return view('portal.hospital-fee-details');
 
         //return $responseJson;
         //return redirect('fronthospital/rest/api/'.Auth::user()->id.'/addpatient')->with('message',$msg);
