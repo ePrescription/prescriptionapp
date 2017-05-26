@@ -482,7 +482,7 @@ class DoctorController extends Controller
                     $userName = ucfirst(Auth::user()->name);
 
                     $doctorDetails = HospitalServiceFacade::getDoctorDetails($userId);
-
+                    $hospitals = $this->hospitalService->getHospitalsByDoctorId($userId);
 
                     /*$loginDetails['doctor']['id'] = $userId;
                     $loginDetails['doctor']['name'] = $userName;
@@ -495,6 +495,7 @@ class DoctorController extends Controller
                     $loginDetails['name'] = $userName;
                     $loginDetails['department'] = $doctorDetails[0]->department;
                     $loginDetails['designation'] = $doctorDetails[0]->designation;
+                    $loginDetails['hospitals'] = $hospitals;
                     //$loginDetails['dept'] = $doctorDetails[0]->doctorId;
                     //$doctorDetails['department'] =
                     //$loginDetails['department'] = $doctorDetails['department'];

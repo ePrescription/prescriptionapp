@@ -19,6 +19,7 @@ interface HospitalInterface {
     public function getDoctorsByHospitalId($hospitalId);
 
     public function getHospitalsForDoctor($email);
+    public function getHospitalsByDoctorId($doctorId);
 
     public function getDoctorDetails($doctorId);
 

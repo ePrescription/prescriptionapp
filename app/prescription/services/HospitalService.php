@@ -170,6 +170,34 @@ class HospitalService {
     }
 
     /**
+     * Get list of hospitals for the doctor
+     * @param $doctorId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getHospitalsByDoctorId($doctorId)
+    {
+        $hospitals = null;
+
+        try
+        {
+            $hospitals = $this->hospitalRepo->getHospitalsByDoctorId($doctorId);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::HOSPITAL_LIST_ERROR, $exc);
+        }
+
+        return $hospitals;
+    }
+
+    /**
      * Save patient profile
      * @param $patientProfileVM
      * @throws $hospitalException
