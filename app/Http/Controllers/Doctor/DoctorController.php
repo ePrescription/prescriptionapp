@@ -2838,6 +2838,7 @@ class DoctorController extends Controller
             if(!is_null($feeReceiptDetails) && !empty($feeReceiptDetails))
             {
                 $status = $this->sendFeeReceiptAsSMS($feeReceiptDetails, $mobile);
+                $msg = "Message Sent Successfully";
             }
 
         }
@@ -2848,6 +2849,7 @@ class DoctorController extends Controller
             $msg = AppendMessage::appendMessage($hospitalExc);
             Log::error($msg);
             //return $jsonResponse;
+            return redirect('fronthospital/rest/api/receipt/'.$receiptId.'/details')->with('message',$msg);
         }
         catch(Exception $exc)
         {
@@ -2855,10 +2857,11 @@ class DoctorController extends Controller
             //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SAVE_ERROR));
             $msg = AppendMessage::appendGeneralException($exc);
             Log::error($msg);
+            return redirect('fronthospital/rest/api/receipt/'.$receiptId.'/details')->with('message',$msg);
         }
 
         //return $responseJson;
-        //return redirect('fronthospital/rest/api/'.Auth::user()->id.'/addpatient')->with('message',$msg);
+        return redirect('fronthospital/rest/api/receipt/'.$receiptId.'/details')->with('success',$msg);
     }
 
     /**
@@ -2958,7 +2961,9 @@ class DoctorController extends Controller
                     //$m->to('alagirivimal@gmail.com')->subject('ePrescription and Lab Tests Application');
                     $m->to($to)->subject($subject);
                 });
-
+                $msg = "Message Sent Successfully";
+                //dd("EMail Sent");
+                //dd($feeReceiptDetails);
             }
 
         }
@@ -2974,6 +2979,8 @@ class DoctorController extends Controller
             Log::error($msg);
         }
 
+
+        return redirect('fronthospital/rest/api/receipt/'.$receiptId.'/details')->with('success',$msg);
         //return view('portal.hospital-fee-details');
 
         //return $responseJson;
