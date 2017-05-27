@@ -154,8 +154,8 @@ Route::group(array('prefix' => 'fronthospital', 'namespace' => 'Doctor'), functi
 
     Route::get('receipt/{receiptId}/sms/{mobile}', array('as' => 'feereceipt.sendsms', 'uses' => 'DoctorController@forwardFeeReceiptBySMS'));
 
-    Route::get('rest/api/receipt/{receiptId}/mail/{email}', array('as' => 'apifeereceipt.sendsms', 'uses' => 'DoctorController@forwardFeeReceiptApiByMail'));
-    Route::get('receipt/{receiptId}/mail/{email}', array('as' => 'feereceipt.sendsms', 'uses' => 'DoctorController@forwardFeeReceiptByMail'));
+    Route::get('rest/api/receipt/{receiptId}/mail/{email}', array('as' => 'apifeereceipt.sendmail', 'uses' => 'DoctorController@forwardFeeReceiptApiByMail'));
+    Route::get('receipt/{receiptId}/mail/{email}', array('as' => 'feereceipt.sendmail', 'uses' => 'DoctorController@forwardFeeReceiptByMail'));
     //Route::get('rest/api/patient/receipts/{receipts}/sms/{mobile}', array('as' => 'feereceipt.sendsms', 'uses' => 'DoctorController@forwardFeeReceiptsBySMS'));
     //Route
 });

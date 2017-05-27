@@ -2902,7 +2902,8 @@ class DoctorController extends Controller
                 });
 
                 $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::FEERECEIPT_EMAIL_SUCCESS));
-                $responseJson->setObj("Mail Sent Successfully");
+                //$responseJson->setObj("Mail Sent Successfully");
+                $responseJson->sendSuccessResponse();
 
                 //dd($responseJson);
             }
