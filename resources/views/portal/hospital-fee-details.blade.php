@@ -39,15 +39,32 @@ $profile_menu="0";
 
             <a href="" style="float: right;" ><button type="button" class="btn btn-success btn-xs" onclick="javascript:printDiv();"><i class="fa fa-print"></i> PRINT</button></a>
 
-            <a href="{{URL::to('/')}}/fronthospital/receipt/{{$receiptId}}/sms/{{$feeReceiptDetails['patientDetails']->telephone}}" style="float: right;padding-right:10px;" target="_blank" ><button type="button" class="btn btn-success btn-xs" ><i class="fa fa-mobile"></i> SMS</button></a>
+            <a href="{{URL::to('/')}}/fronthospital/receipt/{{$receiptId}}/sms/{{$feeReceiptDetails['patientDetails']->telephone}}" style="float: right;padding-right:10px;" ><button type="button" class="btn btn-success btn-xs" ><i class="fa fa-mobile"></i> SMS</button></a>
 
-            <a href="{{URL::to('/')}}/fronthospital/receipt/{{$receiptId}}/mail/{{$feeReceiptDetails['patientDetails']->email}}" style="float: right;padding-right:10px;" target="_blank" ><button type="button" class="btn btn-success btn-xs" ><i class="fa fa-envelope-o"></i> E-MAIL</button></a>
+            <a href="{{URL::to('/')}}/fronthospital/receipt/{{$receiptId}}/mail/{{$feeReceiptDetails['patientDetails']->email}}" style="float: right;padding-right:10px;" ><button type="button" class="btn btn-success btn-xs" ><i class="fa fa-envelope-o"></i> E-MAIL</button></a>
 
         </div>
 
         <!-- Main content -->
         <section id="PagePrintX" class="content">
             <div class="row">
+
+
+                @if (session()->has('message'))
+                    <div class="col-xs-12 login-title">
+                                <span style="color:red;">
+                                    <b>{{session('message')}}</b>
+                                </span>
+                    </div>
+                @endif
+
+                @if (session()->has('success'))
+                    <div class="col-xs-12 login-title">
+                                <span style="color:green;">
+                                    <b>{{session('success')}}</b>
+                                </span>
+                    </div>
+                @endif
 
                 <div class="col-xs-12">
 
