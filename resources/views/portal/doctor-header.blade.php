@@ -24,7 +24,8 @@
             </h2>
         </div>
         <div style="width:200px;float:left;">
-<br/>
+        <p style="color: #fff;padding-top: 5px;font-weight: bold;">Choose Hospital</p>
+
             @if(!empty(Session::get('LoginUserHospital')))
                 <form id="changehospital" name="changehospital" action="{{URL::to('/')}}/doctor/changehospital" role="form" method="POST">
                     <?php $hospitalsArray = Session::get('LoginUserHospitals'); ?>
