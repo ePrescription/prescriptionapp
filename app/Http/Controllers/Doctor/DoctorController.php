@@ -444,9 +444,6 @@ class DoctorController extends Controller
      * @author Baskar
      */
 
-
-
-
     //public function login()
     //public function login(Request $loginRequest)
     public function login(DoctorLoginRequest $loginRequest)
@@ -536,6 +533,56 @@ class DoctorController extends Controller
         return $responseJson;
     }
 
+    /**
+     * Get list of hospitals for the doctor
+     * @param $doctorId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getHospitalsByDoctorId($doctorId)
+    {
+        $hospitals = null;
+        $responseJson = null;
+        //$jsonResponse =
+        //dd($doctorId);
+
+        //dd('Inside patient details '.$patientId);
+        try
+        {
+            //$patientDetails = HospitalServiceFacade::getPatientDetailsById($patientId);
+            $hospitals = $this->hospitalService->getHospitalsByDoctorId($doctorId);
+            //dd($hospitals);
+
+            if(!empty($hospitals))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::HOSPITAL_LIST_SUCCESS));
+                $responseJson->setCount(sizeof($hospitals));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_HOSPITALS_FOUND));
+            }
+
+            $responseJson->setObj($hospitals);
+            $responseJson->sendSuccessResponse();
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_LIST_ERROR));
+            $responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::HOSPITAL_LIST_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return $responseJson;
+    }
+
 
     public function doctorloginform()
     {
@@ -550,13 +597,13 @@ class DoctorController extends Controller
         }
         catch(HospitalException $hospitalExc)
         {
-            dd($hospitalExc);
+            //dd($hospitalExc);
             //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_DETAILS_ERROR));
             //$responseJson->sendErrorResponse($hospitalExc);
         }
         catch(Exception $exc)
         {
-            dd($exc);
+            //dd($exc);
             //$responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FEE_RECEIPT_DETAILS_ERROR));
             //$responseJson->sendUnExpectedExpectionResponse($exc);
         }
