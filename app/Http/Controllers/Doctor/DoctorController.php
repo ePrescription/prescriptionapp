@@ -43,6 +43,9 @@ use GuzzleHttp\Client;
 
 use App\Http\ViewModels\PatientPrescriptionViewModel;
 
+use Softon\Indipay\Facades\Indipay;
+
+
 class DoctorController extends Controller
 {
     protected $hospitalService;
@@ -3308,6 +3311,39 @@ class DoctorController extends Controller
         return redirect('fronthospital/rest/api/'.Auth::user()->id.'/addfeereceipt')->with('success',$msg);
 
         //return $responseJson;
+
+    }
+
+    public function processPayment()
+    {
+
+        $parameters = [
+
+            'tid' => '45646489556322',
+            'order_id' => '1232212',
+            'amount' => '1200.00',
+            'firstname' => 'Baskaran',
+            'email' => 'baskar2271@yahoo.com',
+            'phone' => '9988844455',
+            'productinfo' => 'test',
+        ];
+        //dd($parameters);
+        try
+        {
+            //$order = Indipay::prepare($parameters);
+            $order = Indipay::gateway('PayUMoney')->prepare($parameters);
+            //dd($order);
+
+
+        }
+        catch(Exception $exc)
+        {
+            dd($exc);
+        }
+
+        return Indipay::process($order);
+
+        //return Indipay::process($order);
 
     }
 }

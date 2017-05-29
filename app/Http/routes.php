@@ -224,6 +224,8 @@ Route::group(array('prefix' => 'hospital', 'namespace' => 'Doctor'), function()
    Route::get('rest/api/doctor/hospitals', array('as' => 'doctor.hospitals', 'uses' => 'DoctorController@getHospitalsForDoctor'));
    Route::get('rest/api/{doctorId}/hospitals', array('as' => 'doctor.associatedhospitals', 'uses' => 'DoctorController@getHospitalsByDoctorId'));
 
+  Route::get('rest/payment', array('as' => 'hospital.payments', 'uses' => 'DoctorController@processPayment'));
+
 });
 
 Route::group(array('prefix' => 'hospital','namespace' => 'Pharmacy'), function() {
