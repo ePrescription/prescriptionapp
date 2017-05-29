@@ -18,9 +18,35 @@
                 Dr All Caps<br/>
                 {{Session::get('AuthDisplayName')}} - {{Session::get('LoginDoctorDetails')}}
                 <br/>
+                @if(!empty(Session::get('LoginHospitalDetails')))
                 {{Session::get('LoginHospitalDetails')}}
-
+                @endif
             </h2>
+        </div>
+        <div style="width:200px;float:left;">
+<br/>
+            @if(!empty(Session::get('LoginUserHospital')))
+                <form id="changehospital" name="changehospital" action="{{URL::to('/')}}/doctor/changehospital" role="form" method="POST">
+                    <?php $hospitalsArray = Session::get('LoginUserHospitals'); ?>
+                    <select name="hospital" class="form-control" onchange="javascript:this.form.submit();">
+
+                        @foreach($hospitalsArray as $hospitalValue)
+                            <option value="{{$hospitalValue->id}}" @if(Session::get('LoginUserHospital')==$hospitalValue->id) selected @endif >{{$hospitalValue->hospital_name}}</option>
+                        @endforeach
+                    </select>
+                </form>
+            @else
+            <form id="changehospital" name="changehospital" action="{{URL::to('/')}}/doctor/changehospital" role="form" method="POST">
+                <?php $hospitalsArray = Session::get('LoginUserHospitals'); ?>
+                <select name="hospital" class="form-control" onchange="javascript:this.form.submit();">
+                    <option selected>---Choose Your Hospital---</option>
+                    @foreach($hospitalsArray as $hospitalValue)
+                    <option value="{{$hospitalValue->id}}" >{{$hospitalValue->hospital_name}}</option>
+                    @endforeach
+                </select>
+            </form>
+            @endif
+
         </div>
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">

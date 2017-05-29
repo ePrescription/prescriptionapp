@@ -255,7 +255,7 @@ class HospitalImpl implements HospitalInterface{
             $query->join('hospital as h', 'h.hospital_id', '=', 'hd.hospital_id');
             $query->where('hd.doctor_id', '=', $doctorId);
             $query->where('usr1.delete_status', '=', 1);
-            $query->select('h.id as id', 'h.hospital_name');
+            $query->select('h.id as id', 'h.hospital_name', 'h.address as hospital_address');
             //dd($query->toSql());
             $hospitals = $query->get();
             //dd($hospitals);

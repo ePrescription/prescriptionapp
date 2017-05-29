@@ -282,6 +282,10 @@ Route::group(['prefix' => 'pharmacy'], function()
 
 Route::group(['prefix' => 'doctor'], function()
 {
+
+
+    Route::post('/changehospital', array('as' => 'doctor.changehospital', 'uses' => 'Doctor\DoctorController@changeHospital'));
+
     Route::get('{id}/dashboard', function () {
         return view('portal.doctor-dashboard');
     });

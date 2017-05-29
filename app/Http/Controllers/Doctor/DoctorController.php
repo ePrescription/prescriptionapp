@@ -1852,10 +1852,10 @@ class DoctorController extends Controller
                     }
                     else if( Auth::user()->hasRole('doctor')  && (Auth::user()->delete_status==1) )
                     {
-                        Auth::logout();
-                        Session::flush();
-                        $msg="Login Details Incorrect! Please try Again. OR Missing Hospital Details";
-                        return redirect('/doctor/login')->with('message',$msg);
+                        //Auth::logout();
+                        //Session::flush();
+                        //$msg="Login Details Incorrect! Please try Again. OR Missing Hospital Details";
+                        //return redirect('/doctor/login')->with('message',$msg);
 
                         //dd('ISSUES');
 
@@ -1863,6 +1863,14 @@ class DoctorController extends Controller
 
                         $doctorid = Auth::user()->id;
                         //dd($doctorid);
+
+                        $hospitalsInfo = HospitalServiceFacade::getHospitalsByDoctorId($doctorid);
+                        //dd($hospitalsInfo);
+                        Session::put('LoginUserHospitals',$hospitalsInfo);
+
+                        Session::put('LoginUserHospital', '');
+                        Session::put('LoginHospitalDetails', '');
+                        /*
                         $hospitalId = HospitalServiceFacade::getHospitalId(UserType::USERTYPE_DOCTOR, $doctorid);
                         //dd($hospitalId);
                         Session::put('LoginUserHospital', $hospitalId[0]->hospital_id);
@@ -1870,11 +1878,11 @@ class DoctorController extends Controller
                         $hospitalInfo = HospitalServiceFacade::getProfile($hospitalId[0]->hospital_id);
                         //dd($hospitalInfo);
                         Session::put('LoginHospitalDetails', $hospitalInfo[0]->hospital_name.' '.$hospitalInfo[0]->address);
-
+                        */
                         $doctorInfo = HospitalServiceFacade::getDoctorDetails($doctorid);
                         //dd($doctorInfo);
                         Session::put('LoginDoctorDetails', $doctorInfo[0]->doctorDetails);
-
+//dd('CIU');
                         return redirect('doctor/'.Auth::user()->id.'/dashboard');
                     }
                     else if( Auth::user()->hasRole('patient') && (Auth::user()->delete_status==1) )
@@ -3344,6 +3352,56 @@ class DoctorController extends Controller
         return Indipay::process($order);
 
         //return Indipay::process($order);
+
+    }
+
+
+    public function changeHospital(Request $loginRequest)
+    {
+        $loginInfo = $loginRequest->all();
+        //dd($loginInfo['hospital']);
+        //$userSession = null;
+
+        try
+        {
+            if (!empty($loginInfo))
+            {
+
+                $hospital_id = $loginInfo['hospital'];
+                //dd($hospital_id);
+                Session::put('LoginUserHospital', $hospital_id);
+
+                $hospitalInfo = HospitalServiceFacade::getProfile($hospital_id);
+                //dd($hospitalInfo);
+                Session::put('LoginHospitalDetails', $hospitalInfo[0]->hospital_name.' '.$hospitalInfo[0]->address);
+
+                return redirect('doctor/'.Auth::user()->id.'/dashboard');
+
+            }
+            else
+            {
+                //$prescriptionResult = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::DOCTOR_LOGIN_FAILURE));
+                $msg = "Please Choose Hospital Details.";
+                return redirect('doctor/'.Auth::user()->id.'/dashboard')->with('message',$msg);
+
+            }
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            //dd("1");
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
+            $prescriptionResult = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FAILURE));
+        }
+        catch(Exception $exc)
+        {
+            //dd("2".$exc);
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+            $prescriptionResult = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FAILURE));
+        }
 
     }
 }
