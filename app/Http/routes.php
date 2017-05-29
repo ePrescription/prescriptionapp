@@ -161,8 +161,8 @@ Route::group(array('prefix' => 'fronthospital', 'namespace' => 'Doctor'), functi
 
     Route::get('payment/online', array('as' => 'payment.online', 'uses' => 'DoctorController@onlinePayment'));
     Route::post('payment/process', array('as' => 'payment.process', 'uses' => 'DoctorController@processPayment'));
-    Route::get('payment/response/success', array('as' => 'payment.success', 'uses' => 'DoctorController@successPayment'));
-    Route::get('payment/response/failure', array('as' => 'payment.failure', 'uses' => 'DoctorController@failurePayment'));
+    Route::any('payment/response/success', array('as' => 'payment.success', 'uses' => 'DoctorController@successPayment'));
+    Route::any('payment/response/failure', array('as' => 'payment.failure', 'uses' => 'DoctorController@failurePayment'));
 });
 
 Route::group(array('prefix' => 'hospital', 'namespace' => 'Doctor'), function()

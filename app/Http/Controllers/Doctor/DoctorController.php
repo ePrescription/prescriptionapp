@@ -3395,6 +3395,11 @@ class DoctorController extends Controller
         try
         {
 
+            // For default Gateway
+            $response = Indipay::response($request);
+
+            // For Otherthan Default Gateway
+            $response = Indipay::gateway('NameOfGatewayUsedDuringRequest')->response($request);
 
         }
         catch(HospitalException $hospitalExc)
@@ -3413,17 +3418,22 @@ class DoctorController extends Controller
             Log::error($msg);
         }
 
-        return view('portal.hospital-online-payment-success');
+        return view('portal.hospital-online-payment-success',compact('response'));
         //return $responseJson;
     }
 
 
-    public function failurePayment()
+    public function failurePayment(Request $request)
     {
 
         try
         {
 
+            // For default Gateway
+            $response = Indipay::response($request);
+
+            // For Otherthan Default Gateway
+            $response = Indipay::gateway('NameOfGatewayUsedDuringRequest')->response($request);
 
         }
         catch(HospitalException $hospitalExc)
@@ -3442,7 +3452,8 @@ class DoctorController extends Controller
             Log::error($msg);
         }
 
-        return view('portal.hospital-online-payment-failure');
+        //dd($response);
+        return view('portal.hospital-online-payment-failure',compact('response'));
         //return $responseJson;
     }
 

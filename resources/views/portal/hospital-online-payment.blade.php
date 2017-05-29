@@ -69,21 +69,21 @@ $profile_menu="0";
                                   Patient Name
                             </div>
                             <div class="col-md-7">
-                                <input type="text" name="firstname" value="" class="form-control" required />
+                                <input type="text" name="firstname" value="" class="form-control"  style="margin-bottom: 8px;" required />
                             </div>
                             <div class="col-md-1"></div>
                             <div class="col-md-4">
                                 Patient Email
                             </div>
                             <div class="col-md-7">
-                                <input type="text" name="email" value="" class="form-control" required />
+                                <input type="text" name="email" value="" class="form-control"  style="margin-bottom: 8px;" required />
                             </div>
                             <div class="col-md-1"></div>
                             <div class="col-md-4">
                                 Patient Mobile
                             </div>
                             <div class="col-md-7">
-                                <input type="text" name="phone" value="" class="form-control" required />
+                                <input type="text" name="phone" value="" class="form-control"  style="margin-bottom: 8px;" required />
                             </div>
                             <div class="col-md-1"></div>
 
@@ -105,7 +105,7 @@ $profile_menu="0";
                                 Payment For
                             </div>
                             <div class="col-md-7">
-                                <input type="text" name="productinfo" value="" class="form-control" required />
+                                <input type="text" name="productinfo" value="" class="form-control"  style="margin-bottom: 8px;" required />
                             </div>
                             <div class="col-md-1"></div>
                         </div>
@@ -114,7 +114,7 @@ $profile_menu="0";
                                 Payment Amount
                             </div>
                             <div class="col-md-7">
-                                <input type="text" name="amount" value="" class="form-control" required />
+                                <input type="text" name="amount" value="" class="form-control"  style="margin-bottom: 8px;" required/>
                             </div>
                             <div class="col-md-1"></div>
                         </div>
