@@ -3373,6 +3373,8 @@ class DoctorController extends Controller
         {
             //$order = Indipay::prepare($parameters);
             $order = Indipay::gateway('PayUMoney')->prepare($parameters);
+            dd($order);
+            return Indipay::process($order);
             //dd($order);
 
 
@@ -3382,14 +3384,14 @@ class DoctorController extends Controller
             dd($exc);
         }
 
-        return Indipay::process($order);
+
 
         //return Indipay::process($order);
 
     }
 
 
-    public function successPayment()
+    public function successPayment(Request $request)
     {
 
         try
