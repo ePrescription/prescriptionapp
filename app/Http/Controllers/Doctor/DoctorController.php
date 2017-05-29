@@ -3322,9 +3322,41 @@ class DoctorController extends Controller
 
     }
 
-    public function processPayment()
+
+    public function onlinePayment()
     {
 
+        try
+        {
+
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            //dd($hospitalExc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        return view('portal.hospital-online-payment');
+        //return $responseJson;
+    }
+
+    public function processPayment(Request $paymentRequest)
+    {
+       // dd($paymentRequest->all());
+
+        $parameters = $paymentRequest->all();
+        /*
         $parameters = [
 
             'tid' => '45646489556322',
@@ -3335,6 +3367,7 @@ class DoctorController extends Controller
             'phone' => '9988844455',
             'productinfo' => 'test',
         ];
+        */
         //dd($parameters);
         try
         {
@@ -3353,6 +3386,64 @@ class DoctorController extends Controller
 
         //return Indipay::process($order);
 
+    }
+
+
+    public function successPayment()
+    {
+
+        try
+        {
+
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            //dd($hospitalExc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        return view('portal.hospital-online-payment-success');
+        //return $responseJson;
+    }
+
+
+    public function failurePayment()
+    {
+
+        try
+        {
+
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            //dd($hospitalExc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $errorMsg = $hospitalExc->getMessageForCode();
+            $msg = AppendMessage::appendMessage($hospitalExc);
+            Log::error($msg);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            //$jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_DETAILS_ERROR));
+            $msg = AppendMessage::appendGeneralException($exc);
+            Log::error($msg);
+        }
+
+        return view('portal.hospital-online-payment-failure');
+        //return $responseJson;
     }
 
 

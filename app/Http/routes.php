@@ -158,6 +158,11 @@ Route::group(array('prefix' => 'fronthospital', 'namespace' => 'Doctor'), functi
     Route::get('receipt/{receiptId}/mail/{email}', array('as' => 'feereceipt.sendmail', 'uses' => 'DoctorController@forwardFeeReceiptByMail'));
     //Route::get('rest/api/patient/receipts/{receipts}/sms/{mobile}', array('as' => 'feereceipt.sendsms', 'uses' => 'DoctorController@forwardFeeReceiptsBySMS'));
     //Route
+
+    Route::get('payment/online', array('as' => 'payment.online', 'uses' => 'DoctorController@onlinePayment'));
+    Route::post('payment/process', array('as' => 'payment.process', 'uses' => 'DoctorController@processPayment'));
+    Route::get('payment/response/success', array('as' => 'payment.success', 'uses' => 'DoctorController@successPayment'));
+    Route::get('payment/response/failure', array('as' => 'payment.failure', 'uses' => 'DoctorController@failurePayment'));
 });
 
 Route::group(array('prefix' => 'hospital', 'namespace' => 'Doctor'), function()
@@ -224,7 +229,7 @@ Route::group(array('prefix' => 'hospital', 'namespace' => 'Doctor'), function()
    Route::get('rest/api/doctor/hospitals', array('as' => 'doctor.hospitals', 'uses' => 'DoctorController@getHospitalsForDoctor'));
    Route::get('rest/api/{doctorId}/hospitals', array('as' => 'doctor.associatedhospitals', 'uses' => 'DoctorController@getHospitalsByDoctorId'));
 
-  Route::get('rest/payment', array('as' => 'hospital.payments', 'uses' => 'DoctorController@processPayment'));
+
 
 });
 
