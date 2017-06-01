@@ -1879,13 +1879,15 @@ class HospitalImpl implements HospitalInterface{
                 $query->join('doctor as d', 'd.doctor_id', '=', 'fr.doctor_id');
                 $query->where('fr.hospital_id', '=', $hospitalId);
                 $query->where('fr.doctor_id', '=', $doctorId);
+                $query->orderBy('fr.created_at', 'DESC');
                 $query->select('fr.id as receiptId', 'p.id as patientId', 'p.name as patientName', 'p.pid as PID',
                         'p.relationship','p.patient_spouse_name as spouseName',
                         'p.telephone as contactNumber', 'd.name as doctorName', 'fr.fee');
 
-                //dd($query->toSql());
+
+                dd($query->toSql());
                 $feeReceipts = $query->get();
-                //dd($feeReceipts);
+                dd($feeReceipts);
 
             }
 
@@ -1941,6 +1943,7 @@ class HospitalImpl implements HospitalInterface{
                 $query->join('doctor as d', 'd.doctor_id', '=', 'fr.doctor_id');
                 //$query->where('fr.doctor_id', '=', 'd.doctor_id');
                 $query->where('p.patient_id', '=', $patientId);
+                $query->orderBy('fr.created_at', 'DESC');
                 $query->select('fr.id as receiptId', 'p.id as patientId', 'p.name as patientName', 'p.pid as PID',
                     'p.relationship','p.patient_spouse_name as spouseName',
                     'p.telephone as contactNumber', 'd.name as doctorName', 'fr.fee');
