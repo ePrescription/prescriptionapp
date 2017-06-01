@@ -1885,9 +1885,9 @@ class HospitalImpl implements HospitalInterface{
                         'p.telephone as contactNumber', 'd.name as doctorName', 'fr.fee');
 
 
-                dd($query->toSql());
+                //dd($query->toSql());
                 $feeReceipts = $query->get();
-                dd($feeReceipts);
+                //dd($feeReceipts);
 
             }
 
