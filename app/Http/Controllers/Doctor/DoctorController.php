@@ -3381,7 +3381,7 @@ class DoctorController extends Controller
         }
         catch(Exception $exc)
         {
-            dd($exc);
+            //dd($exc);
         }
 
 
