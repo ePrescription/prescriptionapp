@@ -2882,8 +2882,10 @@ class DoctorController extends Controller
      * @author Baskar
      */
 
-    public function forwardFeeReceiptBySMS($receiptId, $mobile)
+    public function forwardFeeReceiptBySMS($receiptId, $mobile, Request $request)
     {
+        //dd($request['mobile']);
+        $mobile=$request['mobile'];
         $feeReceiptDetails = null;
         $responseJson = null;
         $status = true;
@@ -2992,12 +2994,14 @@ class DoctorController extends Controller
      * @author Baskar
      */
 
-    public function forwardFeeReceiptByMail($receiptId, $email)
+    public function forwardFeeReceiptByMail($receiptId, $email, Request $request)
     {
-
+        //dd($request['email']);
+        $email=$request['email'];
         $feeReceiptDetails = null;
         $responseJson = null;
         $status = true;
+        $msg = null;
 
         try
         {
