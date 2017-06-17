@@ -81,7 +81,7 @@ class NewAppointmentRequest extends BasePrescriptionRequest
                 }
 
             },
-            'Invalid date. Please check appointment date!!!'
+            'Invalid date or time. Please check appointment date or time!!!'
         );
 
         $validationFactory->extend(

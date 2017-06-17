@@ -2252,6 +2252,7 @@ class DoctorController extends Controller
 
 
     public function saveAppointmentByHospitalForFront(Request $appointmentRequest)
+    //public function saveAppointmentByHospitalForFront(NewAppointmentRequest $appointmentRequest)
     {
         //dd($appointmentRequest);
         $appointmentsVM = null;
