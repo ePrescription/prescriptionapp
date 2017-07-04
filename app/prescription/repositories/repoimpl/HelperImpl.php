@@ -26,7 +26,7 @@ class HelperImpl implements HelperInterface
      * @params none
      * @throws HelperException
      * @return array | null
-     * @author Baskar
+     * @author Baskaran Subbaraman
      */
 
     public function getCities()
