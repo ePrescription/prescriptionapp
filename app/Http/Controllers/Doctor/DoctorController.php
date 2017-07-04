@@ -93,7 +93,7 @@ class DoctorController extends Controller
             $responseJson->sendErrorResponse($hospitalExc);
             /*$errorMsg = $hospitalExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($hospitalExc);
-            Log::error($msg);*/
+            Log::error($msg);//*/
         }
         catch(Exception $exc)
         {
