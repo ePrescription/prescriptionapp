@@ -2122,7 +2122,7 @@ class DoctorController extends Controller
         }
         catch(HospitalException $profileExc)
         {
-            //dd($hospitalExc);
+            ////dd($hospitalExc);
             $errorMsg = $profileExc->getMessageForCode();
             $msg = AppendMessage::appendMessage($profileExc);
             Log::error($msg);
