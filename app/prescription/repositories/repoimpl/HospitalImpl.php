@@ -597,9 +597,12 @@ class HospitalImpl implements HospitalInterface{
             $hospitalQuery->where('pp.id', '=', $prescriptionId);
             $hospitalDetails = $hospitalQuery->get();
 
-            $query = DB::table('prescription_details as pd')->select('b.id as trade_id', DB::raw('TRIM(UPPER(b.brand_name)) as trade_name'),
-                        'd.id as formulation_id',
-                        DB::raw('TRIM(UPPER(d.drug_name)) as formulation_name'),
+            $query = DB::table('prescription_details as pd')->select('b.id as trade_id',
+                        DB::raw('TRIM(UPPER(b.brand_name)) as trade_name'),
+                        //'d.id as formulation_id',
+                        //DB::raw('TRIM(UPPER(d.drug_name)) as formulation_name'),
+                        'b.id as formulation_id',
+                        DB::raw('TRIM(UPPER(b.brand_name)) as formulation_name'),
                         'pd.dosage', 'pd.no_of_days', 'pd.intake_form',
                         'pd.morning', 'pd.afternoon', 'pd.night', 'pd.drug_status');
             $query->join('patient_prescription as pp', 'pp.id', '=', 'pd.patient_prescription_id');
