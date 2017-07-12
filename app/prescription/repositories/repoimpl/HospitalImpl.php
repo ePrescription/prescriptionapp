@@ -1093,7 +1093,8 @@ class HospitalImpl implements HospitalInterface{
         {
             //dd('Before query');
             $query = DB::table('labtest as lt')->select('lt.id',
-                DB::raw('TRIM(UPPER(lt.test_category)) as test_category'),
+                //DB::raw('TRIM(UPPER(lt.test_category)) as test_category'),
+                DB::raw('TRIM(UPPER(lt.test_name)) as test_category'),
                 DB::raw('TRIM(UPPER(lt.test_name)) as test_name'));
             $query->where('lt.test_status', '=', 1);
             $query->where('lt.test_name', 'LIKE', $keyword.'%');
