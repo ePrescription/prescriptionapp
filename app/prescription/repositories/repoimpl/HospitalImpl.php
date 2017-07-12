@@ -988,7 +988,8 @@ class HospitalImpl implements HospitalInterface{
                 'd.id as formulationId',
                 //'b.brand_name as tradeName', 'd.id as formulationId',
                 DB::raw('TRIM(UPPER(d.drug_name)) as formulationName'));
-            $query->join('drugs as d', 'd.id', '=', 'b.drug_id');
+            $query->leftjoin('drugs as d', 'd.id', '=', 'b.drug_id');
+            //$query->join('drugs as d', 'd.id', '=', 'b.drug_id');
             $query->where('b.brand_name', 'LIKE', $keyword.'%');
             $query->where('b.brand_status', '=', 1);
             //dd($query->toSql());
