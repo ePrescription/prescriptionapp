@@ -495,6 +495,7 @@ class DoctorController extends Controller
                     $loginDetails['name'] = $userName;
                     $loginDetails['department'] = $doctorDetails[0]->department;
                     $loginDetails['designation'] = $doctorDetails[0]->designation;
+                    //$loginDetails['qualification'] = $doctorDetails[0]->doctorDetails;
                     $loginDetails['hospitals'] = $hospitals;
                     //$loginDetails['dept'] = $doctorDetails[0]->doctorId;
                     //$doctorDetails['department'] =
