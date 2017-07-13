@@ -79,7 +79,7 @@ $profile_menu="0";
                                 <div class="form-group col-md-12">
                                     <label class="col-sm-3 control-label">Email</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" name="email" value="" required="required" />
+                                        <input type="text" class="form-control" name="email" value=""  />
                                     </div>
                                 </div>
                                 <div class="form-group col-md-12">
