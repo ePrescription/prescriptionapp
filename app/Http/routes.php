@@ -288,7 +288,6 @@ Route::group(['prefix' => 'pharmacy'], function()
 Route::group(['prefix' => 'doctor'], function()
 {
 
-
     Route::post('/changehospital', array('as' => 'doctor.changehospital', 'uses' => 'Doctor\DoctorController@changeHospital'));
 
     Route::get('{id}/dashboard', function () {
@@ -297,9 +296,13 @@ Route::group(['prefix' => 'doctor'], function()
 
     Route::group(['namespace' => 'Doctor'], function()
     {
-
         Route::get('rest/api/{doctorId}/hospital/{hospitalId}/patients', array('as' => 'doctor.patients', 'uses' => 'DoctorController@getPatientsByDoctorForFront'));
-
+        Route::get('rest/api/mainsymptoms', array('as' => 'doctor.symptoms', 'uses' => 'DoctorApiController@getMainSymptoms'));
+        Route::get('rest/api/{mainsymptomId}/subsymptoms', array('as' => 'doctor.subsymptoms', 'uses' => 'DoctorApiController@getSubSymptomsForMainSymptoms'));
+        Route::get('rest/api/{subsymptomId}/symptoms', array('as' => 'doctor.symptoms', 'uses' => 'DoctorApiController@getSymptomsForSubSymptoms'));
+        Route::get('rest/api/{patientId}/patienthistory', array('as' => 'doctor.patienthistory', 'uses' => 'DoctorApiController@getPersonalHistory'));
+        Route::get('rest/api/{patientId}/pastillness', array('as' => 'doctor.patientpastillness', 'uses' => 'DoctorApiController@getPatientPastIllness'));
+        Route::get('rest/api/{patientId}/familyillness', array('as' => 'doctor.familyillness', 'uses' => 'DoctorApiController@getPatientFamilyIllness'));
     });
 
 
@@ -334,8 +337,6 @@ Route::group(['prefix' => 'doctor'], function()
         //Route::get('rest/api/lab', array('as' => 'lab.editlab', 'uses' => 'LabController@saveChangesPassword'));
     });
 });
-
-
 
 
 Route::group(['prefix' => 'lab'], function()

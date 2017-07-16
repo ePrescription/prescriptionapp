@@ -1137,4 +1137,176 @@ class HospitalService {
 
         return $status;
     }
+
+    /*Symptom section -- Begin */
+
+    /**
+     * Get all the symptoms
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getMainSymptoms()
+    {
+        $mainSymptoms = null;
+
+        try
+        {
+            $mainSymptoms = $this->hospitalRepo->getMainSymptoms();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::MAIN_SYMPTOMS_LIST_ERROR, $exc);
+        }
+
+        return $mainSymptoms;
+    }
+
+    /**
+     * Get all the sub symptoms for main symptom
+     * @param $mainSymptomsId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getSubSymptomsForMainSymptoms($mainSymptomsId)
+    {
+        $subSymptoms = null;
+
+        try
+        {
+            $subSymptoms = $this->hospitalRepo->getSubSymptomsForMainSymptoms($mainSymptomsId);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::SUB_SYMPTOMS_LIST_ERROR, $exc);
+        }
+
+        return $subSymptoms;
+    }
+
+    /**
+     * Get all the symptoms for sub symptom
+     * @param $subSymptomId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getSymptomsForSubSymptoms($subSymptomId)
+    {
+        $symptoms = null;
+
+        try
+        {
+            $symptoms = $this->hospitalRepo->getSymptomsForSubSymptoms($subSymptomId);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::SYMPTOMS_LIST_ERROR, $exc);
+        }
+
+        return $symptoms;
+    }
+
+    /**
+     * Get personal history for the patient
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPersonalHistory($patientId)
+    {
+        $personalHistoryDetails = null;
+
+        try
+        {
+            $personalHistoryDetails = $this->hospitalRepo->getPersonalHistory($patientId);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PERSONAL_HISTORY_ERROR, $exc);
+        }
+
+        return $personalHistoryDetails;
+    }
+
+    /**
+     * Get patient past illness
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientPastIllness($patientId)
+    {
+        $pastIllness = null;
+
+        try
+        {
+            $pastIllness = $this->hospitalRepo->getPatientPastIllness($patientId);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_PAST_ILLNESS_DETAILS_ERROR, $exc);
+        }
+
+        return $pastIllness;
+    }
+
+    /**
+     * Get patient family illness
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientFamilyIllness($patientId)
+    {
+        $familyIllness = null;
+
+        try
+        {
+            $familyIllness = $this->hospitalRepo->getPatientFamilyIllness($patientId);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_FAMILY_ILLNESS_DETAILS_ERROR, $exc);
+        }
+
+        return $familyIllness;
+    }
+
+    /*Symptom section -- End */
 }

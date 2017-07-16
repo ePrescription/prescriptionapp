@@ -33,6 +33,7 @@
           "app/prescription/utilities",
           "app/prescription/utilities/Exception",
           "app/prescription/utilities/HHSCache",
+          "app/prescription/utilities/Logger",
           "app/prescription/common",
           "app/prescription/mapper",
           "app/Numbers_Words-0.18.1",

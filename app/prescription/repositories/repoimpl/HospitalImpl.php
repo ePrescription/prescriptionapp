@@ -38,6 +38,7 @@ use Numbers_Words;
 use Config as CA;
 
 
+
 class HospitalImpl implements HospitalInterface{
 
     /**
@@ -2178,4 +2179,265 @@ class HospitalImpl implements HospitalInterface{
 
         return $status;
     }
+
+    /*Symptom section -- Begin */
+
+    /**
+     * Get all the symptoms
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getMainSymptoms()
+    {
+        $mainSymptoms = null;
+
+        try
+        {
+            $query = DB::table('main_symptoms as ms')->where('ms.status', '=', 1);
+            $query->select('ms.id', 'ms.main_symptom_name', 'ms.main_symptom_code');
+            $mainSymptoms = $query->get();
+        }
+        catch(QueryException $queryEx)
+        {
+            throw new HospitalException(null, ErrorEnum::MAIN_SYMPTOMS_LIST_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::MAIN_SYMPTOMS_LIST_ERROR, $exc);
+        }
+
+        return $mainSymptoms;
+    }
+
+    /**
+     * Get all the sub symptoms for main symptom
+     * @param $mainSymptomsId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getSubSymptomsForMainSymptoms($mainSymptomsId)
+    {
+        $subSymptoms = null;
+
+        try
+        {
+            $query = DB::table('sub_symptoms as ss')->where('ss.status', '=', 1);
+            $query->where('ss.main_symptom_id', $mainSymptomsId);
+            $query->select('ss.id', 'ss.sub_symptom_name', 'ss.sub_symptom_code');
+            $subSymptoms = $query->get();
+        }
+        catch(QueryException $queryEx)
+        {
+            throw new HospitalException(null, ErrorEnum::SUB_SYMPTOMS_LIST_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::SUB_SYMPTOMS_LIST_ERROR, $exc);
+        }
+
+        return $subSymptoms;
+    }
+
+    /**
+     * Get all the symptoms for sub symptom
+     * @param $subSymptomId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getSymptomsForSubSymptoms($subSymptomId)
+    {
+        $symptoms = null;
+
+        try
+        {
+            $query = DB::table('symptoms as s')->where('s.status', '=', 1);
+            $query->where('s.sub_symptom_id', $subSymptomId);
+            $query->select('s.id', 's.symptom_name', 's.symptom_code');
+            $symptoms = $query->get();
+        }
+        catch(QueryException $queryEx)
+        {
+            throw new HospitalException(null, ErrorEnum::SYMPTOMS_LIST_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::SYMPTOMS_LIST_ERROR, $exc);
+        }
+
+        return $symptoms;
+    }
+
+    /**
+     * Get personal history for the patient
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPersonalHistory($patientId)
+    {
+        $feeInfo = null;
+        $doctorId = null;
+
+        $personalHistory = null;
+        $patientHistory = null;
+        $personalHistoryDetails = null;
+
+        //$personalHistoryQuery
+
+        try
+        {
+            $patientHistoryQuery = DB::table('personal_history as ph')->where('pph.patient_id', '=', $patientId);
+            $patientHistoryQuery->join('personal_history_item as phi', 'phi.personal_history_id', '=', 'ph.id');
+            $patientHistoryQuery->join('patient_personal_history as pph', function($join){
+                $join->on('pph.personal_history_id', '=', 'ph.id');
+                $join->on('pph.personal_history_id', '=', 'ph.id');
+            });
+            $patientHistoryQuery->select('pph.id', 'pph.patient_id as patientId', 'ph.id as personalHistoryId',
+                'ph.personal_history_name as personalHistoryName', 'phi.id as personalHistoryItemId',
+                'phi.personal_history_item_name as personalHistoryItemName');
+
+            $patientHistory = $patientHistoryQuery->get();
+
+            $personalHistoryQuery = DB::table('personal_history as ph')->join('personal_history_item as phi', 'phi.personal_history_id', '=', 'ph.id');
+            $personalHistoryQuery->select('ph.id as personalHistoryId', 'ph.personal_history_name as personalHistoryName',
+                'phi.id as personalHistoryItemId', 'phi.personal_history_item_name as personalHistoryItemName');
+            $personalHistory = $personalHistoryQuery->get();
+
+            /*if(!is_null($patientFeedback) && !empty($patientFeedback))
+            {
+
+            }*/
+
+            $personalHistoryDetails["patientHistory"] = $patientHistory;
+            $personalHistoryDetails["personalHistory"] = $personalHistory;
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            throw new HospitalException(null, ErrorEnum::PERSONAL_HISTORY_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            throw new HospitalException(null, ErrorEnum::PERSONAL_HISTORY_ERROR, $exc);
+        }
+
+        //dd($feeReceiptDetails);
+        return $personalHistoryDetails;
+    }
+
+    /**
+     * Get patient past illness
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientPastIllness($patientId)
+    {
+        $pastIllness = null;
+
+        //dd($patientId);
+
+        try
+        {
+            $patientUser = User::find($patientId);
+
+            if(is_null($patientUser))
+            {
+                throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
+            }
+
+            $query = DB::table('past_illness as pii')->select('ppi.id as patientPastIllnessId', 'pii.id as patientIllnessId', 'pii.illness_name as illnessName',
+                'ppi.past_illness_name as otherIllnessName');
+            $query->leftJoin('patient_past_illness as ppi', function($join){
+                $join->on('ppi.past_illness_id', '=', 'pii.id');
+                $join->on('ppi.patient_id', '=', DB::raw('?'));
+            })->setBindings(array_merge($query->getBindings(), array($patientId)));
+            $query->where('pii.status', '=', 1);
+
+            $pastIllness = $query->get();
+            //dd($pastIllness);
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            throw new HospitalException(null, ErrorEnum::PATIENT_PAST_ILLNESS_DETAILS_ERROR, $queryEx);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            throw new HospitalException(null, ErrorEnum::PATIENT_PAST_ILLNESS_DETAILS_ERROR, $exc);
+        }
+
+        return $pastIllness;
+    }
+
+    /**
+     * Get patient family illness
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientFamilyIllness($patientId)
+    {
+        $familyIllness = null;
+
+        try
+        {
+            $patientUser = User::find($patientId);
+
+            if(is_null($patientUser))
+            {
+                throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
+            }
+
+            $query = DB::table('family_illness as fi')->select('fi.id as familyIllnessId', 'fi.illness_name as familyIllnessName',
+                'ppi.id as patientIllnessId', 'ppi.past_illness_name as otherIllnessName');
+            $query->leftJoin('patient_past_illness as ppi', function($join){
+                $join->on('ppi.past_illness_id', '=', 'fi.id');
+                $join->on('ppi.patient_id', '=', DB::raw('?'));
+            })->setBindings(array_merge($query->getBindings(), array($patientId)));
+            $query->where('fi.status', '=', 1);
+
+            $familyIllness = $query->get();
+            //dd($pastIllness);
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            throw new HospitalException(null, ErrorEnum::PATIENT_FAMILY_ILLNESS_DETAILS_ERROR, $queryEx);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            throw new HospitalException(null, ErrorEnum::PATIENT_FAMILY_ILLNESS_DETAILS_ERROR, $exc);
+        }
+
+        return $familyIllness;
+    }
+
+    /*Symptom section -- End */
 }
