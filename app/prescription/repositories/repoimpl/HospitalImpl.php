@@ -2295,6 +2295,13 @@ class HospitalImpl implements HospitalInterface{
 
         try
         {
+            $patientUser = User::find($patientId);
+
+            if(is_null($patientUser))
+            {
+                throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
+            }
+
             $patientHistoryQuery = DB::table('personal_history as ph')->where('pph.patient_id', '=', $patientId);
             $patientHistoryQuery->join('personal_history_item as phi', 'phi.personal_history_id', '=', 'ph.id');
             $patientHistoryQuery->join('patient_personal_history as pph', function($join){
@@ -2324,6 +2331,11 @@ class HospitalImpl implements HospitalInterface{
         {
             //dd($queryEx);
             throw new HospitalException(null, ErrorEnum::PERSONAL_HISTORY_ERROR, $queryEx);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
         }
         catch(Exception $exc)
         {

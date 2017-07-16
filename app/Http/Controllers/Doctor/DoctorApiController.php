@@ -196,9 +196,15 @@ class DoctorApiController extends Controller
         }
         catch(HospitalException $hospitalExc)
         {
-            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PERSONAL_HISTORY_ERROR));
+            //dd($hospitalExc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.$hospitalExc->getUserErrorCode()));
             $responseJson->sendErrorResponse($hospitalExc);
         }
+        /*catch(HospitalException $hospitalExc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PERSONAL_HISTORY_ERROR));
+            $responseJson->sendErrorResponse($hospitalExc);
+        }*/
         catch(Exception $exc)
         {
             //dd($exc);
