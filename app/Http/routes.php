@@ -298,11 +298,15 @@ Route::group(['prefix' => 'doctor'], function()
     {
         Route::get('rest/api/{doctorId}/hospital/{hospitalId}/patients', array('as' => 'doctor.patients', 'uses' => 'DoctorController@getPatientsByDoctorForFront'));
         Route::get('rest/api/mainsymptoms', array('as' => 'doctor.symptoms', 'uses' => 'DoctorApiController@getMainSymptoms'));
+
         Route::get('rest/api/{mainsymptomId}/subsymptoms', array('as' => 'doctor.subsymptoms', 'uses' => 'DoctorApiController@getSubSymptomsForMainSymptoms'));
         Route::get('rest/api/{subsymptomId}/symptoms', array('as' => 'doctor.symptoms', 'uses' => 'DoctorApiController@getSymptomsForSubSymptoms'));
         Route::get('rest/api/{patientId}/patienthistory', array('as' => 'doctor.patienthistory', 'uses' => 'DoctorApiController@getPersonalHistory'));
         Route::get('rest/api/{patientId}/pastillness', array('as' => 'doctor.patientpastillness', 'uses' => 'DoctorApiController@getPatientPastIllness'));
         Route::get('rest/api/{patientId}/familyillness', array('as' => 'doctor.familyillness', 'uses' => 'DoctorApiController@getPatientFamilyIllness'));
+        Route::get('rest/api/{patientId}/generalexamination', array('as' => 'doctor.generalexamination', 'uses' => 'DoctorApiController@getPatientGeneralExamination'));
+        Route::post('rest/api/personalhistory', array('as' => 'doctor.savepersonalhistory', 'uses' => 'DoctorApiController@savePersonalHistory'));
+        Route::post('rest/api/generalexamination', array('as' => 'doctor.savegeneralexamination', 'uses' => 'DoctorApiController@savePatientGeneralExamination'));
     });
 
 

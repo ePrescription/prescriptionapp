@@ -8,6 +8,7 @@
 
     return[
         "0" => "We are facing some technical issues. Please contact the support team",
+        "2" => "Invalid User",
         "3" => "Validation errors",
         "4" => "No doctor found",
         "5" => "No hospital found",
@@ -126,4 +127,14 @@
         "716" => "Unable to retrieve patient family illness details",
         "717" => "Successfully retrieved patient family illness details",
         "718" => "No family illness details found for the patient",
+
+        "719" => "Unable to save patient personal history",
+        "720" => "Successfully saved patient personal history",
+
+        "721" => "Unable to retrieve patient general examination details",
+        "722" => "Successfully retrieved patient general examination details",
+        "723" => "No general examination details available for the patient",
+
+        "724" => "Unable to save patient general examination details",
+        "725" => "Successfully saved patient general examination details",
     ];

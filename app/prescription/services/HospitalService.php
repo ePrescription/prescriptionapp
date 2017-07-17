@@ -1308,5 +1308,101 @@ class HospitalService {
         return $familyIllness;
     }
 
+    /**
+     * Get patient general examination
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientGeneralExamination($patientId)
+    {
+        $generalExamination = null;
+
+        try
+        {
+            $generalExamination = $this->hospitalRepo->getPatientGeneralExamination($patientId);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_GENERAL_EXAMINATION_DETAILS_ERROR, $exc);
+        }
+
+        return $generalExamination;
+    }
+
+    /**
+     * Save patient personal history
+     * @param $patientHistoryVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePersonalHistory($patientHistoryVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientHistoryVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePersonalHistory($patientHistoryVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_PERSONAL_HISTORY_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient general examination details
+     * @param $patientExaminationVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientGeneralExamination($patientExaminationVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientExaminationVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePatientGeneralExamination($patientExaminationVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_GENERAL_EXAMINATION_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
     /*Symptom section -- End */
 }

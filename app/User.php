@@ -94,4 +94,20 @@ class User extends Model implements AuthenticatableContract,
     {
         return $this->hasOne('App\prescription\model\entities\Doctor', 'doctor_id');
     }
+
+    public function personalhistory()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\PersonalHistory',
+            'patient_personal_history', 'patient_id', 'personal_history_id')
+            ->withPivot('personal_history_item_id',
+                'created_by', 'modified_by', 'created_at', 'updated_at');
+    }
+
+    public function patientgeneralexaminations()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\GeneralExamination',
+            'patient_general_examination', 'patient_id', 'general_examination_id')
+            ->withPivot('general_examination_value',
+                'created_by', 'modified_by', 'created_at', 'updated_at');
+    }
 }

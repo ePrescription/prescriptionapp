@@ -10,7 +10,9 @@ namespace App\prescription\repositories\repoimpl;
 
 use App\Http\ViewModels\FeeReceiptViewModel;
 use App\Http\ViewModels\NewAppointmentViewModel;
+use App\Http\ViewModels\PatientGeneralExaminationViewModel;
 use App\Http\ViewModels\PatientLabTestViewModel;
+use App\Http\ViewModels\PatientPersonalHistoryViewModel;
 use App\Http\ViewModels\PatientProfileViewModel;
 use App\prescription\model\entities\Doctor;
 use App\prescription\model\entities\DoctorAppointments;
@@ -2449,6 +2451,223 @@ class HospitalImpl implements HospitalInterface{
         }
 
         return $familyIllness;
+    }
+
+    /**
+     * Get patient general examination
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientGeneralExamination($patientId)
+    {
+        $generalExamination = null;
+
+        try
+        {
+            $patientUser = User::find($patientId);
+
+            if(is_null($patientUser))
+            {
+                throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
+            }
+
+            $query = DB::table('patient_general_examination as pge')->select('ge.id', 'ge.general_examination_name as generalExaminationName',
+                'pge.id as patientExaminationId', 'pge.general_examination_value as generalExaminationValue');
+            $query->rightJoin('general_examination as ge', function($join){
+                $join->on('ge.id', '=', 'pge.general_examination_id');
+                $join->on('pge.patient_id', '=', DB::raw('?'));
+            })->setBindings(array_merge($query->getBindings(), array($patientId)));
+            $query->where('ge.status', '=', 1);
+
+            $generalExamination = $query->get();
+            //dd($pastIllness);
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            throw new HospitalException(null, ErrorEnum::PATIENT_GENERAL_EXAMINATION_DETAILS_ERROR, $queryEx);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            throw new HospitalException(null, ErrorEnum::PATIENT_GENERAL_EXAMINATION_DETAILS_ERROR, $exc);
+        }
+
+        return $generalExamination;
+    }
+
+    /**
+     * Save patient personal history
+     * @param $patientHistoryVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePersonalHistory(PatientPersonalHistoryViewModel $patientHistoryVM)
+    {
+        $status = true;
+
+        try
+        {
+            $patientId = $patientHistoryVM->getPatientId();
+            $patientUser = User::find($patientId);
+
+            $patientPersonalHistory = $patientHistoryVM->getPatientPersonalHistory();
+            //dd($patientPersonalHistory);
+
+            if (!is_null($patientUser))
+            {
+
+                foreach($patientPersonalHistory as $patientHistory)
+                {
+                    //dd($patientHistory);
+                    $personalHistoryId = $patientHistory->personalHistoryId;
+                    $personalHistoryItemId = $patientHistory->personalHistoryItemId;
+
+                    $count = DB::table('patient_personal_history as pph')
+                        ->where('pph.personal_history_id', '=', $personalHistoryId)
+                        ->where('pph.patient_id', '=', $patientId)->count();
+
+                    if($count == 0)
+                    {
+                        $patientUser->personalhistory()->attach($personalHistoryId,
+                            array('personal_history_item_id' => $personalHistoryItemId,
+                                'created_by' => 'Admin',
+                                'modified_by' => 'Admin',
+                                'created_at' => date("Y-m-d H:i:s"),
+                                'updated_at' => date("Y-m-d H:i:s"),
+                            ));
+                    }
+                    else
+                    {
+                        $patientUser->personalhistory()->updateExistingPivot($personalHistoryId,
+                            array('personal_history_item_id' => $personalHistoryItemId,
+                                'created_by' => 'Admin',
+                                'modified_by' => 'Admin',
+                                'created_at' => date("Y-m-d H:i:s"),
+                                'updated_at' => date("Y-m-d H:i:s"),
+                            ));
+                    }
+                }
+
+            }
+            else
+            {
+                throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
+            }
+
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_PERSONAL_HISTORY_SAVE_ERROR, $queryEx);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_PERSONAL_HISTORY_SAVE_ERROR, $exc);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient general examination details
+     * @param $patientExaminationVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientGeneralExamination(PatientGeneralExaminationViewModel $patientExaminationVM)
+    {
+        $status = true;
+
+        try
+        {
+            $patientId = $patientExaminationVM->getPatientId();
+            $patientUser = User::find($patientId);
+
+            $patientGeneralExamination = $patientExaminationVM->getPatientGeneralExamination();
+
+            if (!is_null($patientUser))
+            {
+
+                foreach($patientGeneralExamination as $examination)
+                {
+                    //dd($patientHistory);
+                    $generalExaminationId = $examination->generalExaminationId;
+                    $generalExaminationValue = $examination->generalExaminationValue;
+
+
+                    $count = DB::table('patient_general_examination as pge')
+                        ->where('pge.general_examination_id', '=', $generalExaminationId)
+                        ->where('pge.patient_id', '=', $patientId)->count();
+
+                    if($count == 0)
+                    {
+                        $patientUser->patientgeneralexaminations()->attach($generalExaminationId,
+                            array('general_examination_value' => $generalExaminationValue,
+                                'created_by' => 'Admin',
+                                'modified_by' => 'Admin',
+                                'created_at' => date("Y-m-d H:i:s"),
+                                'updated_at' => date("Y-m-d H:i:s"),
+                            ));
+                    }
+                    else
+                    {
+                        $patientUser->patientgeneralexaminations()->updateExistingPivot($generalExaminationId,
+                            array('general_examination_value' => $generalExaminationValue,
+                                'created_by' => 'Admin',
+                                'modified_by' => 'Admin',
+                                'created_at' => date("Y-m-d H:i:s"),
+                                'updated_at' => date("Y-m-d H:i:s"),
+                            ));
+                    }
+                }
+
+            }
+            else
+            {
+                throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
+            }
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_GENERAL_EXAMINATION_SAVE_ERROR, $queryEx);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_GENERAL_EXAMINATION_SAVE_ERROR, $exc);
+        }
+
+        return $status;
+
     }
 
     /*Symptom section -- End */

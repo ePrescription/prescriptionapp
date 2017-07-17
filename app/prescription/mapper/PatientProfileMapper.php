@@ -10,6 +10,8 @@ namespace App\prescription\mapper;
 
 use App\Http\ViewModels\FeeReceiptViewModel;
 use App\Http\ViewModels\NewAppointmentViewModel;
+use App\Http\ViewModels\PatientGeneralExaminationViewModel;
+use App\Http\ViewModels\PatientPersonalHistoryViewModel;
 use App\Http\ViewModels\PatientProfileViewModel;
 use Illuminate\Http\Request;
 use App\Http\Requests\FeeReceiptRequest;
@@ -95,6 +97,62 @@ class PatientProfileMapper
         $feeReceiptVM->setUpdatedAt(date("Y-m-d H:i:s"));
 
         return $feeReceiptVM;
+    }
+
+    public static function setPersonalHistory(Request $personalHistoryRequest)
+    {
+        $patientHistoryVM = new PatientPersonalHistoryViewModel();
+
+        $patientHistory = (object) $personalHistoryRequest->all();
+
+        $patientHistoryVM->setPatientId($patientHistory->patientId);
+        //$patientHistoryVM->setHospitalId($patientHistory->hospitalId);
+        //$patientHistoryVM->setDoctorId($patientHistory->doctorId);
+
+        $medicalHistory = $patientHistory->personalHistory;
+        //dd($candidateEmployments);
+
+        foreach($medicalHistory as $history)
+        {
+            $patientHistoryVM->setPatientPersonalHistory($history);
+        }
+
+        //$userName = Session::get('DisplayName');
+        $userName = 'Admin';
+
+        $patientHistoryVM->setCreatedBy($userName);
+        $patientHistoryVM->setUpdatedBy($userName);
+        $patientHistoryVM->setCreatedAt(date("Y-m-d H:i:s"));
+        $patientHistoryVM->setUpdatedAt(date("Y-m-d H:i:s"));
+
+        return $patientHistoryVM;
+    }
+
+    public static function setGeneralExamination(Request $personalExaminationRequest)
+    {
+        $patientGenExaminationVM = new PatientGeneralExaminationViewModel();
+
+        $generalExaminationObj = (object) $personalExaminationRequest->all();
+
+        $patientGenExaminationVM->setPatientId($generalExaminationObj->patientId);
+
+        $generalExamination = $generalExaminationObj->generalExamination;
+        //dd($candidateEmployments);
+
+        foreach($generalExamination as $examination)
+        {
+            $patientGenExaminationVM->setPatientGeneralExamination($examination);
+        }
+
+        //$userName = Session::get('DisplayName');
+        $userName = 'Admin';
+
+        $patientGenExaminationVM->setCreatedBy($userName);
+        $patientGenExaminationVM->setUpdatedBy($userName);
+        $patientGenExaminationVM->setCreatedAt(date("Y-m-d H:i:s"));
+        $patientGenExaminationVM->setUpdatedAt(date("Y-m-d H:i:s"));
+
+        return $patientGenExaminationVM;
     }
 
 }
