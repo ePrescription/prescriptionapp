@@ -10,8 +10,10 @@ namespace App\prescription\repositories\repoimpl;
 
 use App\Http\ViewModels\FeeReceiptViewModel;
 use App\Http\ViewModels\NewAppointmentViewModel;
+use App\Http\ViewModels\PatientFamilyIllnessViewModel;
 use App\Http\ViewModels\PatientGeneralExaminationViewModel;
 use App\Http\ViewModels\PatientLabTestViewModel;
+use App\Http\ViewModels\PatientPastIllnessViewModel;
 use App\Http\ViewModels\PatientPersonalHistoryViewModel;
 use App\Http\ViewModels\PatientProfileViewModel;
 use App\prescription\model\entities\Doctor;
@@ -2668,6 +2670,170 @@ class HospitalImpl implements HospitalInterface{
 
         return $status;
 
+    }
+
+    /**
+     * Save patient past illness details
+     * @param $patientPastIllnessVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientPastIllness(PatientPastIllnessViewModel $patientPastIllnessVM)
+    {
+        $status = true;
+
+        try
+        {
+            $patientId = $patientPastIllnessVM->getPatientId();
+            $patientUser = User::find($patientId);
+
+            $patientPastIllness = $patientPastIllnessVM->getPatientPastIllness();
+
+            if (!is_null($patientUser))
+            {
+
+                foreach($patientPastIllness as $illness)
+                {
+                    //dd($patientHistory);
+                    $pastIllnessId = $illness->pastIllnessId;
+                    $pastIllnessName = $illness->pastIllnessName;
+
+
+                    $count = DB::table('patient_past_illness as ppi')
+                        ->where('ppi.past_illness_id', '=', $pastIllnessId)
+                        ->where('ppi.patient_id', '=', $patientId)->count();
+
+                    if($count == 0)
+                    {
+                        $patientUser->patientpastillness()->attach($pastIllnessId,
+                            array('past_illness_name' => $pastIllnessName,
+                                'created_by' => 'Admin',
+                                'modified_by' => 'Admin',
+                                'created_at' => date("Y-m-d H:i:s"),
+                                'updated_at' => date("Y-m-d H:i:s"),
+                            ));
+                    }
+                    else
+                    {
+                        $patientUser->patientpastillness()->updateExistingPivot($pastIllnessId,
+                            array('general_examination_value' => $pastIllnessName,
+                                'created_by' => 'Admin',
+                                'modified_by' => 'Admin',
+                                'created_at' => date("Y-m-d H:i:s"),
+                                'updated_at' => date("Y-m-d H:i:s"),
+                            ));
+                    }
+                }
+
+            }
+            else
+            {
+                throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
+            }
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_PAST_ILLNESS_SAVE_ERROR, $queryEx);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_PAST_ILLNESS_SAVE_ERROR, $exc);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient family illness details
+     * @param $patientFamilyIllnessVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientFamilyIllness(PatientFamilyIllnessViewModel $patientFamilyIllnessVM)
+    {
+        $status = true;
+
+        try
+        {
+            $patientId = $patientFamilyIllnessVM->getPatientId();
+            $patientUser = User::find($patientId);
+
+            $patientFamilyIllness = $patientFamilyIllnessVM->getPatientFamilyIllness();
+
+            if (!is_null($patientUser))
+            {
+
+                foreach($patientFamilyIllness as $illness)
+                {
+                    //dd($patientHistory);
+                    $familyIllnessId = $illness->familyIllnessId;
+                    $familyIllnessName = $illness->familyIllnessName;
+
+
+                    $count = DB::table('patient_family_illness as pfi')
+                        ->where('pfi.family_illness_id', '=', $familyIllnessId)
+                        ->where('pfi.patient_id', '=', $patientId)->count();
+
+                    if($count == 0)
+                    {
+                        $patientUser->patientfamilyillness()->attach($familyIllnessId,
+                            array('family_illness_name' => $familyIllnessName,
+                                'created_by' => 'Admin',
+                                'modified_by' => 'Admin',
+                                'created_at' => date("Y-m-d H:i:s"),
+                                'updated_at' => date("Y-m-d H:i:s"),
+                            ));
+                    }
+                    else
+                    {
+                        $patientUser->patientfamilyillness()->updateExistingPivot($familyIllnessId,
+                            array('family_illness_name' => $familyIllnessName,
+                                'created_by' => 'Admin',
+                                'modified_by' => 'Admin',
+                                'created_at' => date("Y-m-d H:i:s"),
+                                'updated_at' => date("Y-m-d H:i:s"),
+                            ));
+                    }
+                }
+
+            }
+            else
+            {
+                throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
+            }
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_FAMILY_ILLNESS_SAVE_ERROR, $queryEx);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_FAMILY_ILLNESS_SAVE_ERROR, $exc);
+        }
+
+        return $status;
     }
 
     /*Symptom section -- End */

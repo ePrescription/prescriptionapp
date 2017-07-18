@@ -8,8 +8,10 @@
 
 use App\Http\ViewModels\FeeReceiptViewModel;
 use App\Http\ViewModels\NewAppointmentViewModel;
+use App\Http\ViewModels\PatientFamilyIllnessViewModel;
 use App\Http\ViewModels\PatientGeneralExaminationViewModel;
 use App\Http\ViewModels\PatientLabTestViewModel;
+use App\Http\ViewModels\PatientPastIllnessViewModel;
 use App\Http\ViewModels\PatientPersonalHistoryViewModel;
 use App\Http\ViewModels\PatientPrescriptionViewModel;
 use App\Http\ViewModels\PatientProfileViewModel;
@@ -87,5 +89,7 @@ interface HospitalInterface {
     public function savePersonalHistory(PatientPersonalHistoryViewModel $patientHistoryVM);
     public function getPatientGeneralExamination($patientId);
     public function savePatientGeneralExamination(PatientGeneralExaminationViewModel $patientExaminationVM);
+    public function savePatientPastIllness(PatientPastIllnessViewModel $patientPastIllnessVM);
+    public function savePatientFamilyIllness(PatientFamilyIllnessViewModel $patientFamilyIllnessVM);
 
 }

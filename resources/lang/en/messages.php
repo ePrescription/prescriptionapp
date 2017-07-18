@@ -137,4 +137,10 @@
 
         "724" => "Unable to save patient general examination details",
         "725" => "Successfully saved patient general examination details",
+
+        "726" => "Unable to save patient past illness details",
+        "727" => "Successfully saved patient past illness details",
+
+        "728" => "Unable to save patient family illness details",
+        "729" => "Successfully saved patient family illness details",
     ];

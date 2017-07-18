@@ -1404,5 +1404,74 @@ class HospitalService {
         return $status;
     }
 
+    /**
+     * Save patient past illness details
+     * @param $patientPastIllnessVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientPastIllness($patientPastIllnessVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientPastIllnessVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePatientPastIllness($patientPastIllnessVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_PAST_ILLNESS_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient family illness details
+     * @param $patientFamilyIllnessVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientFamilyIllness($patientFamilyIllnessVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientFamilyIllnessVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePatientFamilyIllness($patientFamilyIllnessVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_FAMILY_ILLNESS_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
+
     /*Symptom section -- End */
 }
