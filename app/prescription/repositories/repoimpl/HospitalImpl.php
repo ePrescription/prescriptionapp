@@ -2375,7 +2375,7 @@ class HospitalImpl implements HospitalInterface{
             }
 
             $query = DB::table('past_illness as pii')->select('ppi.id as patientPastIllnessId', 'pii.id as patientIllnessId', 'pii.illness_name as illnessName',
-                'ppi.past_illness_name as otherIllnessName');
+                'ppi.past_illness_name as otherIllnessName', 'ppi.relation');
             $query->leftJoin('patient_past_illness as ppi', function($join){
                 $join->on('ppi.past_illness_id', '=', 'pii.id');
                 $join->on('ppi.patient_id', '=', DB::raw('?'));
@@ -2426,10 +2426,10 @@ class HospitalImpl implements HospitalInterface{
             }
 
             $query = DB::table('family_illness as fi')->select('fi.id as familyIllnessId', 'fi.illness_name as familyIllnessName',
-                'ppi.id as patientIllnessId', 'ppi.past_illness_name as otherIllnessName');
-            $query->leftJoin('patient_past_illness as ppi', function($join){
-                $join->on('ppi.past_illness_id', '=', 'fi.id');
-                $join->on('ppi.patient_id', '=', DB::raw('?'));
+                'pfi.id as patientIllnessId', 'pfi.family_illness_name as otherIllnessName', 'pfi.relation');
+            $query->leftJoin('patient_family_illness as pfi', function($join){
+                $join->on('pfi.family_illness_id', '=', 'fi.id');
+                $join->on('pfi.patient_id', '=', DB::raw('?'));
             })->setBindings(array_merge($query->getBindings(), array($patientId)));
             $query->where('fi.status', '=', 1);
 
@@ -2699,7 +2699,7 @@ class HospitalImpl implements HospitalInterface{
                     //dd($patientHistory);
                     $pastIllnessId = $illness->pastIllnessId;
                     $pastIllnessName = $illness->pastIllnessName;
-
+                    $relation = $illness->relation;
 
                     $count = DB::table('patient_past_illness as ppi')
                         ->where('ppi.past_illness_id', '=', $pastIllnessId)
@@ -2709,6 +2709,7 @@ class HospitalImpl implements HospitalInterface{
                     {
                         $patientUser->patientpastillness()->attach($pastIllnessId,
                             array('past_illness_name' => $pastIllnessName,
+                                'relation' => $relation,
                                 'created_by' => 'Admin',
                                 'modified_by' => 'Admin',
                                 'created_at' => date("Y-m-d H:i:s"),
@@ -2719,6 +2720,7 @@ class HospitalImpl implements HospitalInterface{
                     {
                         $patientUser->patientpastillness()->updateExistingPivot($pastIllnessId,
                             array('general_examination_value' => $pastIllnessName,
+                                'relation' => $relation,
                                 'created_by' => 'Admin',
                                 'modified_by' => 'Admin',
                                 'created_at' => date("Y-m-d H:i:s"),
@@ -2781,6 +2783,7 @@ class HospitalImpl implements HospitalInterface{
                     //dd($patientHistory);
                     $familyIllnessId = $illness->familyIllnessId;
                     $familyIllnessName = $illness->familyIllnessName;
+                    $relation = $illness->relation;
 
 
                     $count = DB::table('patient_family_illness as pfi')
@@ -2791,6 +2794,7 @@ class HospitalImpl implements HospitalInterface{
                     {
                         $patientUser->patientfamilyillness()->attach($familyIllnessId,
                             array('family_illness_name' => $familyIllnessName,
+                                'relation' => $relation,
                                 'created_by' => 'Admin',
                                 'modified_by' => 'Admin',
                                 'created_at' => date("Y-m-d H:i:s"),
@@ -2801,6 +2805,7 @@ class HospitalImpl implements HospitalInterface{
                     {
                         $patientUser->patientfamilyillness()->updateExistingPivot($familyIllnessId,
                             array('family_illness_name' => $familyIllnessName,
+                                'relation' => $relation,
                                 'created_by' => 'Admin',
                                 'modified_by' => 'Admin',
                                 'created_at' => date("Y-m-d H:i:s"),

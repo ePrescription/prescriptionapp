@@ -115,7 +115,7 @@ class User extends Model implements AuthenticatableContract,
     {
         return $this->belongsToMany('App\prescription\model\entities\PastIllness',
             'patient_past_illness', 'patient_id', 'past_illness_id')
-            ->withPivot('past_illness_name',
+            ->withPivot('past_illness_name', 'relation',
                 'created_by', 'modified_by', 'created_at', 'updated_at');
     }
 
@@ -123,7 +123,7 @@ class User extends Model implements AuthenticatableContract,
     {
         return $this->belongsToMany('App\prescription\model\entities\FamilyIllness',
             'patient_family_illness', 'patient_id', 'family_illness_id')
-            ->withPivot('family_illness_name',
+            ->withPivot('family_illness_name', 'relation',
                 'created_by', 'modified_by', 'created_at', 'updated_at');
     }
 }
