@@ -2699,7 +2699,7 @@ class HospitalImpl implements HospitalInterface{
                     //dd($patientHistory);
                     $pastIllnessId = $illness->pastIllnessId;
                     $pastIllnessName = $illness->pastIllnessName;
-                    $relation = $illness->relation;
+                    //$relation = $illness->relation;
 
                     $count = DB::table('patient_past_illness as ppi')
                         ->where('ppi.past_illness_id', '=', $pastIllnessId)
@@ -2709,7 +2709,7 @@ class HospitalImpl implements HospitalInterface{
                     {
                         $patientUser->patientpastillness()->attach($pastIllnessId,
                             array('past_illness_name' => $pastIllnessName,
-                                'relation' => $relation,
+                                //'relation' => $relation,
                                 'created_by' => 'Admin',
                                 'modified_by' => 'Admin',
                                 'created_at' => date("Y-m-d H:i:s"),
@@ -2720,7 +2720,7 @@ class HospitalImpl implements HospitalInterface{
                     {
                         $patientUser->patientpastillness()->updateExistingPivot($pastIllnessId,
                             array('general_examination_value' => $pastIllnessName,
-                                'relation' => $relation,
+                                //'relation' => $relation,
                                 'created_by' => 'Admin',
                                 'modified_by' => 'Admin',
                                 'created_at' => date("Y-m-d H:i:s"),
