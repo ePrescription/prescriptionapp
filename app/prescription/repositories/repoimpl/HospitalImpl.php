@@ -2306,17 +2306,23 @@ class HospitalImpl implements HospitalInterface{
                 throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
             }
 
-            $patientHistoryQuery = DB::table('personal_history as ph')->where('pph.patient_id', '=', $patientId);
+            /*$patientHistoryQuery = DB::table('personal_history as ph')->where('pph.patient_id', '=', $patientId);
             $patientHistoryQuery->join('personal_history_item as phi', 'phi.personal_history_id', '=', 'ph.id');
             $patientHistoryQuery->join('patient_personal_history as pph', function($join){
                 $join->on('pph.personal_history_id', '=', 'ph.id');
                 $join->on('pph.personal_history_id', '=', 'ph.id');
-            });
+            });*/
+            $patientHistoryQuery = DB::table('patient_personal_history as pph')->where('pph.patient_id', '=', $patientId);
+            $patientHistoryQuery->join('personal_history as ph', 'ph.id', '=', 'pph.personal_history_id');
+            $patientHistoryQuery->join('personal_history_item as phi', 'phi.id', '=', 'pph.personal_history_item_id');
+
             $patientHistoryQuery->select('pph.id', 'pph.patient_id as patientId', 'ph.id as personalHistoryId',
                 'ph.personal_history_name as personalHistoryName', 'phi.id as personalHistoryItemId',
                 'phi.personal_history_item_name as personalHistoryItemName');
 
+            //dd($patientHistoryQuery->toSql());
             $patientHistory = $patientHistoryQuery->get();
+            //dd($patientHistory);
 
             $personalHistoryQuery = DB::table('personal_history as ph')->join('personal_history_item as phi', 'phi.personal_history_id', '=', 'ph.id');
             $personalHistoryQuery->select('ph.id as personalHistoryId', 'ph.personal_history_name as personalHistoryName',
