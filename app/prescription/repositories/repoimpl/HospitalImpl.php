@@ -2529,11 +2529,14 @@ class HospitalImpl implements HospitalInterface{
             $patientId = $patientHistoryVM->getPatientId();
             $patientUser = User::find($patientId);
 
+            //dd($patientId);
+
             $patientPersonalHistory = $patientHistoryVM->getPatientPersonalHistory();
             //dd($patientPersonalHistory);
 
             if (!is_null($patientUser))
             {
+                DB::table('patient_personal_history')->where('patient_id', $patientId)->delete();
 
                 foreach($patientPersonalHistory as $patientHistory)
                 {
@@ -2541,7 +2544,15 @@ class HospitalImpl implements HospitalInterface{
                     $personalHistoryId = $patientHistory->personalHistoryId;
                     $personalHistoryItemId = $patientHistory->personalHistoryItemId;
 
-                    $count = DB::table('patient_personal_history as pph')
+                    $patientUser->personalhistory()->attach($personalHistoryId,
+                        array('personal_history_item_id' => $personalHistoryItemId,
+                            'created_by' => 'Admin',
+                            'modified_by' => 'Admin',
+                            'created_at' => date("Y-m-d H:i:s"),
+                            'updated_at' => date("Y-m-d H:i:s"),
+                        ));
+
+                    /*$count = DB::table('patient_personal_history as pph')
                         ->where('pph.personal_history_id', '=', $personalHistoryId)
                         ->where('pph.patient_id', '=', $patientId)->count();
 
@@ -2564,7 +2575,7 @@ class HospitalImpl implements HospitalInterface{
                                 'created_at' => date("Y-m-d H:i:s"),
                                 'updated_at' => date("Y-m-d H:i:s"),
                             ));
-                    }
+                    }*/
                 }
 
             }
@@ -2617,14 +2628,24 @@ class HospitalImpl implements HospitalInterface{
             if (!is_null($patientUser))
             {
 
+                DB::table('patient_general_history')->where('patient_id', $patientId)->delete();
+
                 foreach($patientGeneralExamination as $examination)
                 {
                     //dd($patientHistory);
                     $generalExaminationId = $examination->generalExaminationId;
                     $generalExaminationValue = $examination->generalExaminationValue;
 
+                    $patientUser->patientgeneralexaminations()->attach($generalExaminationId,
+                        array('general_examination_value' => $generalExaminationValue,
+                            'created_by' => 'Admin',
+                            'modified_by' => 'Admin',
+                            'created_at' => date("Y-m-d H:i:s"),
+                            'updated_at' => date("Y-m-d H:i:s"),
+                        ));
 
-                    $count = DB::table('patient_general_examination as pge')
+
+                    /*$count = DB::table('patient_general_examination as pge')
                         ->where('pge.general_examination_id', '=', $generalExaminationId)
                         ->where('pge.patient_id', '=', $patientId)->count();
 
@@ -2647,7 +2668,7 @@ class HospitalImpl implements HospitalInterface{
                                 'created_at' => date("Y-m-d H:i:s"),
                                 'updated_at' => date("Y-m-d H:i:s"),
                             ));
-                    }
+                    }*/
                 }
 
             }
@@ -2697,8 +2718,11 @@ class HospitalImpl implements HospitalInterface{
 
             $patientPastIllness = $patientPastIllnessVM->getPatientPastIllness();
 
+            $pivotData = array();
+
             if (!is_null($patientUser))
             {
+                DB::table('patient_past_illness')->where('patient_id', $patientId)->delete();
 
                 foreach($patientPastIllness as $illness)
                 {
@@ -2707,7 +2731,16 @@ class HospitalImpl implements HospitalInterface{
                     $pastIllnessName = $illness->pastIllnessName;
                     //$relation = $illness->relation;
 
-                    $count = DB::table('patient_past_illness as ppi')
+                    $patientUser->patientpastillness()->attach($pastIllnessId,
+                        array('past_illness_name' => $pastIllnessName,
+                            //'relation' => $relation,
+                            'created_by' => 'Admin',
+                            'modified_by' => 'Admin',
+                            'created_at' => date("Y-m-d H:i:s"),
+                            'updated_at' => date("Y-m-d H:i:s"),
+                        ));
+
+                    /*$count = DB::table('patient_past_illness as ppi')
                         ->where('ppi.past_illness_id', '=', $pastIllnessId)
                         ->where('ppi.patient_id', '=', $patientId)->count();
 
@@ -2732,7 +2765,7 @@ class HospitalImpl implements HospitalInterface{
                                 'created_at' => date("Y-m-d H:i:s"),
                                 'updated_at' => date("Y-m-d H:i:s"),
                             ));
-                    }
+                    }*/
                 }
 
             }
@@ -2783,6 +2816,7 @@ class HospitalImpl implements HospitalInterface{
 
             if (!is_null($patientUser))
             {
+                DB::table('patient_family_illness')->where('patient_id', $patientId)->delete();
 
                 foreach($patientFamilyIllness as $illness)
                 {
@@ -2791,8 +2825,17 @@ class HospitalImpl implements HospitalInterface{
                     $familyIllnessName = $illness->familyIllnessName;
                     $relation = $illness->relation;
 
+                    $patientUser->patientfamilyillness()->attach($familyIllnessId,
+                        array('family_illness_name' => $familyIllnessName,
+                            'relation' => $relation,
+                            'created_by' => 'Admin',
+                            'modified_by' => 'Admin',
+                            'created_at' => date("Y-m-d H:i:s"),
+                            'updated_at' => date("Y-m-d H:i:s"),
+                        ));
 
-                    $count = DB::table('patient_family_illness as pfi')
+
+                    /*$count = DB::table('patient_family_illness as pfi')
                         ->where('pfi.family_illness_id', '=', $familyIllnessId)
                         ->where('pfi.patient_id', '=', $patientId)->count();
 
@@ -2817,7 +2860,7 @@ class HospitalImpl implements HospitalInterface{
                                 'created_at' => date("Y-m-d H:i:s"),
                                 'updated_at' => date("Y-m-d H:i:s"),
                             ));
-                    }
+                    }*/
                 }
 
             }
