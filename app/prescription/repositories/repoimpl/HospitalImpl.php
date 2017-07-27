@@ -419,7 +419,7 @@ class HospitalImpl implements HospitalInterface{
         {
             $query = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name as name', 'p.address','p.pid', 'c.city_name',
                             'co.name as country','p.telephone', 'p.email', 'p.relationship', 'p.patient_spouse_name as spouseName',
-                            'p.dob', 'p.age', 'p.place_of_birth', 'p.nationality', 'p.gender', 'p.main_symptom_id', 'p.sub_symptom_id', 'p.symptom_id'
+                            'p.dob', 'p.age', 'p.place_of_birth', 'p.nationality', 'p.gender', 'p.main_symptoms_id', 'p.sub_symptoms_id', 'p.symptoms_id'
                             ,'da.appointment_date', 'da.appointment_time', 'da.brief_history');
             $query->leftJoin('doctor_appointment as da', 'da.patient_id', '=', 'p.patient_id');
             $query->leftJoin('cities as c', 'c.id', '=', 'p.city');
@@ -461,7 +461,7 @@ class HospitalImpl implements HospitalInterface{
         try
         {
             $query = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'p.age',
-                'p.gender', 'p.email', 'p.relationship', 'p.patient_spouse_name as spouseName', 'p.telephone', 'p.main_symptom_id', 'p.sub_symptom_id', 'p.symptom_id');
+                'p.gender', 'p.email', 'p.relationship', 'p.patient_spouse_name as spouseName', 'p.telephone', 'p.main_symptoms_id', 'p.sub_symptoms_id', 'p.symptoms_id');
             $query->join('users as usr', 'usr.id', '=', 'p.patient_id');
             $query->where('p.patient_id', $patientId);
             $query->where('usr.delete_status', '=', 1);
@@ -1510,9 +1510,9 @@ class HospitalImpl implements HospitalInterface{
             $patient->nationality = $patientProfileVM->getNationality();
             $patient->gender = $patientProfileVM->getGender();
             $patient->married = $patientProfileVM->getMaritalStatus();
-            $patient->main_symptom_id = $patientProfileVM->getMainSymptomId();
-            $patient->sub_symptom_id = $patientProfileVM->getSubSymptomId();
-            $patient->symptom_id = $patientProfileVM->getSymptomId();
+            $patient->main_symptoms_id = $patientProfileVM->getMainSymptomId();
+            $patient->sub_symptoms_id = $patientProfileVM->getSubSymptomId();
+            $patient->symptoms_id = $patientProfileVM->getSymptomId();
 
             $patient->created_by = $patientProfileVM->getCreatedBy();
             $patient->created_at = $patientProfileVM->getCreatedAt();
