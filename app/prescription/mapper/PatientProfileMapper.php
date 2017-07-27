@@ -47,6 +47,9 @@ class PatientProfileMapper
         $profileVM->setMaritalStatus(property_exists($profile, 'maritalStatus') ? $profile->maritalStatus : null);
         $profileVM->setHospitalId(property_exists($profile, 'hospitalId') ? $profile->hospitalId : null);
         $profileVM->setDoctorId(property_exists($profile, 'doctorId') ? $profile->doctorId : null);
+        $profileVM->setMainSymptomId(property_exists($profile, 'mainSymptomId') ? $profile->mainSymptomId : null);
+        $profileVM->setSubSymptomId(property_exists($profile, 'subSymptomId') ? $profile->subSymptomId : null);
+        $profileVM->setSymptomId(property_exists($profile, 'symptomId') ? $profile->symptomId : null);
 
         $profileVM->setCreatedBy($userName);
         $profileVM->setUpdatedBy($userName);

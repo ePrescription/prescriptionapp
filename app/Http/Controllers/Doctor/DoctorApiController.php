@@ -172,14 +172,18 @@ class DoctorApiController extends Controller
      * @author Baskar
      */
 
-    public function getPersonalHistory($patientId)
+    public function getPersonalHistory($patientId, Request $patientSearchRequest)
     {
         $personalHistoryDetails = null;
         $responseJson = null;
 
         try
         {
-            $personalHistoryDetails = $this->hospitalService->getPersonalHistory($patientId);
+            $examinationDate = $patientSearchRequest->get('examinationDate');
+            //dd($examinationDate);
+            //$generalExaminationDate = \DateTime::createFromFormat('Y-m-d', $examinationDate);
+            $personalHistoryDate = date('Y-m-d', strtotime($examinationDate));
+            $personalHistoryDetails = $this->hospitalService->getPersonalHistory($patientId, $personalHistoryDate);
             //dd($personalHistoryDetails);
 
             if(!is_null($personalHistoryDetails) && !empty($personalHistoryDetails))
@@ -224,14 +228,20 @@ class DoctorApiController extends Controller
      * @author Baskar
      */
 
-    public function getPatientPastIllness($patientId)
+    public function getPatientPastIllness($patientId, Request $patientSearchRequest)
     {
         $pastIllness = null;
         $responseJson = null;
 
         try
         {
-            $pastIllness = $this->hospitalService->getPatientPastIllness($patientId);
+            //dd($patientId);
+            $examinationDate = $patientSearchRequest->get('examinationDate');
+            //dd($examinationDate);
+            //$generalExaminationDate = \DateTime::createFromFormat('Y-m-d', $examinationDate);
+            $pastIllnessDate = date('Y-m-d', strtotime($examinationDate));
+            //dd($generalExaminationDate);
+            $pastIllness = $this->hospitalService->getPatientPastIllness($patientId, $pastIllnessDate);
             //dd($pastIllness);
 
             if(!is_null($pastIllness) && !empty($pastIllness))
@@ -276,14 +286,18 @@ class DoctorApiController extends Controller
      * @author Baskar
      */
 
-    public function getPatientFamilyIllness($patientId)
+    public function getPatientFamilyIllness($patientId, Request $patientSearchRequest)
     {
         $familyIllness = null;
         $responseJson = null;
 
         try
         {
-            $familyIllness = $this->hospitalService->getPatientFamilyIllness($patientId);
+            $examinationDate = $patientSearchRequest->get('examinationDate');
+            //dd($examinationDate);
+            //$generalExaminationDate = \DateTime::createFromFormat('Y-m-d', $examinationDate);
+            $familyIllnessDate = date('Y-m-d', strtotime($examinationDate));
+            $familyIllness = $this->hospitalService->getPatientFamilyIllness($patientId, $familyIllnessDate);
             //dd($familyIllness);
 
             if(!is_null($familyIllness) && !empty($familyIllness))
@@ -328,14 +342,18 @@ class DoctorApiController extends Controller
      * @author Baskar
      */
 
-    public function getPatientGeneralExamination($patientId)
+    public function getPatientGeneralExamination($patientId, Request $patientSearchRequest)
     {
         $generalExamination = null;
         $responseJson = null;
 
         try
         {
-            $generalExamination = $this->hospitalService->getPatientGeneralExamination($patientId);
+            $examinationDate = $patientSearchRequest->get('examinationDate');
+            //dd($examinationDate);
+            //$generalExaminationDate = \DateTime::createFromFormat('Y-m-d', $examinationDate);
+            $generalExaminationDate = date('Y-m-d', strtotime($examinationDate));
+            $generalExamination = $this->hospitalService->getPatientGeneralExamination($patientId, $generalExaminationDate);
             //dd($generalExamination);
 
             if(!is_null($generalExamination) && !empty($generalExamination))
@@ -366,6 +384,58 @@ class DoctorApiController extends Controller
         {
             //dd($exc);
             $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_GENERAL_EXAMINATION_DETAILS_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return $responseJson;
+    }
+
+    /**
+     * Get patient examination dates
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getExaminationDates($patientId)
+    {
+        $examinationDates = null;
+        $responseJson = null;
+
+        try
+        {
+            $examinationDates = $this->hospitalService->getExaminationDates($patientId);
+            //dd($examinationDates);
+
+            if(!is_null($examinationDates) && !empty($examinationDates))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_EXAMINATION_DATES_SUCCESS));
+                $responseJson->setCount(sizeof($examinationDates));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_PATIENT_EXAMINATION_DATES_FOUND));
+            }
+
+            $responseJson->setObj($examinationDates);
+            $responseJson->sendSuccessResponse();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            //dd($hospitalExc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.$hospitalExc->getUserErrorCode()));
+            $responseJson->sendErrorResponse($hospitalExc);
+        }
+            /*catch(HospitalException $hospitalExc)
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_PAST_ILLNESS_DETAILS_ERROR));
+                $responseJson->sendErrorResponse($hospitalExc);
+            }*/
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_EXAMINATION_DATES_ERROR));
             $responseJson->sendUnExpectedExpectionResponse($exc);
         }
 

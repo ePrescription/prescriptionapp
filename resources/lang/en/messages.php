@@ -143,4 +143,8 @@
 
         "728" => "Unable to save patient family illness details",
         "729" => "Successfully saved patient family illness details",
+
+        "730" => "Unable to retrieve patient examination dates",
+        "731" => "Successfully retrieved patient examination dates",
+        "732" => "No examination dates available for the patient",
     ];

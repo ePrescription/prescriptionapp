@@ -419,7 +419,7 @@ class HospitalImpl implements HospitalInterface{
         {
             $query = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name as name', 'p.address','p.pid', 'c.city_name',
                             'co.name as country','p.telephone', 'p.email', 'p.relationship', 'p.patient_spouse_name as spouseName',
-                            'p.dob', 'p.age', 'p.place_of_birth', 'p.nationality', 'p.gender'
+                            'p.dob', 'p.age', 'p.place_of_birth', 'p.nationality', 'p.gender', 'p.main_symptom_id', 'p.sub_symptom_id', 'p.symptom_id'
                             ,'da.appointment_date', 'da.appointment_time', 'da.brief_history');
             $query->leftJoin('doctor_appointment as da', 'da.patient_id', '=', 'p.patient_id');
             $query->leftJoin('cities as c', 'c.id', '=', 'p.city');
@@ -461,7 +461,7 @@ class HospitalImpl implements HospitalInterface{
         try
         {
             $query = DB::table('patient as p')->select('p.id', 'p.patient_id', 'p.name', 'p.pid', 'p.age',
-                'p.gender', 'p.email', 'p.relationship', 'p.patient_spouse_name as spouseName', 'p.telephone');
+                'p.gender', 'p.email', 'p.relationship', 'p.patient_spouse_name as spouseName', 'p.telephone', 'p.main_symptom_id', 'p.sub_symptom_id', 'p.symptom_id');
             $query->join('users as usr', 'usr.id', '=', 'p.patient_id');
             $query->where('p.patient_id', $patientId);
             $query->where('usr.delete_status', '=', 1);
@@ -1510,6 +1510,9 @@ class HospitalImpl implements HospitalInterface{
             $patient->nationality = $patientProfileVM->getNationality();
             $patient->gender = $patientProfileVM->getGender();
             $patient->married = $patientProfileVM->getMaritalStatus();
+            $patient->main_symptom_id = $patientProfileVM->getMainSymptomId();
+            $patient->sub_symptom_id = $patientProfileVM->getSubSymptomId();
+            $patient->symptom_id = $patientProfileVM->getSymptomId();
 
             $patient->created_by = $patientProfileVM->getCreatedBy();
             $patient->created_at = $patientProfileVM->getCreatedAt();
@@ -2286,7 +2289,7 @@ class HospitalImpl implements HospitalInterface{
      * @author Baskar
      */
 
-    public function getPersonalHistory($patientId)
+    public function getPersonalHistory($patientId, $personalHistoryDate)
     {
         $feeInfo = null;
         $doctorId = null;
@@ -2312,7 +2315,7 @@ class HospitalImpl implements HospitalInterface{
                 $join->on('pph.personal_history_id', '=', 'ph.id');
                 $join->on('pph.personal_history_id', '=', 'ph.id');
             });*/
-            $patientHistoryQuery = DB::table('patient_personal_history as pph')->where('pph.patient_id', '=', $patientId);
+            $patientHistoryQuery = DB::table('patient_personal_history as pph')->where('pph.patient_id', '=', $patientId)->where('pph.personal_history_date', '=', $personalHistoryDate);
             $patientHistoryQuery->join('personal_history as ph', 'ph.id', '=', 'pph.personal_history_id');
             $patientHistoryQuery->join('personal_history_item as phi', 'phi.id', '=', 'pph.personal_history_item_id');
 
@@ -2365,7 +2368,7 @@ class HospitalImpl implements HospitalInterface{
      * @author Baskar
      */
 
-    public function getPatientPastIllness($patientId)
+    public function getPatientPastIllness($patientId, $pastIllnessDate)
     {
         $pastIllness = null;
 
@@ -2385,8 +2388,10 @@ class HospitalImpl implements HospitalInterface{
             $query->leftJoin('patient_past_illness as ppi', function($join){
                 $join->on('ppi.past_illness_id', '=', 'pii.id');
                 $join->on('ppi.patient_id', '=', DB::raw('?'));
-            })->setBindings(array_merge($query->getBindings(), array($patientId)));
+                $join->on('ppi.past_illness_date', '=', DB::raw('?'));
+            })->setBindings(array_merge($query->getBindings(), array($patientId, $pastIllnessDate)));
             $query->where('pii.status', '=', 1);
+            //dd($query->toSql());
 
             $pastIllness = $query->get();
             //dd($pastIllness);
@@ -2418,7 +2423,7 @@ class HospitalImpl implements HospitalInterface{
      * @author Baskar
      */
 
-    public function getPatientFamilyIllness($patientId)
+    public function getPatientFamilyIllness($patientId, $familyIllnessDate)
     {
         $familyIllness = null;
 
@@ -2436,7 +2441,8 @@ class HospitalImpl implements HospitalInterface{
             $query->leftJoin('patient_family_illness as pfi', function($join){
                 $join->on('pfi.family_illness_id', '=', 'fi.id');
                 $join->on('pfi.patient_id', '=', DB::raw('?'));
-            })->setBindings(array_merge($query->getBindings(), array($patientId)));
+                $join->on('pfi.family_illness_date', '=', DB::raw('?'));
+            })->setBindings(array_merge($query->getBindings(), array($patientId, $familyIllnessDate)));
             $query->where('fi.status', '=', 1);
 
             $familyIllness = $query->get();
@@ -2469,7 +2475,7 @@ class HospitalImpl implements HospitalInterface{
      * @author Baskar
      */
 
-    public function getPatientGeneralExamination($patientId)
+    public function getPatientGeneralExamination($patientId, $generalExaminationDate)
     {
         $generalExamination = null;
 
@@ -2487,7 +2493,8 @@ class HospitalImpl implements HospitalInterface{
             $query->rightJoin('general_examination as ge', function($join){
                 $join->on('ge.id', '=', 'pge.general_examination_id');
                 $join->on('pge.patient_id', '=', DB::raw('?'));
-            })->setBindings(array_merge($query->getBindings(), array($patientId)));
+                $join->on('pge.general_examination_date', '=', DB::raw('?'));
+            })->setBindings(array_merge($query->getBindings(), array($patientId, $generalExaminationDate)));
             $query->where('ge.status', '=', 1);
 
             $generalExamination = $query->get();
@@ -2510,6 +2517,76 @@ class HospitalImpl implements HospitalInterface{
         }
 
         return $generalExamination;
+    }
+
+    /**
+     * Get patient examination dates
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getExaminationDates($patientId)
+    {
+        $examinationDates = null;
+        $generalExaminationDates = null;
+        $pastIllnessDates = null;
+        $familyIllnessDates = null;
+        $personalHistoryDates = null;
+
+        $patientLabTests = null;
+
+        try
+        {
+            $patientUser = User::find($patientId);
+
+            if(is_null($patientUser))
+            {
+                throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
+            }
+
+            $examinationQuery = DB::table('patient_general_examination as pge')->where('pge.patient_id', '=', $patientId);
+            $examinationQuery->select('pge.patient_id', 'pge.general_examination_date')->orderBy('pge.general_examination_date', 'DESC');
+            $generalExaminationDates = $examinationQuery->get();
+
+            $pastIllnessQuery = DB::table('patient_past_illness as ppi')->where('ppi.patient_id', '=', $patientId);
+            $pastIllnessQuery->select('ppi.patient_id', 'ppi.past_illness_date')->orderBy('ppi.past_illness_date', 'DESC');
+            $pastIllnessDates = $pastIllnessQuery->get();
+
+            $familyIllnessQuery = DB::table('patient_family_illness as pfi')->where('pfi.patient_id', '=', $patientId);
+            $familyIllnessQuery->select('pfi.patient_id', 'pfi.family_illness_date')->orderBy('pfi.family_illness_date', 'DESC');
+            $familyIllnessDates = $familyIllnessQuery->get();
+
+            $personalHistoryQuery = DB::table('patient_personal_history as pph')->where('pph.patient_id', '=', $patientId);
+            $personalHistoryQuery->select('pph.patient_id', 'pph.personal_history_date')->orderBy('pph.personal_history_date', 'DESC');
+            $personalHistoryDates = $personalHistoryQuery->get();
+
+            $examinationDates["generalExaminationDates"] = $generalExaminationDates;
+            $examinationDates["pastIllnessDates"] = $pastIllnessDates;
+            $examinationDates["familyIllnessDates"] = $familyIllnessDates;
+            $examinationDates["personalHistoryDates"] = $personalHistoryDates;
+
+            //dd($examinationDates);
+
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            throw new HospitalException(null, ErrorEnum::PATIENT_EXAMINATION_DATES_ERROR, $queryEx);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_EXAMINATION_DATES_ERROR, $exc);
+        }
+
+        //dd($patientLabTests);
+        return $examinationDates;
     }
 
     /**
@@ -2536,16 +2613,22 @@ class HospitalImpl implements HospitalInterface{
 
             if (!is_null($patientUser))
             {
-                DB::table('patient_personal_history')->where('patient_id', $patientId)->delete();
+                //DB::table('patient_personal_history')->where('patient_id', $patientId)->delete();
 
                 foreach($patientPersonalHistory as $patientHistory)
                 {
                     //dd($patientHistory);
                     $personalHistoryId = $patientHistory->personalHistoryId;
                     $personalHistoryItemId = $patientHistory->personalHistoryItemId;
+                    //$personalHistoryDate = \DateTime::createFromFormat('Y-m-d', $patientHistory->personalHistoryDate);
+                    $historyDate = $patientHistory->personalHistoryDate;
+                    //dd($examinationDate);
+                    //$generalExaminationDate = \DateTime::createFromFormat('Y-m-d', $examinationDate);
+                    $personalHistoryDate = date('Y-m-d', strtotime($historyDate));
 
                     $patientUser->personalhistory()->attach($personalHistoryId,
                         array('personal_history_item_id' => $personalHistoryItemId,
+                            'personal_history_date' => $personalHistoryDate,
                             'created_by' => 'Admin',
                             'modified_by' => 'Admin',
                             'created_at' => date("Y-m-d H:i:s"),
@@ -2628,16 +2711,22 @@ class HospitalImpl implements HospitalInterface{
             if (!is_null($patientUser))
             {
 
-                DB::table('patient_general_history')->where('patient_id', $patientId)->delete();
+                //DB::table('patient_general_history')->where('patient_id', $patientId)->delete();
 
                 foreach($patientGeneralExamination as $examination)
                 {
                     //dd($patientHistory);
                     $generalExaminationId = $examination->generalExaminationId;
                     $generalExaminationValue = $examination->generalExaminationValue;
+                    //$generalExaminationDate = \DateTime::createFromFormat('Y-m-d', $examination->generalExaminationDate);
+                    $examinationDate = $examination->examinationDate;
+                    //dd($examinationDate);
+                    //$generalExaminationDate = \DateTime::createFromFormat('Y-m-d', $examinationDate);
+                    $generalExaminationDate = date('Y-m-d', strtotime($examinationDate));
 
                     $patientUser->patientgeneralexaminations()->attach($generalExaminationId,
                         array('general_examination_value' => $generalExaminationValue,
+                            'general_examination_date' => $generalExaminationDate,
                             'created_by' => 'Admin',
                             'modified_by' => 'Admin',
                             'created_at' => date("Y-m-d H:i:s"),
@@ -2718,21 +2807,27 @@ class HospitalImpl implements HospitalInterface{
 
             $patientPastIllness = $patientPastIllnessVM->getPatientPastIllness();
 
-            $pivotData = array();
+            //$pivotData = array();
 
             if (!is_null($patientUser))
             {
-                DB::table('patient_past_illness')->where('patient_id', $patientId)->delete();
+                //DB::table('patient_past_illness')->where('patient_id', $patientId)->delete();
 
                 foreach($patientPastIllness as $illness)
                 {
                     //dd($patientHistory);
                     $pastIllnessId = $illness->pastIllnessId;
                     $pastIllnessName = $illness->pastIllnessName;
+                    //$pastIllnessDate = \DateTime::createFromFormat('Y-m-d', $illness->pastIllnessDate);
                     //$relation = $illness->relation;
+                    $illnessDate = $illness->pastIllnessDate;
+                    //dd($examinationDate);
+                    //$generalExaminationDate = \DateTime::createFromFormat('Y-m-d', $examinationDate);
+                    $pastIllnessDate = date('Y-m-d', strtotime($illnessDate));
 
                     $patientUser->patientpastillness()->attach($pastIllnessId,
                         array('past_illness_name' => $pastIllnessName,
+                            'past_illness_date' => $pastIllnessDate,
                             //'relation' => $relation,
                             'created_by' => 'Admin',
                             'modified_by' => 'Admin',
@@ -2816,7 +2911,7 @@ class HospitalImpl implements HospitalInterface{
 
             if (!is_null($patientUser))
             {
-                DB::table('patient_family_illness')->where('patient_id', $patientId)->delete();
+                //DB::table('patient_family_illness')->where('patient_id', $patientId)->delete();
 
                 foreach($patientFamilyIllness as $illness)
                 {
@@ -2824,9 +2919,15 @@ class HospitalImpl implements HospitalInterface{
                     $familyIllnessId = $illness->familyIllnessId;
                     $familyIllnessName = $illness->familyIllnessName;
                     $relation = $illness->relation;
+                    //$familyIllnessDate = \DateTime::createFromFormat('Y-m-d', $illness->familyIllnessDate);
+                    $illnessDate = $illness->familyIllnessDate;
+                    //dd($examinationDate);
+                    //$generalExaminationDate = \DateTime::createFromFormat('Y-m-d', $examinationDate);
+                    $familyIllnessDate = date('Y-m-d', strtotime($illnessDate));
 
                     $patientUser->patientfamilyillness()->attach($familyIllnessId,
                         array('family_illness_name' => $familyIllnessName,
+                            'family_illness_date' => $familyIllnessDate,
                             'relation' => $relation,
                             'created_by' => 'Admin',
                             'modified_by' => 'Admin',

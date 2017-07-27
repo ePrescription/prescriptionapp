@@ -1232,13 +1232,13 @@ class HospitalService {
      * @author Baskar
      */
 
-    public function getPersonalHistory($patientId)
+    public function getPersonalHistory($patientId, $personalHistoryDate)
     {
         $personalHistoryDetails = null;
 
         try
         {
-            $personalHistoryDetails = $this->hospitalRepo->getPersonalHistory($patientId);
+            $personalHistoryDetails = $this->hospitalRepo->getPersonalHistory($patientId, $personalHistoryDate);
         }
         catch(HospitalException $hospitalExc)
         {
@@ -1260,13 +1260,13 @@ class HospitalService {
      * @author Baskar
      */
 
-    public function getPatientPastIllness($patientId)
+    public function getPatientPastIllness($patientId, $pastIllnessDate)
     {
         $pastIllness = null;
 
         try
         {
-            $pastIllness = $this->hospitalRepo->getPatientPastIllness($patientId);
+            $pastIllness = $this->hospitalRepo->getPatientPastIllness($patientId, $pastIllnessDate);
         }
         catch(HospitalException $hospitalExc)
         {
@@ -1288,13 +1288,13 @@ class HospitalService {
      * @author Baskar
      */
 
-    public function getPatientFamilyIllness($patientId)
+    public function getPatientFamilyIllness($patientId, $familyIllnessDate)
     {
         $familyIllness = null;
 
         try
         {
-            $familyIllness = $this->hospitalRepo->getPatientFamilyIllness($patientId);
+            $familyIllness = $this->hospitalRepo->getPatientFamilyIllness($patientId, $familyIllnessDate);
         }
         catch(HospitalException $hospitalExc)
         {
@@ -1316,13 +1316,13 @@ class HospitalService {
      * @author Baskar
      */
 
-    public function getPatientGeneralExamination($patientId)
+    public function getPatientGeneralExamination($patientId, $generalExaminationDate)
     {
         $generalExamination = null;
 
         try
         {
-            $generalExamination = $this->hospitalRepo->getPatientGeneralExamination($patientId);
+            $generalExamination = $this->hospitalRepo->getPatientGeneralExamination($patientId, $generalExaminationDate);
         }
         catch(HospitalException $hospitalExc)
         {
@@ -1334,6 +1334,34 @@ class HospitalService {
         }
 
         return $generalExamination;
+    }
+
+    /**
+     * Get patient examination dates
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getExaminationDates($patientId)
+    {
+        $examinationDates = null;
+
+        try
+        {
+            $examinationDates = $this->hospitalRepo->getExaminationDates($patientId);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_EXAMINATION_DATES_ERROR, $exc);
+        }
+
+        return $examinationDates;
     }
 
     /**

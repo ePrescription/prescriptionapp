@@ -83,13 +83,15 @@ interface HospitalInterface {
     public function getMainSymptoms();
     public function getSubSymptomsForMainSymptoms($mainSymptomsId);
     public function getSymptomsForSubSymptoms($subSymptomId);
-    public function getPersonalHistory($patientId);
-    public function getPatientPastIllness($patientId);
-    public function getPatientFamilyIllness($patientId);
+    public function getPersonalHistory($patientId, $personalHistoryDate);
+    public function getPatientPastIllness($patientId, $pastIllnessDate);
+    public function getPatientFamilyIllness($patientId, $familyIllnessDate);
     public function savePersonalHistory(PatientPersonalHistoryViewModel $patientHistoryVM);
-    public function getPatientGeneralExamination($patientId);
+    public function getPatientGeneralExamination($patientId, $generalExaminationDate);
     public function savePatientGeneralExamination(PatientGeneralExaminationViewModel $patientExaminationVM);
     public function savePatientPastIllness(PatientPastIllnessViewModel $patientPastIllnessVM);
     public function savePatientFamilyIllness(PatientFamilyIllnessViewModel $patientFamilyIllnessVM);
+
+    public function getExaminationDates($patientId);
 
 }

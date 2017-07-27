@@ -309,6 +309,7 @@ Route::group(['prefix' => 'doctor'], function()
         Route::post('rest/api/generalexamination', array('as' => 'doctor.savegeneralexamination', 'uses' => 'DoctorApiController@savePatientGeneralExamination'));
         Route::post('rest/api/pastillness', array('as' => 'doctor.savepastillness', 'uses' => 'DoctorApiController@savePatientPastIllness'));
         Route::post('rest/api/familyillness', array('as' => 'doctor.savefamilyillness', 'uses' => 'DoctorApiController@savePatientFamilyIllness'));
+        Route::get('rest/api/{patientId}/examinationdates', array('as' => 'doctor.examinationdates', 'uses' => 'DoctorApiController@getExaminationDates'));
     });
 
 
