@@ -2621,10 +2621,20 @@ class HospitalImpl implements HospitalInterface{
                     $personalHistoryId = $patientHistory->personalHistoryId;
                     $personalHistoryItemId = $patientHistory->personalHistoryItemId;
                     //$personalHistoryDate = \DateTime::createFromFormat('Y-m-d', $patientHistory->personalHistoryDate);
-                    $historyDate = $patientHistory->personalHistoryDate;
-                    //dd($examinationDate);
+                    //$historyDate = $patientHistory->personalHistoryDate;
+
+                    $historyDate = property_exists($patientHistory, 'personalHistoryDate') ? $patientHistory->personalHistoryDate : null;
+
+                    if(!is_null($historyDate))
+                    {
+                        $personalHistoryDate = date('Y-m-d', strtotime($historyDate));
+                    }
+                    else
+                    {
+                        $personalHistoryDate = null;
+                    }
                     //$generalExaminationDate = \DateTime::createFromFormat('Y-m-d', $examinationDate);
-                    $personalHistoryDate = date('Y-m-d', strtotime($historyDate));
+
 
                     $patientUser->personalhistory()->attach($personalHistoryId,
                         array('personal_history_item_id' => $personalHistoryItemId,
@@ -2719,10 +2729,22 @@ class HospitalImpl implements HospitalInterface{
                     $generalExaminationId = $examination->generalExaminationId;
                     $generalExaminationValue = $examination->generalExaminationValue;
                     //$generalExaminationDate = \DateTime::createFromFormat('Y-m-d', $examination->generalExaminationDate);
-                    $examinationDate = $examination->examinationDate;
+                    //$examinationDate = $examination->examinationDate;
+
+                    $examinationDate = property_exists($examination, 'examinationDate') ? $examination->examinationDate : null;
+
+                    if(!is_null($examinationDate))
+                    {
+                        $generalExaminationDate = date('Y-m-d', strtotime($examinationDate));
+                    }
+                    else
+                    {
+                        $generalExaminationDate = null;
+                    }
+
                     //dd($examinationDate);
                     //$generalExaminationDate = \DateTime::createFromFormat('Y-m-d', $examinationDate);
-                    $generalExaminationDate = date('Y-m-d', strtotime($examinationDate));
+                    //$generalExaminationDate = date('Y-m-d', strtotime($examinationDate));
 
                     $patientUser->patientgeneralexaminations()->attach($generalExaminationId,
                         array('general_examination_value' => $generalExaminationValue,
@@ -2820,10 +2842,21 @@ class HospitalImpl implements HospitalInterface{
                     $pastIllnessName = $illness->pastIllnessName;
                     //$pastIllnessDate = \DateTime::createFromFormat('Y-m-d', $illness->pastIllnessDate);
                     //$relation = $illness->relation;
-                    $illnessDate = $illness->pastIllnessDate;
+                    //$illnessDate = $illness->pastIllnessDate;
                     //dd($examinationDate);
                     //$generalExaminationDate = \DateTime::createFromFormat('Y-m-d', $examinationDate);
-                    $pastIllnessDate = date('Y-m-d', strtotime($illnessDate));
+                    //$pastIllnessDate = date('Y-m-d', strtotime($illnessDate));
+
+                    $illnessDate = property_exists($illness, 'pastIllnessDate') ? $illness->pastIllnessDate : null;
+
+                    if(!is_null($illnessDate))
+                    {
+                        $pastIllnessDate = date('Y-m-d', strtotime($illnessDate));
+                    }
+                    else
+                    {
+                        $pastIllnessDate = null;
+                    }
 
                     $patientUser->patientpastillness()->attach($pastIllnessId,
                         array('past_illness_name' => $pastIllnessName,
@@ -2920,10 +2953,21 @@ class HospitalImpl implements HospitalInterface{
                     $familyIllnessName = $illness->familyIllnessName;
                     $relation = $illness->relation;
                     //$familyIllnessDate = \DateTime::createFromFormat('Y-m-d', $illness->familyIllnessDate);
-                    $illnessDate = $illness->familyIllnessDate;
+                    //$illnessDate = $illness->familyIllnessDate;
                     //dd($examinationDate);
                     //$generalExaminationDate = \DateTime::createFromFormat('Y-m-d', $examinationDate);
-                    $familyIllnessDate = date('Y-m-d', strtotime($illnessDate));
+                    //$familyIllnessDate = date('Y-m-d', strtotime($illnessDate));
+
+                    $illnessDate = property_exists($illness, 'familyIllnessDate') ? $illness->familyIllnessDate : null;
+
+                    if(!is_null($illnessDate))
+                    {
+                        $familyIllnessDate = date('Y-m-d', strtotime($illnessDate));
+                    }
+                    else
+                    {
+                        $familyIllnessDate = null;
+                    }
 
                     $patientUser->patientfamilyillness()->attach($familyIllnessId,
                         array('family_illness_name' => $familyIllnessName,
