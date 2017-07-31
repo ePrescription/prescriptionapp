@@ -99,7 +99,7 @@ class User extends Model implements AuthenticatableContract,
     {
         return $this->belongsToMany('App\prescription\model\entities\PersonalHistory',
             'patient_personal_history', 'patient_id', 'personal_history_id')
-            ->withPivot('personal_history_item_id',
+            ->withPivot('personal_history_item_id', 'is_value_set',
                 'created_by', 'modified_by', 'created_at', 'updated_at');
     }
 
@@ -107,7 +107,7 @@ class User extends Model implements AuthenticatableContract,
     {
         return $this->belongsToMany('App\prescription\model\entities\GeneralExamination',
             'patient_general_examination', 'patient_id', 'general_examination_id')
-            ->withPivot('general_examination_value',
+            ->withPivot('general_examination_value', 'is_value_set',
                 'created_by', 'modified_by', 'created_at', 'updated_at');
     }
 
@@ -115,7 +115,7 @@ class User extends Model implements AuthenticatableContract,
     {
         return $this->belongsToMany('App\prescription\model\entities\PastIllness',
             'patient_past_illness', 'patient_id', 'past_illness_id')
-            ->withPivot('past_illness_name',
+            ->withPivot('past_illness_name', 'is_value_set',
                 'created_by', 'modified_by', 'created_at', 'updated_at');
     }
 
@@ -123,7 +123,23 @@ class User extends Model implements AuthenticatableContract,
     {
         return $this->belongsToMany('App\prescription\model\entities\FamilyIllness',
             'patient_family_illness', 'patient_id', 'family_illness_id')
-            ->withPivot('family_illness_name', 'relation',
+            ->withPivot('family_illness_name', 'relation', 'is_value_set',
+                'created_by', 'modified_by', 'created_at', 'updated_at');
+    }
+
+    public function patientpregnancy()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\Pregnancy',
+            'patient_pregnancy', 'patient_id', 'pregnancy_id')
+            ->withPivot('pregnancy_value', 'pregnancy_date', 'is_value_set',
+                'created_by', 'modified_by', 'created_at', 'updated_at');
+    }
+
+    public function patientscans()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\Scans',
+            'patient_scan', 'patient_id', 'scan_id')
+            ->withPivot('scan_date', 'is_value_set',
                 'created_by', 'modified_by', 'created_at', 'updated_at');
     }
 }

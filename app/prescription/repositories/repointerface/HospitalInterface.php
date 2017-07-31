@@ -13,8 +13,10 @@ use App\Http\ViewModels\PatientGeneralExaminationViewModel;
 use App\Http\ViewModels\PatientLabTestViewModel;
 use App\Http\ViewModels\PatientPastIllnessViewModel;
 use App\Http\ViewModels\PatientPersonalHistoryViewModel;
+use App\Http\ViewModels\PatientPregnancyViewModel;
 use App\Http\ViewModels\PatientPrescriptionViewModel;
 use App\Http\ViewModels\PatientProfileViewModel;
+use App\Http\ViewModels\PatientScanViewModel;
 
 interface HospitalInterface {
     public function getHospitals();
@@ -91,7 +93,10 @@ interface HospitalInterface {
     public function savePatientGeneralExamination(PatientGeneralExaminationViewModel $patientExaminationVM);
     public function savePatientPastIllness(PatientPastIllnessViewModel $patientPastIllnessVM);
     public function savePatientFamilyIllness(PatientFamilyIllnessViewModel $patientFamilyIllnessVM);
-
     public function getExaminationDates($patientId);
+    public function getPregnancyDetails($patientId, $pregnancyDate);
+    public function savePatientPregnancyDetails(PatientPregnancyViewModel $patientPregnancyVM);
+    public function getPatientScanDetails($patientId, $scanDate);
+    public function savePatientScanDetails(PatientScanViewModel $patientScanVM);
 
 }

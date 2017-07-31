@@ -147,4 +147,15 @@
         "730" => "Unable to retrieve patient examination dates",
         "731" => "Successfully retrieved patient examination dates",
         "732" => "No examination dates available for the patient",
+
+        "733" => "Unable to retrieve patient pregnancy details",
+        "734" => "Successfully retrieved patient pregnancy details",
+        "735" => "No patient pregnancy details available for the patient",
+
+        "736" => "Unable to save patient pregnancy details",
+        "737" => "Successfully saved patient pregnancy details",
+
+        "738" => "Unable to retrieve patient scan details",
+        "739" => "Successfully retrieved patient scan details",
+        "740" => "No patient scan details available for the patient",
     ];

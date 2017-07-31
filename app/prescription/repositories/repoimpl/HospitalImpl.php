@@ -15,7 +15,9 @@ use App\Http\ViewModels\PatientGeneralExaminationViewModel;
 use App\Http\ViewModels\PatientLabTestViewModel;
 use App\Http\ViewModels\PatientPastIllnessViewModel;
 use App\Http\ViewModels\PatientPersonalHistoryViewModel;
+use App\Http\ViewModels\PatientPregnancyViewModel;
 use App\Http\ViewModels\PatientProfileViewModel;
+use App\Http\ViewModels\PatientScanViewModel;
 use App\prescription\model\entities\Doctor;
 use App\prescription\model\entities\DoctorAppointments;
 use App\prescription\model\entities\FeeReceipt;
@@ -40,7 +42,6 @@ use Illuminate\Database\QueryException;
 use Exception;
 use Numbers_Words;
 use Config as CA;
-
 
 
 class HospitalImpl implements HospitalInterface{
@@ -2384,7 +2385,7 @@ class HospitalImpl implements HospitalInterface{
             }
 
             $query = DB::table('past_illness as pii')->select('ppi.id as patientPastIllnessId', 'pii.id as patientIllnessId', 'pii.illness_name as illnessName',
-                'ppi.past_illness_name as otherIllnessName', 'ppi.relation');
+                'ppi.past_illness_name as otherIllnessName', 'ppi.relation', 'ppi.is_value_set as isValueSet');
             $query->leftJoin('patient_past_illness as ppi', function($join){
                 $join->on('ppi.past_illness_id', '=', 'pii.id');
                 $join->on('ppi.patient_id', '=', DB::raw('?'));
@@ -2437,7 +2438,7 @@ class HospitalImpl implements HospitalInterface{
             }
 
             $query = DB::table('family_illness as fi')->select('fi.id as familyIllnessId', 'fi.illness_name as familyIllnessName',
-                'pfi.id as patientIllnessId', 'pfi.family_illness_name as otherIllnessName', 'pfi.relation');
+                'pfi.id as patientIllnessId', 'pfi.family_illness_name as otherIllnessName', 'pfi.relation', 'pfi.is_value_set as isValueSet');
             $query->leftJoin('patient_family_illness as pfi', function($join){
                 $join->on('pfi.family_illness_id', '=', 'fi.id');
                 $join->on('pfi.patient_id', '=', DB::raw('?'));
@@ -2469,7 +2470,7 @@ class HospitalImpl implements HospitalInterface{
 
     /**
      * Get patient general examination
-     * @param $patientId
+     * @param $patientId, $generalExaminationDate
      * @throws $hospitalException
      * @return array | null
      * @author Baskar
@@ -2489,7 +2490,7 @@ class HospitalImpl implements HospitalInterface{
             }
 
             $query = DB::table('patient_general_examination as pge')->select('ge.id', 'ge.general_examination_name as generalExaminationName',
-                'pge.id as patientExaminationId', 'pge.general_examination_value as generalExaminationValue');
+                'pge.id as patientExaminationId', 'pge.general_examination_value as generalExaminationValue', 'pge.is_value_set as isValueSet');
             $query->rightJoin('general_examination as ge', function($join){
                 $join->on('ge.id', '=', 'pge.general_examination_id');
                 $join->on('pge.patient_id', '=', DB::raw('?'));
@@ -2517,6 +2518,115 @@ class HospitalImpl implements HospitalInterface{
         }
 
         return $generalExamination;
+    }
+
+    /**
+     * Get patient pregnancy details
+     * @param $patientId, $pregnancyDate
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPregnancyDetails($patientId, $pregnancyDate)
+    {
+        $pregnancyDetails = null;
+
+        try
+        {
+            $patientUser = User::find($patientId);
+
+            if(is_null($patientUser))
+            {
+                throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
+            }
+
+            $query = DB::table('patient_pregnancy as pp')->select('p.id as pregnancyId', 'p.pregnancy_details as pregnancyDetails',
+                'pp.id as patientPregnancyId', 'pp.pregnancy_value as pregnancyValue',
+                'pp.pregnancy_date as pregnancyExaminationDate', 'pp.is_value_set as isValueSet');
+            $query->rightJoin('pregnancy as p', function($join){
+                $join->on('p.id', '=', 'pp.pregnancy_id');
+                $join->on('pp.patient_id', '=', DB::raw('?'));
+                $join->on('pp.pregnancy_date', '=', DB::raw('?'));
+            })->setBindings(array_merge($query->getBindings(), array($patientId, $pregnancyDate)));
+            $query->where('p.status', '=', 1);
+
+            //dd($query->toSql());
+
+            $pregnancyDetails = $query->get();
+            //dd($pregnancyDetails);
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            throw new HospitalException(null, ErrorEnum::PATIENT_PREGNANCY_DETAILS_ERROR, $queryEx);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            throw new HospitalException(null, ErrorEnum::PATIENT_PREGNANCY_DETAILS_ERROR, $exc);
+        }
+
+        return $pregnancyDetails;
+    }
+
+    /**
+     * Get patient scan details
+     * @param $patientId, $scanDate
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientScanDetails($patientId, $scanDate)
+    {
+        $scanDetails = null;
+
+        try
+        {
+            $patientUser = User::find($patientId);
+
+            if(is_null($patientUser))
+            {
+                throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
+            }
+
+            $query = DB::table('patient_scan as ps')->select('s.id as scanId', 'p.scan_name as scanName',
+                'ps.id as patientScanId', 'ps.is_value_set as isValueSet', 'ps.scan_date as scanDate');
+            $query->rightJoin('scans as s', function($join){
+                $join->on('s.id', '=', 'ps.scan_id');
+                $join->on('ps.patient_id', '=', DB::raw('?'));
+                $join->on('ps.scan_date', '=', DB::raw('?'));
+            })->setBindings(array_merge($query->getBindings(), array($patientId, $scanDate)));
+            $query->where('s.status', '=', 1);
+
+            //dd($query->toSql());
+
+            $scanDetails = $query->get();
+            //dd($pregnancyDetails);
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            throw new HospitalException(null, ErrorEnum::PATIENT_SCAN_DETAILS_ERROR, $queryEx);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            throw new HospitalException(null, ErrorEnum::PATIENT_SCAN_DETAILS_ERROR, $exc);
+        }
+
+        return $scanDetails;
     }
 
     /**
@@ -2620,6 +2730,7 @@ class HospitalImpl implements HospitalInterface{
                     //dd($patientHistory);
                     $personalHistoryId = $patientHistory->personalHistoryId;
                     $personalHistoryItemId = $patientHistory->personalHistoryItemId;
+                    $isValueSet = $patientHistory->isValueSet;
                     //$personalHistoryDate = \DateTime::createFromFormat('Y-m-d', $patientHistory->personalHistoryDate);
                     //$historyDate = $patientHistory->personalHistoryDate;
 
@@ -2639,6 +2750,7 @@ class HospitalImpl implements HospitalInterface{
                     $patientUser->personalhistory()->attach($personalHistoryId,
                         array('personal_history_item_id' => $personalHistoryItemId,
                             'personal_history_date' => $personalHistoryDate,
+                            'is_value_set' => $isValueSet,
                             'created_by' => 'Admin',
                             'modified_by' => 'Admin',
                             'created_at' => date("Y-m-d H:i:s"),
@@ -2728,6 +2840,7 @@ class HospitalImpl implements HospitalInterface{
                     //dd($patientHistory);
                     $generalExaminationId = $examination->generalExaminationId;
                     $generalExaminationValue = $examination->generalExaminationValue;
+                    $isValueSet = $examination->isValueSet;
                     //$generalExaminationDate = \DateTime::createFromFormat('Y-m-d', $examination->generalExaminationDate);
                     //$examinationDate = $examination->examinationDate;
 
@@ -2749,6 +2862,7 @@ class HospitalImpl implements HospitalInterface{
                     $patientUser->patientgeneralexaminations()->attach($generalExaminationId,
                         array('general_examination_value' => $generalExaminationValue,
                             'general_examination_date' => $generalExaminationDate,
+                            'is_value_set' => $isValueSet,
                             'created_by' => 'Admin',
                             'modified_by' => 'Admin',
                             'created_at' => date("Y-m-d H:i:s"),
@@ -2840,6 +2954,8 @@ class HospitalImpl implements HospitalInterface{
                     //dd($patientHistory);
                     $pastIllnessId = $illness->pastIllnessId;
                     $pastIllnessName = $illness->pastIllnessName;
+                    $isValueSet = $illness->isValueSet;
+
                     //$pastIllnessDate = \DateTime::createFromFormat('Y-m-d', $illness->pastIllnessDate);
                     //$relation = $illness->relation;
                     //$illnessDate = $illness->pastIllnessDate;
@@ -2861,6 +2977,7 @@ class HospitalImpl implements HospitalInterface{
                     $patientUser->patientpastillness()->attach($pastIllnessId,
                         array('past_illness_name' => $pastIllnessName,
                             'past_illness_date' => $pastIllnessDate,
+                            'is_value_set' => $isValueSet,
                             //'relation' => $relation,
                             'created_by' => 'Admin',
                             'modified_by' => 'Admin',
@@ -2952,6 +3069,7 @@ class HospitalImpl implements HospitalInterface{
                     $familyIllnessId = $illness->familyIllnessId;
                     $familyIllnessName = $illness->familyIllnessName;
                     $relation = $illness->relation;
+                    $isValueSet = $illness->isValueSet;
                     //$familyIllnessDate = \DateTime::createFromFormat('Y-m-d', $illness->familyIllnessDate);
                     //$illnessDate = $illness->familyIllnessDate;
                     //dd($examinationDate);
@@ -2973,6 +3091,7 @@ class HospitalImpl implements HospitalInterface{
                         array('family_illness_name' => $familyIllnessName,
                             'family_illness_date' => $familyIllnessDate,
                             'relation' => $relation,
+                            'is_value_set' => $isValueSet,
                             'created_by' => 'Admin',
                             'modified_by' => 'Admin',
                             'created_at' => date("Y-m-d H:i:s"),
@@ -3030,6 +3149,166 @@ class HospitalImpl implements HospitalInterface{
             //dd($exc);
             $status = false;
             throw new HospitalException(null, ErrorEnum::PATIENT_FAMILY_ILLNESS_SAVE_ERROR, $exc);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient pregnancy details
+     * @param $patientPregnancyVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientPregnancyDetails(PatientPregnancyViewModel $patientPregnancyVM)
+    {
+        $status = true;
+
+        try
+        {
+            $patientId = $patientPregnancyVM->getPatientId();
+            $patientUser = User::find($patientId);
+
+            $patientPregnancy = $patientPregnancyVM->getPatientPregnancy();
+
+            if (!is_null($patientUser))
+            {
+                //DB::table('patient_family_illness')->where('patient_id', $patientId)->delete();
+
+                foreach($patientPregnancy as $pregnancy)
+                {
+                    //dd($patientHistory);
+                    $pregnancyId = $pregnancy->pregnancyId;
+                    $pregnancyValue = $pregnancy->pregnancyValue;
+                    $isValueSet = $pregnancy->isValueSet;
+                    //$pregnancyDate = $pregnancy->pregnancyDate;
+
+                    $pregnancyDate = property_exists($pregnancy, 'pregnancyDate') ? $pregnancy->pregnancyDate : null;
+
+                    if(!is_null($pregnancyDate))
+                    {
+                        $patientPregnancyDate = date('Y-m-d', strtotime($pregnancyDate));
+                    }
+                    else
+                    {
+                        $patientPregnancyDate = null;
+                    }
+
+                    $patientUser->patientpregnancy()->attach($pregnancyId,
+                        array('pregnancy_value' => $pregnancyValue,
+                            'pregnancy_date' => $patientPregnancyDate,
+                            'is_value_set' => $isValueSet,
+                            'created_by' => 'Admin',
+                            'modified_by' => 'Admin',
+                            'created_at' => date("Y-m-d H:i:s"),
+                            'updated_at' => date("Y-m-d H:i:s"),
+                        ));
+
+                }
+
+            }
+            else
+            {
+                throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
+            }
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_PREGNANCY_DETAILS_SAVE_ERROR, $queryEx);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_PREGNANCY_DETAILS_SAVE_ERROR, $exc);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient scan details
+     * @param $patientScanVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientScanDetails(PatientScanViewModel $patientScanVM)
+    {
+        $status = true;
+
+        try
+        {
+            $patientId = $patientScanVM->getPatientId();
+            $patientUser = User::find($patientId);
+
+            $patientScans = $patientScanVM->getPatientScans();
+
+            if (!is_null($patientUser))
+            {
+                //DB::table('patient_family_illness')->where('patient_id', $patientId)->delete();
+
+                foreach($patientScans as $scans)
+                {
+                    //dd($patientHistory);
+                    $scanId = $scans->scanId;
+                    $isValueSet = $scans->isValueSet;
+                    //$pregnancyDate = $pregnancy->pregnancyDate;
+
+                    $scanDate = property_exists($scans, 'scanDate') ? $scans->scanDate : null;
+
+                    if(!is_null($scanDate))
+                    {
+                        $patientScanDate = date('Y-m-d', strtotime($scanDate));
+                    }
+                    else
+                    {
+                        $patientScanDate = null;
+                    }
+
+                    $patientUser->patientscans()->attach($scanId,
+                        array('scan_date' => $patientScanDate,
+                            'is_value_set' => $isValueSet,
+                            'created_by' => 'Admin',
+                            'modified_by' => 'Admin',
+                            'created_at' => date("Y-m-d H:i:s"),
+                            'updated_at' => date("Y-m-d H:i:s"),
+                        ));
+
+                }
+
+            }
+            else
+            {
+                throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
+            }
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_SCAN_SAVE_ERROR, $queryEx);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_SCAN_SAVE_ERROR, $exc);
         }
 
         return $status;
