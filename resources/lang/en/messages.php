@@ -158,4 +158,7 @@
         "738" => "Unable to retrieve patient scan details",
         "739" => "Successfully retrieved patient scan details",
         "740" => "No patient scan details available for the patient",
+
+        "741" => "Unable to save patient scan details",
+        "742" => "Successfully saved patient scan details",
     ];
