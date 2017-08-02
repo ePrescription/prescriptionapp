@@ -17,6 +17,7 @@ use App\Http\ViewModels\PatientPersonalHistoryViewModel;
 use App\Http\ViewModels\PatientPregnancyViewModel;
 use App\Http\ViewModels\PatientProfileViewModel;
 use App\Http\ViewModels\PatientScanViewModel;
+use App\Http\ViewModels\PatientSymptomsViewModel;
 use Illuminate\Http\Request;
 use App\Http\Requests\FeeReceiptRequest;
 use Session;
@@ -53,14 +54,14 @@ class PatientProfileMapper
         //$profileVM->setSubSymptomId(property_exists($profile, 'subSymptomId') ? $profile->subSymptomId : null);
         //$profileVM->setSymptomId(property_exists($profile, 'symptomId') ? $profile->symptomId : null);
 
-        $symptoms = $profile->$symptoms;
+        //$symptoms = $profile->$symptoms;
         //dd($candidateEmployments);
 
-        foreach($symptoms as $symptom)
+        /*foreach($symptoms as $symptom)
         {
             $profileVM->setSymptoms($symptom);
             //$patientPastIllnessVM->setPatientPastIllness($illness);
-        }
+        }*/
 
         $profileVM->setCreatedBy($userName);
         $profileVM->setUpdatedBy($userName);
@@ -269,6 +270,31 @@ class PatientProfileMapper
         $patientScanVM->setUpdatedAt(date("Y-m-d H:i:s"));
 
         return $patientScanVM;
+    }
+
+    public static function setPatientSymptomDetails(Request $symptomsRequest)
+    {
+        $patientSymVM = new PatientSymptomsViewModel();
+
+        $symObj = (object) $symptomsRequest->all();
+        $patientSymVM->setPatientId($symptomsRequest->patientId);
+        $symptomDetails = $symObj->symptomDetails;
+        //dd($candidateEmployments);
+
+        foreach($symptomDetails as $symptom)
+        {
+            $patientSymVM->setPatientSymptoms($symptom);
+        }
+
+        //$userName = Session::get('DisplayName');
+        $userName = 'Admin';
+
+        $patientSymVM->setCreatedBy($userName);
+        $patientSymVM->setUpdatedBy($userName);
+        $patientSymVM->setCreatedAt(date("Y-m-d H:i:s"));
+        $patientSymVM->setUpdatedAt(date("Y-m-d H:i:s"));
+
+        return $patientSymVM;
     }
 
 }

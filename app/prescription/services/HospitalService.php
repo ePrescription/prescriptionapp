@@ -1393,6 +1393,34 @@ class HospitalService {
     }
 
     /**
+     * Get patient symptom details
+     * @param $patientId, $symptomDate
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientSymptoms($patientId, $symptomDate)
+    {
+        $symptomDetails = null;
+
+        try
+        {
+            $symptomDetails = $this->hospitalRepo->getPatientSymptoms($patientId, $symptomDate);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_SYMPTOM_DETAILS_ERROR, $exc);
+        }
+
+        return $symptomDetails;
+    }
+
+    /**
      * Get patient examination dates
      * @param $patientId
      * @throws $hospitalException
@@ -1619,6 +1647,40 @@ class HospitalService {
 
             $status = false;
             throw new HospitalException(null, ErrorEnum::PATIENT_SCAN_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient symptom details
+     * @param $patientSymVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientSymptoms($patientSymVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientSymVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePatientSymptoms($patientSymVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_SYMPTOM_SAVE_ERROR, $ex);
         }
 
         return $status;

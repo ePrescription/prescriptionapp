@@ -142,4 +142,12 @@ class User extends Model implements AuthenticatableContract,
             ->withPivot('scan_date', 'is_value_set',
                 'created_by', 'modified_by', 'created_at', 'updated_at');
     }
+
+    /*public function patientsymptoms()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\Scans',
+            'patient_scan', 'patient_id', 'scan_id')
+            ->withPivot('scan_date', 'is_value_set',
+                'created_by', 'modified_by', 'created_at', 'updated_at');
+    }*/
 }

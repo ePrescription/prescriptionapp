@@ -33,7 +33,7 @@ class PatientProfileViewModel
     //private $mainSymptomId;
     //private $subSymptomId;
     //private $symptomId;
-    private $symptoms;
+    //private $symptoms;
 
     private $createdBy;
     private $updatedBy;
@@ -42,7 +42,7 @@ class PatientProfileViewModel
 
     public function __construct()
     {
-        $this->symptoms = array();
+        //$this->symptoms = array();
     }
 
     /**
@@ -352,19 +352,19 @@ class PatientProfileViewModel
     /**
      * @return mixed
      */
-    public function getSymptoms()
+    /*public function getSymptoms()
     {
         return $this->symptoms;
-    }
+    }*/
 
     /**
      * @param mixed $symptoms
      */
-    public function setSymptoms($symptoms)
+    /*public function setSymptoms($symptoms)
     {
         array_push($this->symptoms, (object) $symptoms);
         //$this->symptoms = $symptoms;
-    }
+    }*/
 
 
     /**

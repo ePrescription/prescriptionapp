@@ -18,6 +18,7 @@ use App\Http\ViewModels\PatientPersonalHistoryViewModel;
 use App\Http\ViewModels\PatientPregnancyViewModel;
 use App\Http\ViewModels\PatientProfileViewModel;
 use App\Http\ViewModels\PatientScanViewModel;
+use App\Http\ViewModels\PatientSymptomsViewModel;
 use App\prescription\model\entities\Doctor;
 use App\prescription\model\entities\DoctorAppointments;
 use App\prescription\model\entities\FeeReceipt;
@@ -26,6 +27,7 @@ use App\prescription\model\entities\LabTestDetails;
 use App\prescription\model\entities\Patient;
 use App\prescription\model\entities\PatientLabTests;
 use App\prescription\model\entities\PatientPrescription;
+use App\prescription\model\entities\PatientSymptoms;
 use App\prescription\model\entities\PrescriptionDetails;
 use App\prescription\repositories\repointerface\HospitalInterface;
 use App\prescription\utilities\ErrorEnum\ErrorEnum;
@@ -1511,9 +1513,9 @@ class HospitalImpl implements HospitalInterface{
             $patient->nationality = $patientProfileVM->getNationality();
             $patient->gender = $patientProfileVM->getGender();
             $patient->married = $patientProfileVM->getMaritalStatus();
-            $patient->main_symptoms_id = $patientProfileVM->getMainSymptomId();
-            $patient->sub_symptoms_id = $patientProfileVM->getSubSymptomId();
-            $patient->symptoms_id = $patientProfileVM->getSymptomId();
+            //$patient->main_symptoms_id = $patientProfileVM->getMainSymptomId();
+            //$patient->sub_symptoms_id = $patientProfileVM->getSubSymptomId();
+            //$patient->symptoms_id = $patientProfileVM->getSymptomId();
 
             $patient->created_by = $patientProfileVM->getCreatedBy();
             $patient->created_at = $patientProfileVM->getCreatedAt();
@@ -1551,10 +1553,10 @@ class HospitalImpl implements HospitalInterface{
         //return $patient;
     }
 
-    private function savePatientSymptoms($patient, PatientProfileViewModel $patientProfileVM)
+    /*private function savePatientSymptoms($patient, PatientProfileViewModel $patientProfileVM)
     {
 
-    }
+    }*/
 
     /**
      * Check if a patient is a new patient or follow up patient
@@ -2635,6 +2637,71 @@ class HospitalImpl implements HospitalInterface{
     }
 
     /**
+     * Get patient symptom details
+     * @param $patientId, $symptomDate
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientSymptoms($patientId, $symptomDate)
+    {
+        $symptomDetails = null;
+
+        try
+        {
+            $patientUser = User::find($patientId);
+
+            if(is_null($patientUser))
+            {
+                throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
+            }
+
+            $query = DB::table('patient_symptoms as ps')->select('ps.patient_id as patientId', 'ps.main_symptom_id as mainSymptomId',
+                'ms.main_symptom_name as mainSymptomName',
+                'ps.sub_symptom_id as subSymptomId', 'ss.sub_symptom_name as subSymptomName',
+                'ps.symptom_id as symptomId', 's.symptom_name as symptomName',
+                'ps.is_value_set as isValueSet', 'ps.patient_symptom_date as symptomDate');
+            $query->join('main_symptoms as ms', function($join){
+                $join->on('ms.id', '=', 'ps.main_symptom_id');
+                $join->on('ms.status', '=', DB::raw('?'));
+            })->setBindings(array_merge($query->getBindings(), array(1)));
+            $query->join('sub_symptoms as ss', function($join){
+                $join->on('ss.id', '=', 'ps.sub_symptom_id');
+                $join->on('ss.status', '=', DB::raw('?'));
+            })->setBindings(array_merge($query->getBindings(), array(1)));
+            $query->join('symptoms as s', function($join){
+                $join->on('s.id', '=', 'ps.symptom_id');
+                $join->on('s.status', '=', DB::raw('?'));
+            })->setBindings(array_merge($query->getBindings(), array(1)));
+            $query->where('ps.patient_id', '=', $patientId);
+            $query->where('ps.patient_symptom_date', '=', $symptomDate);
+
+            //dd($query->toSql());
+
+            $symptomDetails = $query->get();
+            //dd($symptomDetails);
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            throw new HospitalException(null, ErrorEnum::PATIENT_SYMPTOM_DETAILS_ERROR, $queryEx);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            throw new HospitalException(null, ErrorEnum::PATIENT_SYMPTOM_DETAILS_ERROR, $exc);
+        }
+
+        return $symptomDetails;
+    }
+
+    /**
      * Get patient examination dates
      * @param $patientId
      * @throws $hospitalException
@@ -3326,6 +3393,101 @@ class HospitalImpl implements HospitalInterface{
             //dd($exc);
             $status = false;
             throw new HospitalException(null, ErrorEnum::PATIENT_SCAN_SAVE_ERROR, $exc);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient symptom details
+     * @param $patientSymVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientSymptoms(PatientSymptomsViewModel $patientSymVM)
+    {
+        $status = true;
+
+        try
+        {
+            $patientId = $patientSymVM->getPatientId();
+            $patientUser = User::find($patientId);
+
+            $patientSymptoms = $patientSymVM->getPatientSymptoms();
+
+            if (!is_null($patientUser))
+            {
+                //DB::table('patient_family_illness')->where('patient_id', $patientId)->delete();
+
+                foreach($patientSymptoms as $symptom)
+                {
+                    //dd($patientHistory);
+                    $mainSymptomId = $symptom->mainSymptomId;
+                    $subSymptomId = $symptom->subSymptomId;
+                    $symptomId = $symptom->symptomId;
+                    $isValueSet = $symptom->isValueSet;
+                    //$pregnancyDate = $pregnancy->pregnancyDate;
+
+                    $symptomDate = property_exists($symptom, 'symptomDate') ? $symptom->symptomDate : null;
+
+                    if(!is_null($symptomDate))
+                    {
+                        $patientSymptomDate = date('Y-m-d', strtotime($symptomDate));
+                    }
+                    else
+                    {
+                        $patientSymptomDate = null;
+                    }
+
+                    $patientSymptom = new PatientSymptoms();
+                    $patientSymptom->patient_id = $patientId;
+                    $patientSymptom->main_symptom_id = $mainSymptomId;
+                    $patientSymptom->sub_symptom_id = $subSymptomId;
+                    $patientSymptom->symptom_id = $symptomId;
+                    $patientSymptom->patient_symptom_date = $patientSymptomDate;
+                    $patientSymptom->is_value_set = $isValueSet;
+                    $patientSymptom->created_by = $patientSymVM->getCreatedBy();
+                    $patientSymptom->modified_by = $patientSymVM->getUpdatedBy();
+                    $patientSymptom->created_at = $patientSymVM->getCreatedAt();
+                    $patientSymptom->updated_at = $patientSymVM->getUpdatedAt();
+
+                    $patientSymptom->save();
+
+                    /*$patientUser->patientscans()->attach($scanId,
+                        array('scan_date' => $patientScanDate,
+                            'is_value_set' => $isValueSet,
+                            'created_by' => 'Admin',
+                            'modified_by' => 'Admin',
+                            'created_at' => date("Y-m-d H:i:s"),
+                            'updated_at' => date("Y-m-d H:i:s"),
+                        ));*/
+
+                }
+
+            }
+            else
+            {
+                throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
+            }
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_SYMPTOM_SAVE_ERROR, $queryEx);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_SYMPTOM_SAVE_ERROR, $exc);
         }
 
         return $status;

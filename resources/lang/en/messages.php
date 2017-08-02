@@ -150,15 +150,22 @@
 
         "733" => "Unable to retrieve patient pregnancy details",
         "734" => "Successfully retrieved patient pregnancy details",
-        "735" => "No patient pregnancy details available for the patient",
+        "735" => "No pregnancy details available for the patient",
 
         "736" => "Unable to save patient pregnancy details",
         "737" => "Successfully saved patient pregnancy details",
 
         "738" => "Unable to retrieve patient scan details",
         "739" => "Successfully retrieved patient scan details",
-        "740" => "No patient scan details available for the patient",
+        "740" => "No scan details available for the patient",
 
         "741" => "Unable to save patient scan details",
         "742" => "Successfully saved patient scan details",
+
+        "743" => "Unable to retrieve patient symptom details",
+        "744" => "Successfully retrieved patient symptom details",
+        "745" => "No symptom details available for the patient",
+
+        "746" => "Unable to save patient symptom details",
+        "747" => "Successfully saved patient symptom details",
     ];
