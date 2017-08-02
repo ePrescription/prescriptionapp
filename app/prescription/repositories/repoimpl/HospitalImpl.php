@@ -1551,6 +1551,11 @@ class HospitalImpl implements HospitalInterface{
         //return $patient;
     }
 
+    private function savePatientSymptoms($patient, PatientProfileViewModel $patientProfileVM)
+    {
+
+    }
+
     /**
      * Check if a patient is a new patient or follow up patient
      * @param $hospitalId, $doctorId, $patientId
@@ -2644,6 +2649,8 @@ class HospitalImpl implements HospitalInterface{
         $pastIllnessDates = null;
         $familyIllnessDates = null;
         $personalHistoryDates = null;
+        $pregnancyDates = null;
+        $scanDates = null;
 
         $patientLabTests = null;
 
@@ -2672,10 +2679,20 @@ class HospitalImpl implements HospitalInterface{
             $personalHistoryQuery->select('pph.patient_id', 'pph.personal_history_date')->orderBy('pph.personal_history_date', 'DESC');
             $personalHistoryDates = $personalHistoryQuery->get();
 
+            $pregnancyDetailsQuery = DB::table('patient_pregnancy as pp')->where('pp.patient_id', '=', $patientId);
+            $pregnancyDetailsQuery->select('pp.patient_id', 'pp.pregnancy_date')->orderBy('pp.pregnancy_date', 'DESC');
+            $pregnancyDates = $pregnancyDetailsQuery->get();
+
+            $scanDetailsQuery = DB::table('patient_scan as ps')->where('ps.patient_id', '=', $patientId);
+            $scanDetailsQuery->select('ps.patient_id', 'ps.scan_date')->orderBy('ps.scan_date', 'DESC');
+            $scanDates = $scanDetailsQuery->get();
+
             $examinationDates["generalExaminationDates"] = $generalExaminationDates;
             $examinationDates["pastIllnessDates"] = $pastIllnessDates;
             $examinationDates["familyIllnessDates"] = $familyIllnessDates;
             $examinationDates["personalHistoryDates"] = $personalHistoryDates;
+            $examinationDates["pregnancyDates"] = $pregnancyDates;
+            $examinationDates["scanDates"] = $scanDates;
 
             //dd($examinationDates);
 
