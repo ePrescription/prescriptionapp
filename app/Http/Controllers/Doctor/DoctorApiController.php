@@ -611,6 +611,294 @@ class DoctorApiController extends Controller
     }
 
     /**
+     * Get all family illness
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllFamilyIllness()
+    {
+        $familyIllness = null;
+        $responseJson = null;
+        //dd('Inside doctor api controller');
+
+        try
+        {
+            //dd($this->hospitalService);
+            $familyIllness = $this->hospitalService->getAllFamilyIllness();
+            //dd($familyIllness);
+
+            if(!is_null($familyIllness) && !empty($familyIllness))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::FAMILY_ILLNESS_SUCCESS));
+                $responseJson->setCount(sizeof($familyIllness));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_FAMILY_ILLNESS_LIST_FOUND));
+            }
+
+            $responseJson->setObj($familyIllness);
+            $responseJson->sendSuccessResponse();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FAMILY_ILLNESS_ERROR));
+            $responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::FAMILY_ILLNESS_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return $responseJson;
+    }
+
+    /**
+     * Get all past illness
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllPastIllness()
+    {
+        $pastIllness = null;
+        $responseJson = null;
+        //dd('Inside doctor api controller');
+
+        try
+        {
+            //dd($this->hospitalService);
+            $pastIllness = $this->hospitalService->getAllPastIllness();
+            //dd($familyIllness);
+
+            if(!is_null($pastIllness) && !empty($pastIllness))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PAST_ILLNESS_SUCCESS));
+                $responseJson->setCount(sizeof($pastIllness));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_PAST_ILLNESS_LIST_FOUND));
+            }
+
+            $responseJson->setObj($pastIllness);
+            $responseJson->sendSuccessResponse();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PAST_ILLNESS_ERROR));
+            $responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PAST_ILLNESS_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return $responseJson;
+    }
+
+    /**
+     * Get all general examinations
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllGeneralExaminations()
+    {
+        $generalExaminations = null;
+        $responseJson = null;
+        //dd('Inside doctor api controller');
+
+        try
+        {
+            //dd($this->hospitalService);
+            $generalExaminations = $this->hospitalService->getAllGeneralExaminations();
+            //dd($familyIllness);
+
+            if(!is_null($generalExaminations) && !empty($generalExaminations))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::GENERAL_EXAMINATIONS_SUCCESS));
+                $responseJson->setCount(sizeof($generalExaminations));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_GENERAL_EXAMINATIONS_LIST_FOUND));
+            }
+
+            $responseJson->setObj($generalExaminations);
+            $responseJson->sendSuccessResponse();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::GENERAL_EXAMINATIONS_ERROR));
+            $responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::GENERAL_EXAMINATIONS_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return $responseJson;
+    }
+
+    /**
+     * Get all personal history
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllPersonalHistory()
+    {
+        $personalHistory = null;
+        $responseJson = null;
+        //dd('Inside doctor api controller');
+
+        try
+        {
+            //dd($this->hospitalService);
+            $personalHistory = $this->hospitalService->getAllPersonalHistory();
+            //dd($familyIllness);
+
+            if(!is_null($personalHistory) && !empty($personalHistory))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PERSONAL_HISTORY_LIST_SUCCESS));
+                $responseJson->setCount(sizeof($personalHistory));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_PERSONAL_HISTORY_LIST_FOUND));
+            }
+
+            $responseJson->setObj($personalHistory);
+            $responseJson->sendSuccessResponse();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PERSONAL_HISTORY_LIST_ERROR));
+            $responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PERSONAL_HISTORY_LIST_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return $responseJson;
+    }
+
+    /**
+     * Get all pregnancy
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllPregnancy()
+    {
+        $pregnancy = null;
+        $responseJson = null;
+        //dd('Inside doctor api controller');
+
+        try
+        {
+            //dd($this->hospitalService);
+            $pregnancy = $this->hospitalService->getAllPregnancy();
+            //dd($familyIllness);
+
+            if(!is_null($pregnancy) && !empty($pregnancy))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PREGNANCY_LIST_SUCCESS));
+                $responseJson->setCount(sizeof($pregnancy));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_PREGNANCY_LIST_FOUND));
+            }
+
+            $responseJson->setObj($pregnancy);
+            $responseJson->sendSuccessResponse();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PREGNANCY_LIST_ERROR));
+            $responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PREGNANCY_LIST_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return $responseJson;
+    }
+
+    /**
+     * Get all scans
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllScans()
+    {
+        $scans = null;
+        $responseJson = null;
+        //dd('Inside doctor api controller');
+
+        try
+        {
+            //dd($this->hospitalService);
+            $scans = $this->hospitalService->getAllScans();
+            //dd($familyIllness);
+
+            if(!is_null($scans) && !empty($scans))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::SCAN_LIST_SUCCESS));
+                $responseJson->setCount(sizeof($scans));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_SCAN_LIST_FOUND));
+            }
+
+            $responseJson->setObj($scans);
+            $responseJson->sendSuccessResponse();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::SCAN_LIST_ERROR));
+            $responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::SCAN_LIST_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return $responseJson;
+    }
+
+    /**
      * Get patient examination dates
      * @param $patientId
      * @throws $hospitalException

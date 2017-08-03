@@ -175,4 +175,24 @@
 
         "751" => "Unable to save patient drug and surgery details",
         "752" => "Successfully saved patient drug and surgery details",
+
+        "753" => "Unable to retrieve family illness",
+        "754" => "Successfully retrieved family illness",
+        "755" => "No family illness list available",
+
+        "756" => "Unable to retrieve past illness",
+        "757" => "Successfully retrieved past illness",
+        "758" => "No past illness list available",
+
+        "759" => "Unable to retrieve general examinations",
+        "760" => "Successfully retrieved general examinations",
+        "761" => "No general examinations list available",
+
+        "762" => "Unable to retrieve personal history",
+        "763" => "Successfully retrieved personal history",
+        "764" => "No personal history list available",
+
+        "765" => "Unable to retrieve pregnancy details",
+        "766" => "Successfully retrieved pregnancy details",
+        "767" => "No pregnancy list available",
     ];

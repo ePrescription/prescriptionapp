@@ -2397,7 +2397,8 @@ class HospitalImpl implements HospitalInterface{
 
             $query = DB::table('past_illness as pii')->select('ppi.id as patientPastIllnessId', 'pii.id as patientIllnessId', 'pii.illness_name as illnessName',
                 'ppi.past_illness_name as otherIllnessName', 'ppi.relation', 'ppi.is_value_set as isValueSet');
-            $query->leftJoin('patient_past_illness as ppi', function($join){
+            //$query->leftJoin('patient_past_illness as ppi', function($join){
+            $query->join('patient_past_illness as ppi', function($join){
                 $join->on('ppi.past_illness_id', '=', 'pii.id');
                 $join->on('ppi.patient_id', '=', DB::raw('?'));
                 $join->on('ppi.past_illness_date', '=', DB::raw('?'));
@@ -2450,7 +2451,8 @@ class HospitalImpl implements HospitalInterface{
 
             $query = DB::table('family_illness as fi')->select('fi.id as familyIllnessId', 'fi.illness_name as familyIllnessName',
                 'pfi.id as patientIllnessId', 'pfi.family_illness_name as otherIllnessName', 'pfi.relation', 'pfi.is_value_set as isValueSet');
-            $query->leftJoin('patient_family_illness as pfi', function($join){
+            //$query->leftJoin('patient_family_illness as pfi', function($join){
+            $query->join('patient_family_illness as pfi', function($join){
                 $join->on('pfi.family_illness_id', '=', 'fi.id');
                 $join->on('pfi.patient_id', '=', DB::raw('?'));
                 $join->on('pfi.family_illness_date', '=', DB::raw('?'));
@@ -2502,7 +2504,8 @@ class HospitalImpl implements HospitalInterface{
 
             $query = DB::table('patient_general_examination as pge')->select('ge.id', 'ge.general_examination_name as generalExaminationName',
                 'pge.id as patientExaminationId', 'pge.general_examination_value as generalExaminationValue', 'pge.is_value_set as isValueSet');
-            $query->rightJoin('general_examination as ge', function($join){
+            //$query->rightJoin('general_examination as ge', function($join){
+            $query->join('general_examination as ge', function($join){
                 $join->on('ge.id', '=', 'pge.general_examination_id');
                 $join->on('pge.patient_id', '=', DB::raw('?'));
                 $join->on('pge.general_examination_date', '=', DB::raw('?'));
@@ -2555,7 +2558,8 @@ class HospitalImpl implements HospitalInterface{
             $query = DB::table('patient_pregnancy as pp')->select('p.id as pregnancyId', 'p.pregnancy_details as pregnancyDetails',
                 'pp.id as patientPregnancyId', 'pp.pregnancy_value as pregnancyValue',
                 'pp.pregnancy_date as pregnancyExaminationDate', 'pp.is_value_set as isValueSet');
-            $query->rightJoin('pregnancy as p', function($join){
+            //$query->rightJoin('pregnancy as p', function($join){
+            $query->join('general_examination as ge', function($join){
                 $join->on('p.id', '=', 'pp.pregnancy_id');
                 $join->on('pp.patient_id', '=', DB::raw('?'));
                 $join->on('pp.pregnancy_date', '=', DB::raw('?'));
@@ -2609,7 +2613,8 @@ class HospitalImpl implements HospitalInterface{
 
             $query = DB::table('patient_scan as ps')->select('s.id as scanId', 'p.scan_name as scanName',
                 'ps.id as patientScanId', 'ps.is_value_set as isValueSet', 'ps.scan_date as scanDate');
-            $query->rightJoin('scans as s', function($join){
+            //$query->rightJoin('scans as s', function($join){
+            $query->join('general_examination as ge', function($join){
                 $join->on('s.id', '=', 'ps.scan_id');
                 $join->on('ps.patient_id', '=', DB::raw('?'));
                 $join->on('ps.scan_date', '=', DB::raw('?'));
@@ -2765,6 +2770,204 @@ class HospitalImpl implements HospitalInterface{
         }
 
         return $drugSurgeryHistory;
+    }
+
+    /**
+     * Get all family illness
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllFamilyIllness()
+    {
+        $familyIllness = null;
+
+        try
+        {
+            $query = DB::table('family_illness as fi')->where('fi.status', '=', 1);
+            $query->select('fi.id', 'fi.illness_name');
+
+            $familyIllness = $query->get();
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            throw new HospitalException(null, ErrorEnum::FAMILY_ILLNESS_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            throw new HospitalException(null, ErrorEnum::FAMILY_ILLNESS_ERROR, $exc);
+        }
+
+        return $familyIllness;
+    }
+
+    /**
+     * Get all past illness
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllPastIllness()
+    {
+        $pastIllness = null;
+
+        try
+        {
+            $query = DB::table('past_illness as pi')->where('pi.status', '=', 1);
+            $query->select('pi.id', 'pi.illness_name');
+
+            $pastIllness = $query->get();
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            throw new HospitalException(null, ErrorEnum::PAST_ILLNESS_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            throw new HospitalException(null, ErrorEnum::PAST_ILLNESS_ERROR, $exc);
+        }
+
+        return $pastIllness;
+    }
+
+    /**
+     * Get all general examinations
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllGeneralExaminations()
+    {
+        $generalExaminations = null;
+
+        try
+        {
+            $query = DB::table('general_examination as ge')->where('ge.status', '=', 1);
+            $query->select('ge.id', 'ge.general_examination_name');
+
+            $generalExaminations = $query->get();
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            throw new HospitalException(null, ErrorEnum::GENERAL_EXAMINATIONS_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            throw new HospitalException(null, ErrorEnum::GENERAL_EXAMINATIONS_ERROR, $exc);
+        }
+
+        return $generalExaminations;
+    }
+
+    /**
+     * Get all personal history
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllPersonalHistory()
+    {
+        $personalHistory = null;
+
+        try
+        {
+            $query = DB::table('personal_history as ph')->where('ph.status', '=', 1);
+            $query->select('ph.id', 'ph.personal_history_name');
+
+            $personalHistory = $query->get();
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            throw new HospitalException(null, ErrorEnum::PERSONAL_HISTORY_LIST_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            throw new HospitalException(null, ErrorEnum::PERSONAL_HISTORY_LIST_ERROR, $exc);
+        }
+
+        return $personalHistory;
+    }
+
+    /**
+     * Get all pregnancy
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllPregnancy()
+    {
+        $pregnancy = null;
+
+        try
+        {
+            $query = DB::table('pregnancy as p')->where('p.status', '=', 1);
+            $query->select('p.id', 'p.pregnancy_details');
+
+            $pregnancy = $query->get();
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            throw new HospitalException(null, ErrorEnum::PREGNANCY_LIST_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            throw new HospitalException(null, ErrorEnum::PREGNANCY_LIST_ERROR, $exc);
+        }
+
+        return $pregnancy;
+    }
+
+    /**
+     * Get all scans
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllScans()
+    {
+        $scans = null;
+
+        try
+        {
+            $query = DB::table('scans as s')->where('s.status', '=', 1);
+            $query->select('s.id', 's.scan_name');
+
+            $scans = $query->get();
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            throw new HospitalException(null, ErrorEnum::SCAN_LIST_ERROR, $queryEx);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            throw new HospitalException(null, ErrorEnum::SCAN_LIST_ERROR, $exc);
+        }
+
+        return $scans;
     }
 
     /**

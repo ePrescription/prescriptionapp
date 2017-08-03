@@ -1449,6 +1449,174 @@ class HospitalService {
     }
 
     /**
+     * Get all family illness
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllFamilyIllness()
+    {
+        $familyIllness = null;
+
+        try
+        {
+            $familyIllness = $this->hospitalRepo->getAllFamilyIllness();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::FAMILY_ILLNESS_ERROR, $exc);
+        }
+
+        return $familyIllness;
+    }
+
+    /**
+     * Get all past illness
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllPastIllness()
+    {
+        $pastIllness = null;
+
+        try
+        {
+            $pastIllness = $this->hospitalRepo->getAllPastIllness();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PAST_ILLNESS_ERROR, $exc);
+        }
+
+        return $pastIllness;
+    }
+
+    /**
+     * Get all general examinations
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllGeneralExaminations()
+    {
+        $generalExaminations = null;
+
+        try
+        {
+            $generalExaminations = $this->hospitalRepo->getAllGeneralExaminations();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::GENERAL_EXAMINATIONS_ERROR, $exc);
+        }
+
+        return $generalExaminations;
+    }
+
+    /**
+     * Get all personal history
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllPersonalHistory()
+    {
+        $personalHistory = null;
+
+        try
+        {
+            $personalHistory = $this->hospitalRepo->getAllPersonalHistory();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PERSONAL_HISTORY_LIST_ERROR, $exc);
+        }
+
+        return $personalHistory;
+    }
+
+    /**
+     * Get all pregnancy
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllPregnancy()
+    {
+        $pregnancy = null;
+
+        try
+        {
+            $pregnancy = $this->hospitalRepo->getAllPregnancy();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PREGNANCY_LIST_ERROR, $exc);
+        }
+
+        return $pregnancy;
+    }
+
+    /**
+     * Get all scans
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllScans()
+    {
+        $scans = null;
+
+        try
+        {
+            $scans = $this->hospitalRepo->getAllScans();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::SCAN_LIST_ERROR, $exc);
+        }
+
+        return $scans;
+    }
+
+    /**
      * Get patient examination dates
      * @param $patientId
      * @throws $hospitalException

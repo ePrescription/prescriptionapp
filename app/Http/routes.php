@@ -322,6 +322,8 @@ Route::group(['prefix' => 'doctor'], function()
 
         Route::get('rest/api/{patientId}/drughistory', array('as' => 'doctor.drughistory', 'uses' => 'DoctorApiController@getPatientDrugHistory'));
         Route::post('rest/api/drughistory', array('as' => 'doctor.savedrughistory', 'uses' => 'DoctorApiController@savePatientDrugHistory'));
+
+        Route::get('rest/api/familyillness', array('as' => 'doctor.familyillness', 'uses' => 'DoctorApiController@getAllFamilyIllness'));
     });
 
 
