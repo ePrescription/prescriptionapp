@@ -2784,6 +2784,7 @@ class HospitalImpl implements HospitalInterface{
         $personalHistoryDates = null;
         $pregnancyDates = null;
         $scanDates = null;
+        $symptomDates = null;
 
         $patientLabTests = null;
 
@@ -2820,12 +2821,17 @@ class HospitalImpl implements HospitalInterface{
             $scanDetailsQuery->select('ps.patient_id', 'ps.scan_date')->orderBy('ps.scan_date', 'DESC');
             $scanDates = $scanDetailsQuery->get();
 
+            $symptomDatesQuery = DB::table('patient_symptoms as ps')->where('ps.patient_id', '=', $patientId);
+            $symptomDatesQuery->select('ps.patient_id', 'ps.patient_symptom_date')->orderBy('ps.patient_symptom_date', 'DESC');
+            $symptomDates = $symptomDatesQuery->get();
+
             $examinationDates["generalExaminationDates"] = $generalExaminationDates;
             $examinationDates["pastIllnessDates"] = $pastIllnessDates;
             $examinationDates["familyIllnessDates"] = $familyIllnessDates;
             $examinationDates["personalHistoryDates"] = $personalHistoryDates;
             $examinationDates["pregnancyDates"] = $pregnancyDates;
             $examinationDates["scanDates"] = $scanDates;
+            $examinationDates["symptomDates"] = $symptomDates;
 
             //dd($examinationDates);
 
