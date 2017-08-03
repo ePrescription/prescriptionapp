@@ -24,6 +24,8 @@ class PatientPrescriptionMapper {
         $prescriptionVM->setPatientId($prescription->patientId);
         $prescriptionVM->setHospitalId($prescription->hospitalId);
         $prescriptionVM->setBriefDescription($prescription->notes);
+        //$profileVM->setRelationship(property_exists($profile, 'relationship') ? $profile->relationship : null);
+        $prescriptionVM->setDrugHistory(property_exists($prescription, 'drugHistory') ? $prescription->drugHistory : null);
         //$prescriptionVM->setIntakeForm($prescription->intakeForm);
         $prescriptionVM->setDrugDetails($prescription->drugs);
         $prescriptionVM->setPrescriptionDate(date("Y-m-d H:i:s"));

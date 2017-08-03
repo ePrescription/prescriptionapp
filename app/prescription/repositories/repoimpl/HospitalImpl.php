@@ -677,6 +677,7 @@ class HospitalImpl implements HospitalInterface{
                 $patientPrescription->hospital_id = $hospitalId;
                 $patientPrescription->doctor_id = $doctorId;
                 $patientPrescription->brief_description = $patientPrescriptionVM->getBriefDescription();
+                $patientPrescription->drug_history = $patientPrescriptionVM->getDrugHistory();
                 //$patientPrescription->unique_id = "PRID".time();
                 $patientPrescription->unique_id = 'PRID'.crc32(uniqid(rand()));
                 $patientPrescription->prescription_date = $patientPrescriptionVM->getPrescriptionDate();
