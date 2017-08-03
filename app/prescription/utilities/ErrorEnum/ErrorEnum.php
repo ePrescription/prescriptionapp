@@ -145,7 +145,7 @@ class ErrorEnum extends Enum{
     const LABTEST_SMS_SUCCESS = 1003;
     const LABTEST_SMS_ERROR = 1004;
 
-    //Symptoms error codes 701 to 800
+    //Symptoms error codes 701 to 850
 
     const MAIN_SYMPTOMS_LIST_ERROR = 701;
     const MAIN_SYMPTOMS_LIST_SUCCESS = 702;
@@ -211,5 +211,12 @@ class ErrorEnum extends Enum{
 
     const PATIENT_SYMPTOM_SAVE_ERROR = 746;
     const PATIENT_SYMPTOM_SAVE_SUCCESS = 747;
+
+    const PATIENT_DRUG_HISTORY_ERROR = 748;
+    const PATIENT_DRUG_HISTORY_SUCCESS = 749;
+    const NO_PATIENT_DRUG_HISTORY_FOUND = 750;
+
+    const PATIENT_DRUG_HISTORY_SAVE_ERROR = 751;
+    const PATIENT_DRUG_HISTORY_SAVE_SUCCESS = 752;
 
 }

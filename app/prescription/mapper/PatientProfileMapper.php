@@ -10,6 +10,7 @@ namespace App\prescription\mapper;
 
 use App\Http\ViewModels\FeeReceiptViewModel;
 use App\Http\ViewModels\NewAppointmentViewModel;
+use App\Http\ViewModels\PatientDrugHistoryViewModel;
 use App\Http\ViewModels\PatientFamilyIllnessViewModel;
 use App\Http\ViewModels\PatientGeneralExaminationViewModel;
 use App\Http\ViewModels\PatientPastIllnessViewModel;
@@ -295,6 +296,37 @@ class PatientProfileMapper
         $patientSymVM->setUpdatedAt(date("Y-m-d H:i:s"));
 
         return $patientSymVM;
+    }
+
+    public static function setPatientDrugHistory(Request $drugHistoryRequest)
+    {
+        $patientDrugsVM = new PatientDrugHistoryViewModel();
+
+        $drugHistoryObj = (object) $drugHistoryRequest->all();
+        $patientDrugsVM->setPatientId($drugHistoryRequest->patientId);
+        $drugHistory = $drugHistoryObj->drugHistory;
+        $surgeryHistory = $drugHistoryObj->surgeryHistory;
+        //dd($candidateEmployments);
+
+        foreach($drugHistory as $history)
+        {
+            $patientDrugsVM->setDrugHistory($history);
+        }
+
+        foreach($surgeryHistory as $history)
+        {
+            $patientDrugsVM->setSurgeryHistory($history);
+        }
+
+        //$userName = Session::get('DisplayName');
+        $userName = 'Admin';
+
+        $patientDrugsVM->setCreatedBy($userName);
+        $patientDrugsVM->setUpdatedBy($userName);
+        $patientDrugsVM->setCreatedAt(date("Y-m-d H:i:s"));
+        $patientDrugsVM->setUpdatedAt(date("Y-m-d H:i:s"));
+
+        return $patientDrugsVM;
     }
 
 }

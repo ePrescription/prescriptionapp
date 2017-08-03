@@ -168,4 +168,11 @@
 
         "746" => "Unable to save patient symptom details",
         "747" => "Successfully saved patient symptom details",
+
+        "748" => "Unable to retrieve patient drug history",
+        "749" => "Successfully retrieved patient drug history",
+        "750" => "No drug history available for the patient",
+
+        "751" => "Unable to save patient drug and surgery details",
+        "752" => "Successfully saved patient drug and surgery details",
     ];

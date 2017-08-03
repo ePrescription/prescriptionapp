@@ -319,6 +319,9 @@ Route::group(['prefix' => 'doctor'], function()
 
         Route::get('rest/api/{patientId}/symptomdetails', array('as' => 'doctor.symptomdetails', 'uses' => 'DoctorApiController@getPatientSymptoms'));
         Route::post('rest/api/symptomdetails', array('as' => 'doctor.savesymptomdetails', 'uses' => 'DoctorApiController@savePatientSymptoms'));
+
+        Route::get('rest/api/{patientId}/drughistory', array('as' => 'doctor.drughistory', 'uses' => 'DoctorApiController@getPatientDrugHistory'));
+        Route::post('rest/api/drughistory', array('as' => 'doctor.savedrughistory', 'uses' => 'DoctorApiController@savePatientDrugHistory'));
     });
 
 

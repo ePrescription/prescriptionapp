@@ -1421,6 +1421,34 @@ class HospitalService {
     }
 
     /**
+     * Get patient drug history
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientDrugHistory($patientId)
+    {
+        $drugSurgeryHistory = null;
+
+        try
+        {
+            $drugSurgeryHistory = $this->hospitalRepo->getPatientDrugHistory($patientId);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_DRUG_HISTORY_ERROR, $exc);
+        }
+
+        return $drugSurgeryHistory;
+    }
+
+    /**
      * Get patient examination dates
      * @param $patientId
      * @throws $hospitalException
@@ -1686,6 +1714,39 @@ class HospitalService {
         return $status;
     }
 
+    /**
+     * Save patient drug and surgery history
+     * @param $patientDrugsVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientDrugHistory($patientDrugsVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientDrugsVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePatientDrugHistory($patientDrugsVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_DRUG_HISTORY_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
 
     /*Symptom section -- End */
 }
