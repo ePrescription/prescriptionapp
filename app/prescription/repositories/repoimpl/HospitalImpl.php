@@ -2559,7 +2559,7 @@ class HospitalImpl implements HospitalInterface{
                 'pp.id as patientPregnancyId', 'pp.pregnancy_value as pregnancyValue',
                 'pp.pregnancy_date as pregnancyExaminationDate', 'pp.is_value_set as isValueSet');
             //$query->rightJoin('pregnancy as p', function($join){
-            $query->join('general_examination as ge', function($join){
+            $query->join('pregnancy as p', function($join){
                 $join->on('p.id', '=', 'pp.pregnancy_id');
                 $join->on('pp.patient_id', '=', DB::raw('?'));
                 $join->on('pp.pregnancy_date', '=', DB::raw('?'));
@@ -2611,10 +2611,10 @@ class HospitalImpl implements HospitalInterface{
                 throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
             }
 
-            $query = DB::table('patient_scan as ps')->select('s.id as scanId', 'p.scan_name as scanName',
+            $query = DB::table('patient_scan as ps')->select('s.id as scanId', 's.scan_name as scanName',
                 'ps.id as patientScanId', 'ps.is_value_set as isValueSet', 'ps.scan_date as scanDate');
             //$query->rightJoin('scans as s', function($join){
-            $query->join('general_examination as ge', function($join){
+            $query->join('scans as s', function($join){
                 $join->on('s.id', '=', 'ps.scan_id');
                 $join->on('ps.patient_id', '=', DB::raw('?'));
                 $join->on('ps.scan_date', '=', DB::raw('?'));
