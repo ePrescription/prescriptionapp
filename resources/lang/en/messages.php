@@ -214,4 +214,11 @@
         "779" => "Unable to save patient motion examination details",
         "780" => "Successfully saved patient motion examination details",
 
+        "781" => "Unable to retrieve patient blood examination details",
+        "782" => "Successfully retrieved patient blood examination details",
+        "783" => "No blood examination details available for the patient",
+
+        "784" => "Unable to save patient blood examination details",
+        "785" => "Successfully saved patient blood examination details",
+
     ];

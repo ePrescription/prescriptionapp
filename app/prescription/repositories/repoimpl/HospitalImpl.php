@@ -2884,6 +2884,61 @@ class HospitalImpl implements HospitalInterface{
     }
 
     /**
+     * Get patient blood tests
+     * @param $patientId, $bloodTestDate
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientBloodTests($patientId, $bloodTestDate)
+    {
+        $bloodTests = null;
+
+        try
+        {
+            $patientUser = User::find($patientId);
+
+            if(is_null($patientUser))
+            {
+                throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
+            }
+
+            $query = DB::table('patient_blood_examination as pbe')->select('be.id as examinationId', 'be.examination_name as examinationName',
+                'pbe.id as patientExaminationId', 'pbe.is_value_set as isValueSet', 'pbe.examination_date as examinationDate');
+            //$query->rightJoin('scans as s', function($join){
+            $query->join('blood_examination as be', function($join){
+                $join->on('be.id', '=', 'pbe.blood_examination_id');
+                $join->on('pbe.patient_id', '=', DB::raw('?'));
+                $join->on('pbe.examination_date', '=', DB::raw('?'));
+            })->setBindings(array_merge($query->getBindings(), array($patientId, $bloodTestDate)));
+            $query->where('be.status', '=', 1);
+
+            //dd($query->toSql());
+
+            $bloodTests = $query->get();
+            //dd($pregnancyDetails);
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            throw new HospitalException(null, ErrorEnum::PATIENT_BLOOD_DETAILS_ERROR, $queryEx);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            throw new HospitalException(null, ErrorEnum::PATIENT_BLOOD_DETAILS_ERROR, $exc);
+        }
+
+        return $bloodTests;
+    }
+
+    /**
      * Get all family illness
      * @param none
      * @throws $hospitalException
@@ -4032,6 +4087,85 @@ class HospitalImpl implements HospitalInterface{
             //dd($exc);
             $status = false;
             throw new HospitalException(null, ErrorEnum::PATIENT_MOTION_DETAILS_SAVE_ERROR, $exc);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient blood examination details
+     * @param $patientBloodVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientBloodTests(PatientUrineExaminationViewModel $patientBloodVM)
+    {
+        $status = true;
+
+        try
+        {
+            $patientId = $patientBloodVM->getPatientId();
+            $patientUser = User::find($patientId);
+
+            $patientExaminations = $patientBloodVM->getExaminations();
+
+            if (!is_null($patientUser))
+            {
+                //DB::table('patient_family_illness')->where('patient_id', $patientId)->delete();
+
+                foreach($patientExaminations as $examination)
+                {
+                    //dd($patientHistory);
+                    $examinationId = $examination->examinationId;
+                    $isValueSet = $examination->isValueSet;
+                    //$pregnancyDate = $pregnancy->pregnancyDate;
+
+                    $examinationDate = property_exists($examination, 'examinationDate') ? $examination->examinationDate : null;
+
+                    if(!is_null($examinationDate))
+                    {
+                        $patientExaminationDate = date('Y-m-d', strtotime($examinationDate));
+                    }
+                    else
+                    {
+                        $patientExaminationDate = null;
+                    }
+
+                    $patientUser->patientbloodexaminations()->attach($examinationId,
+                        array('examination_date' => $patientExaminationDate,
+                            'is_value_set' => $isValueSet,
+                            'created_by' => 'Admin',
+                            'modified_by' => 'Admin',
+                            'created_at' => date("Y-m-d H:i:s"),
+                            'updated_at' => date("Y-m-d H:i:s"),
+                        ));
+
+                }
+
+            }
+            else
+            {
+                throw new UserNotFoundException(null, ErrorEnum::PATIENT_USER_NOT_FOUND, null);
+            }
+        }
+        catch(QueryException $queryEx)
+        {
+            //dd($queryEx);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_BLOOD_DETAILS_SAVE_ERROR, $queryEx);
+        }
+        catch(UserNotFoundException $userExc)
+        {
+            //dd($userExc);
+            throw new HospitalException(null, $userExc->getUserErrorCode(), $userExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_BLOOD_DETAILS_SAVE_ERROR, $exc);
         }
 
         return $status;

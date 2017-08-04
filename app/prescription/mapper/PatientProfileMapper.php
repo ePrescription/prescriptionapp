@@ -380,4 +380,29 @@ class PatientProfileMapper
         return $patientMotionVM;
     }
 
+    public static function setPatientBloodExamination(Request $examinationRequest)
+    {
+        $patientBloodVM = new PatientUrineExaminationViewModel();
+
+        $examinationObj = (object) $examinationRequest->all();
+        $patientBloodVM->setPatientId($examinationRequest->patientId);
+        $examinationDetails = $examinationObj->bloodExaminations;
+        //dd($candidateEmployments);
+
+        foreach($examinationDetails as $examination)
+        {
+            $patientBloodVM->setExaminations($examination);
+        }
+
+        //$userName = Session::get('DisplayName');
+        $userName = 'Admin';
+
+        $patientBloodVM->setCreatedBy($userName);
+        $patientBloodVM->setUpdatedBy($userName);
+        $patientBloodVM->setCreatedAt(date("Y-m-d H:i:s"));
+        $patientBloodVM->setUpdatedAt(date("Y-m-d H:i:s"));
+
+        return $patientBloodVM;
+    }
+
 }

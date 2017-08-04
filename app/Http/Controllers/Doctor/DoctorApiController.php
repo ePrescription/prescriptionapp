@@ -723,6 +723,62 @@ class DoctorApiController extends Controller
     }
 
     /**
+     * Get patient blood tests
+     * @param $patientId, $patientSearchRequest
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientBloodTests($patientId, Request $patientSearchRequest)
+    {
+        $bloodTests = null;
+        $responseJson = null;
+
+        try
+        {
+            $examinationDate = $patientSearchRequest->get('examinationDate');
+            //dd($examinationDate);
+            //$generalExaminationDate = \DateTime::createFromFormat('Y-m-d', $examinationDate);
+            $examinationDate = date('Y-m-d', strtotime($examinationDate));
+            $bloodTests = $this->hospitalService->getPatientBloodTests($patientId, $examinationDate);
+            //dd($familyIllness);
+
+            if(!is_null($bloodTests) && !empty($bloodTests))
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_BLOOD_DETAILS_SUCCESS));
+                $responseJson->setCount(sizeof($bloodTests));
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::NO_PATIENT_BLOOD_DETAILS_FOUND));
+            }
+
+            $responseJson->setObj($bloodTests);
+            $responseJson->sendSuccessResponse();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            //dd($hospitalExc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.$hospitalExc->getUserErrorCode()));
+            $responseJson->sendErrorResponse($hospitalExc);
+        }
+            /*catch(HospitalException $hospitalExc)
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_PAST_ILLNESS_DETAILS_ERROR));
+                $responseJson->sendErrorResponse($hospitalExc);
+            }*/
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_BLOOD_DETAILS_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return $responseJson;
+    }
+
+    /**
      * Get all family illness
      * @param none
      * @throws $hospitalException
@@ -1479,6 +1535,53 @@ class DoctorApiController extends Controller
         {
             //dd($exc);
             $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_MOTION_DETAILS_SAVE_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
+        }
+
+        return $responseJson;
+    }
+
+    /**
+     * Save patient patient blood examination details
+     * @param $examinationRequest
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientBloodTests(Request $examinationRequest)
+    {
+        $patientBloodVM = null;
+        $status = true;
+        $responseJson = null;
+
+        try
+        {
+            //dd($personalHistoryRequest->all());
+            $patientBloodVM = PatientProfileMapper::setPatientBloodExamination($examinationRequest);
+            //dd($patientMotionVM);
+            $status = $this->hospitalService->savePatientBloodTests($patientBloodVM);
+
+            if($status)
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PATIENT_BLOOD_DETAILS_SAVE_SUCCESS));
+                $responseJson->sendSuccessResponse();
+            }
+            else
+            {
+                $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_BLOOD_DETAILS_SAVE_ERROR));
+                $responseJson->sendSuccessResponse();
+            }
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_BLOOD_DETAILS_SAVE_ERROR));
+            $responseJson->sendErrorResponse($hospitalExc);
+        }
+        catch(Exception $exc)
+        {
+            //dd($exc);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PATIENT_BLOOD_DETAILS_SAVE_ERROR));
             $responseJson->sendUnExpectedExpectionResponse($exc);
         }
 
