@@ -143,6 +143,22 @@ class User extends Model implements AuthenticatableContract,
                 'created_by', 'modified_by', 'created_at', 'updated_at');
     }
 
+    public function patienturineexaminations()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\UrineExamination',
+            'patient_urine_examination', 'patient_id', 'urine_examination_id')
+            ->withPivot('examination_date', 'is_value_set',
+                'created_by', 'modified_by', 'created_at', 'updated_at');
+    }
+
+    public function patientmotionexaminations()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\MotionExamination',
+            'patient_motion_examination', 'patient_id', 'motion_examination_id')
+            ->withPivot('examination_date', 'is_value_set',
+                'created_by', 'modified_by', 'created_at', 'updated_at');
+    }
+
     public function patientdrughistory()
     {
         return $this->hasMany('App\prescription\model\entities\PatientDrugHistory', 'patient_id');

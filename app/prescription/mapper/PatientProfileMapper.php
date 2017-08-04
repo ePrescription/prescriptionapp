@@ -19,6 +19,7 @@ use App\Http\ViewModels\PatientPregnancyViewModel;
 use App\Http\ViewModels\PatientProfileViewModel;
 use App\Http\ViewModels\PatientScanViewModel;
 use App\Http\ViewModels\PatientSymptomsViewModel;
+use App\Http\ViewModels\PatientUrineExaminationViewModel;
 use Illuminate\Http\Request;
 use App\Http\Requests\FeeReceiptRequest;
 use Session;
@@ -327,6 +328,56 @@ class PatientProfileMapper
         $patientDrugsVM->setUpdatedAt(date("Y-m-d H:i:s"));
 
         return $patientDrugsVM;
+    }
+
+    public static function setPatientUrineExamination(Request $examinationRequest)
+    {
+        $patientUrineVM = new PatientUrineExaminationViewModel();
+
+        $examinationObj = (object) $examinationRequest->all();
+        $patientUrineVM->setPatientId($examinationRequest->patientId);
+        $examinationDetails = $examinationObj->urineExaminations;
+        //dd($candidateEmployments);
+
+        foreach($examinationDetails as $examination)
+        {
+            $patientUrineVM->setExaminations($examination);
+        }
+
+        //$userName = Session::get('DisplayName');
+        $userName = 'Admin';
+
+        $patientUrineVM->setCreatedBy($userName);
+        $patientUrineVM->setUpdatedBy($userName);
+        $patientUrineVM->setCreatedAt(date("Y-m-d H:i:s"));
+        $patientUrineVM->setUpdatedAt(date("Y-m-d H:i:s"));
+
+        return $patientUrineVM;
+    }
+
+    public static function setPatientMotionExamination(Request $examinationRequest)
+    {
+        $patientMotionVM = new PatientUrineExaminationViewModel();
+
+        $examinationObj = (object) $examinationRequest->all();
+        $patientMotionVM->setPatientId($examinationRequest->patientId);
+        $examinationDetails = $examinationObj->motionExaminations;
+        //dd($candidateEmployments);
+
+        foreach($examinationDetails as $examination)
+        {
+            $patientMotionVM->setExaminations($examination);
+        }
+
+        //$userName = Session::get('DisplayName');
+        $userName = 'Admin';
+
+        $patientMotionVM->setCreatedBy($userName);
+        $patientMotionVM->setUpdatedBy($userName);
+        $patientMotionVM->setCreatedAt(date("Y-m-d H:i:s"));
+        $patientMotionVM->setUpdatedAt(date("Y-m-d H:i:s"));
+
+        return $patientMotionVM;
     }
 
 }

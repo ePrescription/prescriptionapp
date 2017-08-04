@@ -195,4 +195,23 @@
         "765" => "Unable to retrieve pregnancy details",
         "766" => "Successfully retrieved pregnancy details",
         "767" => "No pregnancy list available",
+
+        "768" => "Unable to retrieve scan details",
+        "769" => "Successfully retrieved scan details",
+        "770" => "No scan list available",
+
+        "771" => "Unable to retrieve patient urine examination details",
+        "772" => "Successfully retrieved patient urine examination details",
+        "773" => "No urine examination details available for the patient",
+
+        "774" => "Unable to retrieve patient motion examination details",
+        "775" => "Successfully retrieved patient motion examination details",
+        "776" => "No motion examination details available for the patient",
+
+        "777" => "Unable to save patient urine examination details",
+        "778" => "Successfully saved patient urine examination details",
+
+        "779" => "Unable to save patient motion examination details",
+        "780" => "Successfully saved patient motion examination details",
+
     ];

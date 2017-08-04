@@ -1449,6 +1449,63 @@ class HospitalService {
     }
 
     /**
+     * Get patient urine tests
+     * @param $patientId, $urineTestDate
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientUrineTests($patientId, $urineTestDate)
+    {
+        $urineTests = null;
+
+        try
+        {
+            $urineTests = $this->hospitalRepo->getPatientUrineTests($patientId, $urineTestDate);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_URINE_DETAILS_ERROR, $exc);
+        }
+
+        return $urineTests;
+    }
+
+    /**
+     * Get patient motion tests
+     * @param $patientId, $motionTestDate
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientMotionTests($patientId, $motionTestDate)
+    {
+        $motionTests = null;
+
+        try
+        {
+            $motionTests = $this->hospitalRepo->getPatientMotionTests($patientId, $motionTestDate);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_MOTION_DETAILS_ERROR, $exc);
+        }
+
+        return $motionTests;
+    }
+
+
+    /**
      * Get all family illness
      * @param none
      * @throws $hospitalException
@@ -1877,6 +1934,74 @@ class HospitalService {
 
             $status = false;
             throw new HospitalException(null, ErrorEnum::PATIENT_SYMPTOM_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient urine examination details
+     * @param $patientUrineVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientUrineTests($patientUrineVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientUrineVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePatientUrineTests($patientUrineVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_URINE_DETAILS_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient motion examination details
+     * @param $patientMotionVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientMotionTests($patientMotionVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientMotionVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePatientMotionTests($patientMotionVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_MOTION_DETAILS_SAVE_ERROR, $ex);
         }
 
         return $status;

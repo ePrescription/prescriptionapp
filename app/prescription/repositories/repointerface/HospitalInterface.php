@@ -19,6 +19,7 @@ use App\Http\ViewModels\PatientPrescriptionViewModel;
 use App\Http\ViewModels\PatientProfileViewModel;
 use App\Http\ViewModels\PatientScanViewModel;
 use App\Http\ViewModels\PatientSymptomsViewModel;
+use App\Http\ViewModels\PatientUrineExaminationViewModel;
 
 interface HospitalInterface {
     public function getHospitals();
@@ -105,6 +106,12 @@ interface HospitalInterface {
 
     public function getPatientDrugHistory($patientId);
     public function savePatientDrugHistory(PatientDrugHistoryViewModel $drugHistoryVM);
+
+    public function getPatientUrineTests($patientId, $urineTestDate);
+    public function savePatientUrineTests(PatientUrineExaminationViewModel $patientUrineVM);
+
+    public function getPatientMotionTests($patientId, $motionTestDate);
+    public function savePatientMotionTests(PatientUrineExaminationViewModel $patientMotionVM);
 
     public function getAllFamilyIllness();
     public function getAllPastIllness();
