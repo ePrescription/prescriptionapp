@@ -3167,32 +3167,34 @@ class HospitalImpl implements HospitalInterface{
             }
 
             $examinationQuery = DB::table('patient_general_examination as pge')->where('pge.patient_id', '=', $patientId);
-            $examinationQuery->select('pge.patient_id', 'pge.general_examination_date')->orderBy('pge.general_examination_date', 'DESC');
-            $generalExaminationDates = $examinationQuery->get();
+            $examinationQuery->select('pge.general_examination_date')->orderBy('pge.general_examination_date', 'DESC');
+            //dd($examinationQuery->toSql());
+            $generalExaminationDates = $examinationQuery->distinct()->get();
+            //dd($generalExaminationDates);
 
             $pastIllnessQuery = DB::table('patient_past_illness as ppi')->where('ppi.patient_id', '=', $patientId);
-            $pastIllnessQuery->select('ppi.patient_id', 'ppi.past_illness_date')->orderBy('ppi.past_illness_date', 'DESC');
-            $pastIllnessDates = $pastIllnessQuery->get();
+            $pastIllnessQuery->select('ppi.past_illness_date')->orderBy('ppi.past_illness_date', 'DESC');
+            $pastIllnessDates = $pastIllnessQuery->distinct()->get();
 
             $familyIllnessQuery = DB::table('patient_family_illness as pfi')->where('pfi.patient_id', '=', $patientId);
-            $familyIllnessQuery->select('pfi.patient_id', 'pfi.family_illness_date')->orderBy('pfi.family_illness_date', 'DESC');
-            $familyIllnessDates = $familyIllnessQuery->get();
+            $familyIllnessQuery->select('pfi.family_illness_date')->orderBy('pfi.family_illness_date', 'DESC');
+            $familyIllnessDates = $familyIllnessQuery->distinct()->get();
 
             $personalHistoryQuery = DB::table('patient_personal_history as pph')->where('pph.patient_id', '=', $patientId);
-            $personalHistoryQuery->select('pph.patient_id', 'pph.personal_history_date')->orderBy('pph.personal_history_date', 'DESC');
-            $personalHistoryDates = $personalHistoryQuery->get();
+            $personalHistoryQuery->select('pph.personal_history_date')->orderBy('pph.personal_history_date', 'DESC');
+            $personalHistoryDates = $personalHistoryQuery->distinct()->get();
 
             $pregnancyDetailsQuery = DB::table('patient_pregnancy as pp')->where('pp.patient_id', '=', $patientId);
-            $pregnancyDetailsQuery->select('pp.patient_id', 'pp.pregnancy_date')->orderBy('pp.pregnancy_date', 'DESC');
-            $pregnancyDates = $pregnancyDetailsQuery->get();
+            $pregnancyDetailsQuery->select('pp.pregnancy_date')->orderBy('pp.pregnancy_date', 'DESC');
+            $pregnancyDates = $pregnancyDetailsQuery->distinct()->get();
 
             $scanDetailsQuery = DB::table('patient_scan as ps')->where('ps.patient_id', '=', $patientId);
-            $scanDetailsQuery->select('ps.patient_id', 'ps.scan_date')->orderBy('ps.scan_date', 'DESC');
-            $scanDates = $scanDetailsQuery->get();
+            $scanDetailsQuery->select('ps.scan_date')->orderBy('ps.scan_date', 'DESC');
+            $scanDates = $scanDetailsQuery->distinct()->get();
 
             $symptomDatesQuery = DB::table('patient_symptoms as ps')->where('ps.patient_id', '=', $patientId);
-            $symptomDatesQuery->select('ps.patient_id', 'ps.patient_symptom_date')->orderBy('ps.patient_symptom_date', 'DESC');
-            $symptomDates = $symptomDatesQuery->get();
+            $symptomDatesQuery->select('ps.patient_symptom_date')->orderBy('ps.patient_symptom_date', 'DESC');
+            $symptomDates = $symptomDatesQuery->distinct()->get();
 
             $examinationDates["generalExaminationDates"] = $generalExaminationDates;
             $examinationDates["pastIllnessDates"] = $pastIllnessDates;
