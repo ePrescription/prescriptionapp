@@ -405,4 +405,29 @@ class PatientProfileMapper
         return $patientBloodVM;
     }
 
+    public static function setPatientUltraSoundExamination(Request $examinationRequest)
+    {
+        $patientUltraSoundVM = new PatientUrineExaminationViewModel();
+
+        $examinationObj = (object) $examinationRequest->all();
+        $patientUltraSoundVM->setPatientId($examinationRequest->patientId);
+        $examinationDetails = $examinationObj->ultraSoundExaminations;
+        //dd($candidateEmployments);
+
+        foreach($examinationDetails as $examination)
+        {
+            $patientUltraSoundVM->setExaminations($examination);
+        }
+
+        //$userName = Session::get('DisplayName');
+        $userName = 'Admin';
+
+        $patientUltraSoundVM->setCreatedBy($userName);
+        $patientUltraSoundVM->setUpdatedBy($userName);
+        $patientUltraSoundVM->setCreatedAt(date("Y-m-d H:i:s"));
+        $patientUltraSoundVM->setUpdatedAt(date("Y-m-d H:i:s"));
+
+        return $patientUltraSoundVM;
+    }
+
 }

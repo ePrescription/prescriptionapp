@@ -1505,12 +1505,12 @@ class HospitalService {
     }
 
     /**
-     * Get patient blood tests
-     * @param $patientId, $bloodTestDate
-     * @throws $hospitalException
-     * @return array | null
-     * @author Baskar
-     */
+ * Get patient blood tests
+ * @param $patientId, $bloodTestDate
+ * @throws $hospitalException
+ * @return array | null
+ * @author Baskar
+ */
 
     public function getPatientBloodTests($patientId, $bloodTestDate)
     {
@@ -1530,6 +1530,34 @@ class HospitalService {
         }
 
         return $bloodTests;
+    }
+
+    /**
+     * Get patient ultrasound tests
+     * @param $patientId, $ultraSoundDate
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientUltraSoundTests($patientId, $ultraSoundDate)
+    {
+        $ultraSound = null;
+
+        try
+        {
+            $ultraSound = $this->hospitalRepo->getPatientUltraSoundTests($patientId, $ultraSoundDate);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_ULTRASOUND_DETAILS_ERROR, $exc);
+        }
+
+        return $ultraSound;
     }
 
 
@@ -2068,6 +2096,41 @@ class HospitalService {
 
         return $status;
     }
+
+    /**
+     * Save patient ultra sound details
+     * @param $patientUltraSoundVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientUltraSoundTests($patientUltraSoundVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientUltraSoundVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePatientUltraSoundTests($patientUltraSoundVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_ULTRASOUND_DETAILS_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
 
     /**
      * Save patient drug and surgery history

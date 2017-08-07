@@ -113,8 +113,11 @@ interface HospitalInterface {
     public function getPatientMotionTests($patientId, $motionTestDate);
     public function savePatientMotionTests(PatientUrineExaminationViewModel $patientMotionVM);
 
-    public function getPatientBloodTests($patientId, $motionTestDate);
+    public function getPatientBloodTests($patientId, $bloodTestDate);
     public function savePatientBloodTests(PatientUrineExaminationViewModel $patientBloodVM);
+
+    public function getPatientUltraSoundTests($patientId, $ultraSoundDate);
+    public function savePatientUltraSoundTests(PatientUrineExaminationViewModel $patientUltraSoundVM);
 
     public function getAllFamilyIllness();
     public function getAllPastIllness();

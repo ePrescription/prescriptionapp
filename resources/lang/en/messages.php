@@ -221,4 +221,11 @@
         "784" => "Unable to save patient blood examination details",
         "785" => "Successfully saved patient blood examination details",
 
+        "786" => "Unable to retrieve patient ultra sound examination details",
+        "787" => "Successfully retrieved patient ultra sound examination details",
+        "788" => "No ultra sound examination details available for the patient",
+
+        "789" => "Unable to save patient ultra sound examination details",
+        "790" => "Successfully saved patient ultra sound examination details",
+
     ];

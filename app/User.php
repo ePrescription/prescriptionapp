@@ -167,6 +167,14 @@ class User extends Model implements AuthenticatableContract,
                 'created_by', 'modified_by', 'created_at', 'updated_at');
     }
 
+    public function patientultrasounds()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\Ultrasound',
+            'patient_ultra_sound', 'patient_id', 'ultra_sound_id')
+            ->withPivot('examination_date', 'is_value_set',
+                'created_by', 'modified_by', 'created_at', 'updated_at');
+    }
+
     public function patientdrughistory()
     {
         return $this->hasMany('App\prescription\model\entities\PatientDrugHistory', 'patient_id');
