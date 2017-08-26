@@ -57,6 +57,11 @@
 
         <strong><a href="#" style="font-size: 12px;">Powered by Daiwik Business Solutions Private Limited</a></strong>
     </div><!-- /.login-box-body -->
+    <br>
+    <div class="login-logo">
+        <img src="images/head-logo-new-small.png">
+    </div><!-- /.login-logo -->
+
 </div><!-- /.login-box -->
 @endsection
 

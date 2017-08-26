@@ -42,8 +42,8 @@
                 <tbody>
                 @foreach($prescriptionDetails['PatientDrugDetails'] as $prescription)
                     <tr>
-                        <td>{{$prescription->brand_name}}</td>
-                        <td>{{$prescription->drug_name}}</td>
+                        <td>{{$prescription->trade_name}}</td>
+                        <td>{{$prescription->formulation_name}}</td>
                         <td>{{$prescription->dosage}}</td>
                         <td>{{$prescription->no_of_days}}</td>
                         <td>
@@ -72,7 +72,7 @@
         <tr>
             <td style="padding: 2px; ">
                 <div>
-                {{$prescriptionDetails['PrescriptionInfo'][0]->brief_description}}
+                {{$prescriptionDetails['PrescriptionInfo'][0]->notes}}
                 </div>
             </td>
         </tr>

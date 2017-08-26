@@ -518,29 +518,25 @@ class PharmacyController extends Controller
             Mail::send('emails.prescription', $data, function ($m) use($to, $subject){
                 //$m->from('prescriptionapp1@gmail.com', $name);
                 //$m->to($to)->subject($subject);
-                $m->from('shamprasadp26@gmail.com', 'ePrescription and Lab Tests Application');;
+                $m->from('prescriptionapp1@gmail.com', 'ePrescription and Lab Tests Application');;
                 //$m->to('alagirivimal@gmail.com')->subject('ePrescription and Lab Tests Application');
                 $m->to($to)->subject($subject);
             });
 
-            $prescriptionMailInfo = new ResponseJson(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SUCCESS));
+            $prescriptionMailInfo = new ResponsePrescription(ErrorEnum::SUCCESS, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_SUCCESS));
             $prescriptionMailInfo->setObj("Mail Sent Successfully");
 
         }
         catch(PharmacyException $pharmacyExc)
         {
-            //dd($pharmacyExc);
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
-            $errorMsg = $pharmacyExc->getMessageForCode();
-            $msg = AppendMessage::appendMessage($pharmacyExc);
-            Log::error($msg);
+            $prescriptionMailInfo = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            $prescriptionMailInfo->sendErrorResponse($pharmacyExc);
         }
         catch(Exception $exc)
         {
             //dd($exc);
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
-            $msg = AppendMessage::appendGeneralException($exc);
-            Log::error($msg);
+            $prescriptionMailInfo = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            $prescriptionMailInfo->sendUnExpectedExpectionResponse($exc);
         }
 
         return $prescriptionMailInfo;
@@ -581,7 +577,7 @@ class PharmacyController extends Controller
 
             foreach($drugDetails as $drug)
             {
-                $prescription .= "Drug Name: ".$drug->drug_name."%0a"." Brand Name: ".$drug->brand_name."%0a"
+                $prescription .= "Drug Name: ".$drug->formulation_name."%0a"." Brand Name: ".$drug->trade_name."%0a"
                         ." Dosage: ".$drug->dosage."%0a"
                         ." No of days: ".$drug->no_of_days."%0a"
                         ." Frequency Morning: ".$drug->morning."%0a"
@@ -617,18 +613,14 @@ class PharmacyController extends Controller
         }
         catch(PharmacyException $pharmacyExc)
         {
-            //dd($pharmacyExc);
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
-            $errorMsg = $pharmacyExc->getMessageForCode();
-            $msg = AppendMessage::appendMessage($pharmacyExc);
-            Log::error($msg);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            $responseJson->sendErrorResponse($pharmacyExc);
         }
         catch(Exception $exc)
         {
             //dd($exc);
-            $jsonResponse = new ResponseJson(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
-            $msg = AppendMessage::appendGeneralException($exc);
-            Log::error($msg);
+            $responseJson = new ResponsePrescription(ErrorEnum::FAILURE, trans('messages.'.ErrorEnum::PRESCRIPTION_DETAILS_ERROR));
+            $responseJson->sendUnExpectedExpectionResponse($exc);
         }
 
         return $responseJson;

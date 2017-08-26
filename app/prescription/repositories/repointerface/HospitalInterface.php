@@ -8,15 +8,27 @@
 
 use App\Http\ViewModels\FeeReceiptViewModel;
 use App\Http\ViewModels\NewAppointmentViewModel;
+use App\Http\ViewModels\PatientDrugHistoryViewModel;
+use App\Http\ViewModels\PatientFamilyIllnessViewModel;
+use App\Http\ViewModels\PatientGeneralExaminationViewModel;
 use App\Http\ViewModels\PatientLabTestViewModel;
+use App\Http\ViewModels\PatientPastIllnessViewModel;
+use App\Http\ViewModels\PatientPersonalHistoryViewModel;
+use App\Http\ViewModels\PatientPregnancyViewModel;
 use App\Http\ViewModels\PatientPrescriptionViewModel;
 use App\Http\ViewModels\PatientProfileViewModel;
+use App\Http\ViewModels\PatientScanViewModel;
+use App\Http\ViewModels\PatientSymptomsViewModel;
+use App\Http\ViewModels\PatientUrineExaminationViewModel;
 
 interface HospitalInterface {
     public function getHospitals();
     public function getHospitalByKeyword($keyword = null);
     public function getHospitalId($userTypeId, $userId);
     public function getDoctorsByHospitalId($hospitalId);
+
+    public function getHospitalsForDoctor($email);
+    public function getHospitalsByDoctorId($doctorId);
 
     public function getDoctorDetails($doctorId);
 
@@ -55,7 +67,7 @@ interface HospitalInterface {
     public function getFormulationNames($keyword);
 
     //Lab Tests
-    public function getLabTests();
+    public function getLabTests($keyword);
     public function getLabTestsForPatient($hospitalId, $doctorId);
     public function getLabTestsByPatient($patientId);
     public function getLabTestDetails($labTestId);
@@ -71,4 +83,46 @@ interface HospitalInterface {
     public function getFeeReceiptsByPatient($patientId);
     public function getReceiptDetails($receiptId);
     public function saveFeeReceipt(FeeReceiptViewModel $feeReceiptVM);
+
+    //Symptoms
+    public function getMainSymptoms();
+    public function getSubSymptomsForMainSymptoms($mainSymptomsId);
+    public function getSymptomsForSubSymptoms($subSymptomId);
+    public function getPersonalHistory($patientId, $personalHistoryDate);
+    public function getPatientPastIllness($patientId, $pastIllnessDate);
+    public function getPatientFamilyIllness($patientId, $familyIllnessDate);
+    public function savePersonalHistory(PatientPersonalHistoryViewModel $patientHistoryVM);
+    public function getPatientGeneralExamination($patientId, $generalExaminationDate);
+    public function savePatientGeneralExamination(PatientGeneralExaminationViewModel $patientExaminationVM);
+    public function savePatientPastIllness(PatientPastIllnessViewModel $patientPastIllnessVM);
+    public function savePatientFamilyIllness(PatientFamilyIllnessViewModel $patientFamilyIllnessVM);
+    public function getExaminationDates($patientId);
+    public function getPregnancyDetails($patientId, $pregnancyDate);
+    public function savePatientPregnancyDetails(PatientPregnancyViewModel $patientPregnancyVM);
+    public function getPatientScanDetails($patientId, $scanDate);
+    public function savePatientScanDetails(PatientScanViewModel $patientScanVM);
+    public function getPatientSymptoms($patientId, $symptomDate);
+    public function savePatientSymptoms(PatientSymptomsViewModel $patientSymVM);
+
+    public function getPatientDrugHistory($patientId);
+    public function savePatientDrugHistory(PatientDrugHistoryViewModel $drugHistoryVM);
+
+    public function getPatientUrineTests($patientId, $urineTestDate);
+    public function savePatientUrineTests(PatientUrineExaminationViewModel $patientUrineVM);
+
+    public function getPatientMotionTests($patientId, $motionTestDate);
+    public function savePatientMotionTests(PatientUrineExaminationViewModel $patientMotionVM);
+
+    public function getPatientBloodTests($patientId, $bloodTestDate);
+    public function savePatientBloodTests(PatientUrineExaminationViewModel $patientBloodVM);
+
+    public function getPatientUltraSoundTests($patientId, $ultraSoundDate);
+    public function savePatientUltraSoundTests(PatientUrineExaminationViewModel $patientUltraSoundVM);
+
+    public function getAllFamilyIllness();
+    public function getAllPastIllness();
+    public function getAllGeneralExaminations();
+    public function getAllPersonalHistory();
+    public function getAllPregnancy();
+    public function getAllScans();
 }

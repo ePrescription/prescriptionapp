@@ -30,11 +30,20 @@ class PatientProfileViewModel
     private $maritalStatus;
     private $hospitalId;
     private $doctorId;
+    //private $mainSymptomId;
+    //private $subSymptomId;
+    //private $symptomId;
+    //private $symptoms;
 
     private $createdBy;
     private $updatedBy;
     private $createdAt;
     private $updatedAt;
+
+    public function __construct()
+    {
+        //$this->symptoms = array();
+    }
 
     /**
      * @return mixed
@@ -339,6 +348,72 @@ class PatientProfileViewModel
     {
         $this->doctorId = $doctorId;
     }
+
+    /**
+     * @return mixed
+     */
+    /*public function getSymptoms()
+    {
+        return $this->symptoms;
+    }*/
+
+    /**
+     * @param mixed $symptoms
+     */
+    /*public function setSymptoms($symptoms)
+    {
+        array_push($this->symptoms, (object) $symptoms);
+        //$this->symptoms = $symptoms;
+    }*/
+
+
+    /**
+     * @return mixed
+     */
+    /*public function getMainSymptomId()
+    {
+        return $this->mainSymptomId;
+    }*/
+
+    /**
+     * @param mixed $mainSymptomId
+     */
+    /*public function setMainSymptomId($mainSymptomId)
+    {
+        $this->mainSymptomId = $mainSymptomId;
+    }*/
+
+    /**
+     * @return mixed
+     */
+    /*public function getSubSymptomId()
+    {
+        return $this->subSymptomId;
+    }*/
+
+    /**
+     * @param mixed $subSymptomId
+     */
+    /*public function setSubSymptomId($subSymptomId)
+    {
+        $this->subSymptomId = $subSymptomId;
+    }*/
+
+    /**
+     * @return mixed
+     */
+    /*public function getSymptomId()
+    {
+        return $this->symptomId;
+    }*/
+
+    /**
+     * @param mixed $symptomId
+     */
+    /*public function setSymptomId($symptomId)
+    {
+        $this->symptomId = $symptomId;
+    }*/
 
     /**
      * @return mixed

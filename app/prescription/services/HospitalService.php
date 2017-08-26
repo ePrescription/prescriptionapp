@@ -142,6 +142,62 @@ class HospitalService {
     }
 
     /**
+     * Get list of hospitals for the doctor
+     * @param $email
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getHospitalsForDoctor($email)
+    {
+        $hospitals = null;
+
+        try
+        {
+            $hospitals = $this->hospitalRepo->getHospitalsForDoctor($email);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::HOSPITAL_LIST_ERROR, $exc);
+        }
+
+        return $hospitals;
+    }
+
+    /**
+     * Get list of hospitals for the doctor
+     * @param $doctorId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getHospitalsByDoctorId($doctorId)
+    {
+        $hospitals = null;
+
+        try
+        {
+            $hospitals = $this->hospitalRepo->getHospitalsByDoctorId($doctorId);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::HOSPITAL_LIST_ERROR, $exc);
+        }
+
+        return $hospitals;
+    }
+
+    /**
      * Save patient profile
      * @param $patientProfileVM
      * @throws $hospitalException
@@ -708,19 +764,19 @@ class HospitalService {
     //Lab Tests
     /**
      * Get all lab tests
-     * @param none
+     * @param $keyword
      * @throws $hospitalException
      * @return array | null
      * @author Baskar
      */
 
-    public function getLabTests()
+    public function getLabTests($keyword)
     {
         $labTests = null;
 
         try
         {
-            $labTests = $this->hospitalRepo->getLabTests();
+            $labTests = $this->hospitalRepo->getLabTests($keyword);
         }
         catch(HospitalException $hospitalExc)
         {
@@ -1081,4 +1137,1034 @@ class HospitalService {
 
         return $status;
     }
+
+    /*Symptom section -- Begin */
+
+    /**
+     * Get all the symptoms
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getMainSymptoms()
+    {
+        $mainSymptoms = null;
+
+        try
+        {
+            $mainSymptoms = $this->hospitalRepo->getMainSymptoms();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::MAIN_SYMPTOMS_LIST_ERROR, $exc);
+        }
+
+        return $mainSymptoms;
+    }
+
+    /**
+     * Get all the sub symptoms for main symptom
+     * @param $mainSymptomsId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getSubSymptomsForMainSymptoms($mainSymptomsId)
+    {
+        $subSymptoms = null;
+
+        try
+        {
+            $subSymptoms = $this->hospitalRepo->getSubSymptomsForMainSymptoms($mainSymptomsId);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::SUB_SYMPTOMS_LIST_ERROR, $exc);
+        }
+
+        return $subSymptoms;
+    }
+
+    /**
+     * Get all the symptoms for sub symptom
+     * @param $subSymptomId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getSymptomsForSubSymptoms($subSymptomId)
+    {
+        $symptoms = null;
+
+        try
+        {
+            $symptoms = $this->hospitalRepo->getSymptomsForSubSymptoms($subSymptomId);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::SYMPTOMS_LIST_ERROR, $exc);
+        }
+
+        return $symptoms;
+    }
+
+    /**
+     * Get personal history for the patient
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPersonalHistory($patientId, $personalHistoryDate)
+    {
+        $personalHistoryDetails = null;
+
+        try
+        {
+            $personalHistoryDetails = $this->hospitalRepo->getPersonalHistory($patientId, $personalHistoryDate);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PERSONAL_HISTORY_ERROR, $exc);
+        }
+
+        return $personalHistoryDetails;
+    }
+
+    /**
+     * Get patient past illness
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientPastIllness($patientId, $pastIllnessDate)
+    {
+        $pastIllness = null;
+
+        try
+        {
+            $pastIllness = $this->hospitalRepo->getPatientPastIllness($patientId, $pastIllnessDate);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_PAST_ILLNESS_DETAILS_ERROR, $exc);
+        }
+
+        return $pastIllness;
+    }
+
+    /**
+     * Get patient family illness
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientFamilyIllness($patientId, $familyIllnessDate)
+    {
+        $familyIllness = null;
+
+        try
+        {
+            $familyIllness = $this->hospitalRepo->getPatientFamilyIllness($patientId, $familyIllnessDate);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_FAMILY_ILLNESS_DETAILS_ERROR, $exc);
+        }
+
+        return $familyIllness;
+    }
+
+    /**
+     * Get patient general examination
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientGeneralExamination($patientId, $generalExaminationDate)
+    {
+        $generalExamination = null;
+
+        try
+        {
+            $generalExamination = $this->hospitalRepo->getPatientGeneralExamination($patientId, $generalExaminationDate);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_GENERAL_EXAMINATION_DETAILS_ERROR, $exc);
+        }
+
+        return $generalExamination;
+    }
+
+    /**
+     * Get patient pregnancy details
+     * @param $patientId, $pregnancyDate
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPregnancyDetails($patientId, $pregnancyDate)
+    {
+        $pregnancyDetails = null;
+
+        try
+        {
+            $pregnancyDetails = $this->hospitalRepo->getPregnancyDetails($patientId, $pregnancyDate);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_PREGNANCY_DETAILS_ERROR, $exc);
+        }
+
+        return $pregnancyDetails;
+    }
+
+    /**
+     * Get patient scan details
+     * @param $patientId, $scanDate
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientScanDetails($patientId, $scanDate)
+    {
+        $scanDetails = null;
+
+        try
+        {
+            $scanDetails = $this->hospitalRepo->getPatientScanDetails($patientId, $scanDate);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_SCAN_DETAILS_ERROR, $exc);
+        }
+
+        return $scanDetails;
+    }
+
+    /**
+     * Get patient symptom details
+     * @param $patientId, $symptomDate
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientSymptoms($patientId, $symptomDate)
+    {
+        $symptomDetails = null;
+
+        try
+        {
+            $symptomDetails = $this->hospitalRepo->getPatientSymptoms($patientId, $symptomDate);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_SYMPTOM_DETAILS_ERROR, $exc);
+        }
+
+        return $symptomDetails;
+    }
+
+    /**
+     * Get patient drug history
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientDrugHistory($patientId)
+    {
+        $drugSurgeryHistory = null;
+
+        try
+        {
+            $drugSurgeryHistory = $this->hospitalRepo->getPatientDrugHistory($patientId);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_DRUG_HISTORY_ERROR, $exc);
+        }
+
+        return $drugSurgeryHistory;
+    }
+
+    /**
+     * Get patient urine tests
+     * @param $patientId, $urineTestDate
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientUrineTests($patientId, $urineTestDate)
+    {
+        $urineTests = null;
+
+        try
+        {
+            $urineTests = $this->hospitalRepo->getPatientUrineTests($patientId, $urineTestDate);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_URINE_DETAILS_ERROR, $exc);
+        }
+
+        return $urineTests;
+    }
+
+    /**
+     * Get patient motion tests
+     * @param $patientId, $motionTestDate
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientMotionTests($patientId, $motionTestDate)
+    {
+        $motionTests = null;
+
+        try
+        {
+            $motionTests = $this->hospitalRepo->getPatientMotionTests($patientId, $motionTestDate);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_MOTION_DETAILS_ERROR, $exc);
+        }
+
+        return $motionTests;
+    }
+
+    /**
+ * Get patient blood tests
+ * @param $patientId, $bloodTestDate
+ * @throws $hospitalException
+ * @return array | null
+ * @author Baskar
+ */
+
+    public function getPatientBloodTests($patientId, $bloodTestDate)
+    {
+        $bloodTests = null;
+
+        try
+        {
+            $bloodTests = $this->hospitalRepo->getPatientBloodTests($patientId, $bloodTestDate);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_BLOOD_DETAILS_ERROR, $exc);
+        }
+
+        return $bloodTests;
+    }
+
+    /**
+     * Get patient ultrasound tests
+     * @param $patientId, $ultraSoundDate
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getPatientUltraSoundTests($patientId, $ultraSoundDate)
+    {
+        $ultraSound = null;
+
+        try
+        {
+            $ultraSound = $this->hospitalRepo->getPatientUltraSoundTests($patientId, $ultraSoundDate);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_ULTRASOUND_DETAILS_ERROR, $exc);
+        }
+
+        return $ultraSound;
+    }
+
+
+    /**
+     * Get all family illness
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllFamilyIllness()
+    {
+        $familyIllness = null;
+
+        try
+        {
+            $familyIllness = $this->hospitalRepo->getAllFamilyIllness();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::FAMILY_ILLNESS_ERROR, $exc);
+        }
+
+        return $familyIllness;
+    }
+
+    /**
+     * Get all past illness
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllPastIllness()
+    {
+        $pastIllness = null;
+
+        try
+        {
+            $pastIllness = $this->hospitalRepo->getAllPastIllness();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PAST_ILLNESS_ERROR, $exc);
+        }
+
+        return $pastIllness;
+    }
+
+    /**
+     * Get all general examinations
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllGeneralExaminations()
+    {
+        $generalExaminations = null;
+
+        try
+        {
+            $generalExaminations = $this->hospitalRepo->getAllGeneralExaminations();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::GENERAL_EXAMINATIONS_ERROR, $exc);
+        }
+
+        return $generalExaminations;
+    }
+
+    /**
+     * Get all personal history
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllPersonalHistory()
+    {
+        $personalHistory = null;
+
+        try
+        {
+            $personalHistory = $this->hospitalRepo->getAllPersonalHistory();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PERSONAL_HISTORY_LIST_ERROR, $exc);
+        }
+
+        return $personalHistory;
+    }
+
+    /**
+     * Get all pregnancy
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllPregnancy()
+    {
+        $pregnancy = null;
+
+        try
+        {
+            $pregnancy = $this->hospitalRepo->getAllPregnancy();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PREGNANCY_LIST_ERROR, $exc);
+        }
+
+        return $pregnancy;
+    }
+
+    /**
+     * Get all scans
+     * @param none
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getAllScans()
+    {
+        $scans = null;
+
+        try
+        {
+            $scans = $this->hospitalRepo->getAllScans();
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::SCAN_LIST_ERROR, $exc);
+        }
+
+        return $scans;
+    }
+
+    /**
+     * Get patient examination dates
+     * @param $patientId
+     * @throws $hospitalException
+     * @return array | null
+     * @author Baskar
+     */
+
+    public function getExaminationDates($patientId)
+    {
+        $examinationDates = null;
+
+        try
+        {
+            $examinationDates = $this->hospitalRepo->getExaminationDates($patientId);
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            throw $hospitalExc;
+        }
+        catch(Exception $exc)
+        {
+            throw new HospitalException(null, ErrorEnum::PATIENT_EXAMINATION_DATES_ERROR, $exc);
+        }
+
+        return $examinationDates;
+    }
+
+    /**
+     * Save patient personal history
+     * @param $patientHistoryVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePersonalHistory($patientHistoryVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientHistoryVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePersonalHistory($patientHistoryVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_PERSONAL_HISTORY_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient general examination details
+     * @param $patientExaminationVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientGeneralExamination($patientExaminationVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientExaminationVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePatientGeneralExamination($patientExaminationVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_GENERAL_EXAMINATION_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient past illness details
+     * @param $patientPastIllnessVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientPastIllness($patientPastIllnessVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientPastIllnessVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePatientPastIllness($patientPastIllnessVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_PAST_ILLNESS_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient family illness details
+     * @param $patientFamilyIllnessVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientFamilyIllness($patientFamilyIllnessVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientFamilyIllnessVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePatientFamilyIllness($patientFamilyIllnessVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_FAMILY_ILLNESS_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient pregnancy details
+     * @param $patientPregnancyVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientPregnancyDetails($patientPregnancyVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientPregnancyVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePatientPregnancyDetails($patientPregnancyVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_PREGNANCY_DETAILS_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient scan details
+     * @param $patientScanVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientScanDetails($patientScanVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientScanVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePatientScanDetails($patientScanVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_SCAN_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient symptom details
+     * @param $patientSymVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientSymptoms($patientSymVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientSymVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePatientSymptoms($patientSymVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_SYMPTOM_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient urine examination details
+     * @param $patientUrineVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientUrineTests($patientUrineVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientUrineVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePatientUrineTests($patientUrineVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_URINE_DETAILS_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient motion examination details
+     * @param $patientMotionVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientMotionTests($patientMotionVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientMotionVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePatientMotionTests($patientMotionVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_MOTION_DETAILS_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient blood examination details
+     * @param $patientBloodVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientBloodTests($patientBloodVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientBloodVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePatientBloodTests($patientBloodVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_BLOOD_DETAILS_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Save patient ultra sound details
+     * @param $patientUltraSoundVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientUltraSoundTests($patientUltraSoundVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientUltraSoundVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePatientUltraSoundTests($patientUltraSoundVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_ULTRASOUND_DETAILS_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
+
+    /**
+     * Save patient drug and surgery history
+     * @param $patientDrugsVM
+     * @throws $hospitalException
+     * @return true | false
+     * @author Baskar
+     */
+
+    public function savePatientDrugHistory($patientDrugsVM)
+    {
+        $status = true;
+
+        try
+        {
+            DB::transaction(function() use ($patientDrugsVM, &$status)
+            {
+                $status = $this->hospitalRepo->savePatientDrugHistory($patientDrugsVM);
+            });
+
+        }
+        catch(HospitalException $hospitalExc)
+        {
+            $status = false;
+            throw $hospitalExc;
+        }
+        catch (Exception $ex) {
+
+            $status = false;
+            throw new HospitalException(null, ErrorEnum::PATIENT_DRUG_HISTORY_SAVE_ERROR, $ex);
+        }
+
+        return $status;
+    }
+
+    /*Symptom section -- End */
 }

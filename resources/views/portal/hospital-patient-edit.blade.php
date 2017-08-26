@@ -153,7 +153,7 @@ $profile_menu="0";
                                         <div class="form-group col-md-12">
                                             <label class="col-sm-3 control-label">Email</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" name="email" value="{{$patientDetails[0]->email}}" required="required" />
+                                                <input type="text" class="form-control" name="email" value="{{$patientDetails[0]->email}}"  />
                                             </div>
                                         </div>
                                         <div class="form-group col-md-12">
@@ -176,6 +176,32 @@ $profile_menu="0";
                                                 <input type="radio" class="form-controlx" name="gender" value="1" required="required" @if($patientDetails[0]->gender==1) checked @endif />Male
                                                 &nbsp;&nbsp;
                                                 <input type="radio" class="form-controlx" name="gender" value="2" required="required" @if($patientDetails[0]->gender==2) checked @endif />Female
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label class="col-sm-3 control-label">Relationship</label>
+                                            <div class="col-sm-9">
+                                                <!--
+                                                <input type="text" class="form-control" name="relationship" value="{{$patientDetails[0]->relationship}}" required="required" />
+                                                -->
+                                                <select class="form-control" name="relationship" required="required">
+                                                    <option selected>{{$patientDetails[0]->relationship}}</option>
+                                                    <option>Brother</option>
+                                                    <option>Sister</option>
+                                                    <option>Husband</option>
+                                                    <option>Wife</option>
+                                                    <option>Father</option>
+                                                    <option>Mother</option>
+                                                    <option>Others</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label class="col-sm-3 control-label">Relation Name</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" name="spouseName" value="{{$patientDetails[0]->spouseName}}" required="required" />
                                             </div>
                                         </div>
                                     </div>

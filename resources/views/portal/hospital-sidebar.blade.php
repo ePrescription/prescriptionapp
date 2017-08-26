@@ -39,6 +39,13 @@
             </a>
         </li>
 
+        <li class="@if($doctor_menu==1) active @endif treeview">
+            <a href="{{URL::to('/')}}/fronthospital/payment/online">
+                <i class="fa fa-users"></i> <span>Online Payment</span>
+            </a>
+        </li>
+
+
         <li class="@if($profile_menu==1) active @endif treeview">
             <a href="#myaccount.html">
                 <i class="fa fa-book"></i> <span>My Account</span>

@@ -94,4 +94,102 @@ class User extends Model implements AuthenticatableContract,
     {
         return $this->hasOne('App\prescription\model\entities\Doctor', 'doctor_id');
     }
+
+    public function personalhistory()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\PersonalHistory',
+            'patient_personal_history', 'patient_id', 'personal_history_id')
+            ->withPivot('personal_history_item_id', 'is_value_set',
+                'created_by', 'modified_by', 'created_at', 'updated_at');
+    }
+
+    public function patientgeneralexaminations()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\GeneralExamination',
+            'patient_general_examination', 'patient_id', 'general_examination_id')
+            ->withPivot('general_examination_value', 'is_value_set',
+                'created_by', 'modified_by', 'created_at', 'updated_at');
+    }
+
+    public function patientpastillness()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\PastIllness',
+            'patient_past_illness', 'patient_id', 'past_illness_id')
+            ->withPivot('past_illness_name', 'is_value_set',
+                'created_by', 'modified_by', 'created_at', 'updated_at');
+    }
+
+    public function patientfamilyillness()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\FamilyIllness',
+            'patient_family_illness', 'patient_id', 'family_illness_id')
+            ->withPivot('family_illness_name', 'relation', 'is_value_set',
+                'created_by', 'modified_by', 'created_at', 'updated_at');
+    }
+
+    public function patientpregnancy()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\Pregnancy',
+            'patient_pregnancy', 'patient_id', 'pregnancy_id')
+            ->withPivot('pregnancy_value', 'pregnancy_date', 'is_value_set',
+                'created_by', 'modified_by', 'created_at', 'updated_at');
+    }
+
+    public function patientscans()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\Scans',
+            'patient_scan', 'patient_id', 'scan_id')
+            ->withPivot('scan_date', 'is_value_set',
+                'created_by', 'modified_by', 'created_at', 'updated_at');
+    }
+
+    public function patienturineexaminations()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\UrineExamination',
+            'patient_urine_examination', 'patient_id', 'urine_examination_id')
+            ->withPivot('examination_date', 'is_value_set',
+                'created_by', 'modified_by', 'created_at', 'updated_at');
+    }
+
+    public function patientmotionexaminations()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\MotionExamination',
+            'patient_motion_examination', 'patient_id', 'motion_examination_id')
+            ->withPivot('examination_date', 'is_value_set',
+                'created_by', 'modified_by', 'created_at', 'updated_at');
+    }
+
+    public function patientbloodexaminations()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\BloodExamination',
+            'patient_blood_examination', 'patient_id', 'blood_examination_id')
+            ->withPivot('examination_date', 'is_value_set',
+                'created_by', 'modified_by', 'created_at', 'updated_at');
+    }
+
+    public function patientultrasounds()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\Ultrasound',
+            'patient_ultra_sound', 'patient_id', 'ultra_sound_id')
+            ->withPivot('examination_date', 'is_value_set',
+                'created_by', 'modified_by', 'created_at', 'updated_at');
+    }
+
+    public function patientdrughistory()
+    {
+        return $this->hasMany('App\prescription\model\entities\PatientDrugHistory', 'patient_id');
+    }
+
+    public function patientsurgeries()
+    {
+        return $this->hasMany('App\prescription\model\entities\PatientSurgeries', 'patient_id');
+    }
+
+    /*public function patientsymptoms()
+    {
+        return $this->belongsToMany('App\prescription\model\entities\Scans',
+            'patient_scan', 'patient_id', 'scan_id')
+            ->withPivot('scan_date', 'is_value_set',
+                'created_by', 'modified_by', 'created_at', 'updated_at');
+    }*/
 }

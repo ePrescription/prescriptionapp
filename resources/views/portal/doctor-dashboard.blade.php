@@ -40,6 +40,7 @@ $profile_menu="0";
             <!-- Small boxes (Stat box) -->
             <div class="row">
 
+                @if(!empty(Session::get('LoginHospitalDetails')))
                 <div class="col-lg-3 col-xs-6">
                     <!-- small box -->
                     <div class="small-box bg-aqua">
@@ -84,6 +85,7 @@ $profile_menu="0";
                         <a href="{{URL::to('/')}}/doctor/rest/api/{{Auth::user()->id}}/hospital/{{Session::get('LoginUserHospital')}}/labtests" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div><!-- ./col -->
+                @endif
 
 
             </div><!-- /.row -->
@@ -94,5 +96,4 @@ $profile_menu="0";
     @include('portal.doctor-footer')
 </div><!-- ./wrapper -->
 
-</body>
-</html>
+@endsection

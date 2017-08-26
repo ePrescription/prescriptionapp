@@ -15,6 +15,9 @@ class PatientPrescriptionViewModel{
     private $doctorId;
     private $hospitalId;
     private $briefDescription;
+
+    private $drugHistory;
+
     private $drugDetails;
     private $prescriptionDate;
     private $intakeForm;
@@ -85,6 +88,22 @@ class PatientPrescriptionViewModel{
     public function setBriefDescription($briefDescription)
     {
         $this->briefDescription = $briefDescription;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDrugHistory()
+    {
+        return $this->drugHistory;
+    }
+
+    /**
+     * @param mixed $drugHistory
+     */
+    public function setDrugHistory($drugHistory)
+    {
+        $this->drugHistory = $drugHistory;
     }
 
     /**

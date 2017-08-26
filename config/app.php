@@ -52,7 +52,8 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('APP_TIMEZONE', 'Asia/Kolkata'),
+
 
     /*
     |--------------------------------------------------------------------------
@@ -163,6 +164,7 @@ return [
         App\prescription\serviceprovider\servicesserviceprovider\HospitalServiceProvider::class,
 
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+        Softon\Indipay\IndipayServiceProvider::class
 
     ],
 
@@ -216,7 +218,8 @@ return [
         'HospitalServiceFacade'      => App\prescription\facades\HospitalServiceFacade::class,
 
         'JWTAuth'   => Tymon\JWTAuth\Facades\JWTAuth::class,
-        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'Indipay' => Softon\Indipay\Facades\Indipay::class
 
     ],
 
